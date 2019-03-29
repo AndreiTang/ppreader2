@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#DBC49B"
+    android:orientation="vertical"
+    tools:context=".ui.fragment.PPReaderListFragment">
+
+    <include
+        layout="@layout/view_main_item_title_bar"
+        />
+
+    <GridView
+        android:id="@+id/novel_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="10dp"
+        android:columnWidth="100dp"
+        android:numColumns="auto_fit"
+        android:scrollbars = "none"
+        android:stretchMode="spacingWidth"
+        android:verticalSpacing="20dp" />
+
+</LinearLayout>

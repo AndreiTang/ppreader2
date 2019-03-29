@@ -5,6 +5,8 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
+import org.andrei.ppreader.data.PPReaderTextPage;
+
 public class PPReaderTextView extends TextView {
 
     public PPReaderTextView(Context context) {
@@ -21,6 +23,10 @@ public class PPReaderTextView extends TextView {
 
     public PPReaderTextView(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
+    }
+
+    public void setText(PPReaderTextPage page){
+
     }
 
 

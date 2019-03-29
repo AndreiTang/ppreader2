@@ -1,3 +1,16 @@
 <resources>
-    <string name="app_name">PPReader</string>
+    <string name="app_name">爬爬读书</string>
+    <string name="ppreader_text_loading">主人，正在搬运中...</string>
+    <string name="ppreader_text_err">主人，再戮我一下...</string>
+
+    <string name="novel_list_title">我的书架</string>
+    <string name="novel_list_edit">编辑</string>
+    <string name="novel_list_remove">删除</string>
+    <string name="novel_list_search">搜索</string>
+    <string name="novel_list_remove_msg">是否要删除%1$s？</string>
+    <string name="btn_ok">确定</string>
+    <string name="btn_cancel">取消</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

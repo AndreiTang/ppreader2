@@ -1,14 +1,21 @@
 package org.andrei.ppreader;
 
+import android.content.Context;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
+import android.widget.TextView;
 
 import org.andrei.ppreader.service.IPPReaderTask;
 import org.andrei.ppreader.service.IPPReaderTaskNotification;
 import org.andrei.ppreader.service.IPPReaderTaskRet;
 import org.andrei.ppreader.service.PPReaderService;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
@@ -46,7 +53,17 @@ public class ServiceTest {
     }
 
 
-    @Test
+    //@Test
+    public void testExample(){
+        Context appContext = InstrumentationRegistry.getTargetContext();
+        TextView tv = new TextView(appContext);
+        tv.setText("ffffff");
+        tv.setWidth(300);
+        tv.setHeight(200);
+        assertEquals(3,3);
+    }
+
+    //@Test
     public void testAllTask(){
 
         final PPReaderService service = PPReaderService.createInstance(new IPPReaderTaskNotification() {
@@ -72,7 +89,7 @@ public class ServiceTest {
         assertEquals(3,m_nRet);
     }
 
-    @Test
+    //@Test
     public void testCancelTask(){
         final PPReaderService service = PPReaderService.createInstance(new IPPReaderTaskNotification() {
 
