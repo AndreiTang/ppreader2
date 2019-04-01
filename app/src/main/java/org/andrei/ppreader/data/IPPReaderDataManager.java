@@ -7,6 +7,7 @@ public interface IPPReaderDataManager {
     public void save();
     public void addNovel(final PPReaderNovel novel);
     public PPReaderNovel getNovel(int index);
+    public PPReaderNovel getNovel(String id);
     public int getNovelCount();
     public void removeNovel(String id);
 

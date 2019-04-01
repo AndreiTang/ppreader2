@@ -35,7 +35,7 @@ public class PPReaderMainFragment extends Fragment implements IPPReaderTaskNotif
     public void onActivityCreated(Bundle savedInstanceState) {
 
         PPReaderListFragment lineFragment = (PPReaderListFragment)m_fragments[0];
-        lineFragment.init(m_dataManager,this);
+        //lineFragment.init(m_dataManager,this);
 
         super.onActivityCreated(savedInstanceState);
         getActivity().findViewById(android.R.id.content).setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE|View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);

@@ -24,6 +24,16 @@ public class PPReaderDataManager implements IPPReaderDataManager {
     }
 
     @Override
+    public PPReaderNovel getNovel(String id) {
+        for(PPReaderNovel novel: m_novels){
+            if(novel.id.compareTo(id) == 0){
+                return novel;
+            }
+        }
+        return null;
+    }
+
+    @Override
     public int getNovelCount() {
         return m_novels.size();
     }

@@ -19,7 +19,6 @@ public class MockDataManager extends PPReaderDataManager {
         novel.img = "https://www.xbiquge6.com/cover/79/79769/79769s.jpg";
         novel.name = "卡牌大明星";
         novel.id = "2";
-        novel.isUpdated = true;
         m_novels.add(novel);
 
 

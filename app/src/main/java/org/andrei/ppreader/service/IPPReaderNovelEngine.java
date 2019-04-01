@@ -1,7 +1,11 @@
 package org.andrei.ppreader.service;
 
-public interface IPPReaderNovelEngine {
-    int search(String url, IPPReaderHttp http, IPPReaderTaskRet ret);
-    
+import org.andrei.ppreader.data.PPReaderChapter;
+import org.andrei.ppreader.data.PPReaderNovel;
 
+import java.util.ArrayList;
+
+public interface IPPReaderNovelEngine {
+    int search(String url, IPPReaderHttp http, ArrayList<PPReaderNovel> novels);
+    int update(final PPReaderNovel novel, final IPPReaderHttp http, ArrayList<PPReaderChapter> delta);
 }

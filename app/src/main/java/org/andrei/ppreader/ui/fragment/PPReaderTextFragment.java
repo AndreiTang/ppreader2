@@ -76,7 +76,7 @@ public class PPReaderTextFragment extends Fragment {
 
     private void init(Bundle savedInstanceState){
         m_pageMgr = new PPReaderPageManager();
-        m_service.addNotification(new IPPReaderTaskNotification() {
+        m_service.start(new IPPReaderTaskNotification() {
             @Override
             public void onNotify(IPPReaderTaskRet ret) {
 

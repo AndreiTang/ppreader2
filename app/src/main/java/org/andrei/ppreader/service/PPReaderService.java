@@ -7,19 +7,28 @@ import android.support.annotation.NonNull;
 import java.util.ArrayList;
 
 
-public class PPReaderService {
-    public static PPReaderService createInstance(@NonNull IPPReaderTaskNotification notification){
-        return new PPReaderService(notification);
+public class PPReaderService implements IPPReaderService {
+    public static PPReaderService createInstance(IPPReaderNovelEngineManager manager,IPPReaderHttp http){
+        return new PPReaderService(manager,http);
     }
 
+    @Override
+    public void start(@NonNull IPPReaderTaskNotification notify) {
+        m_notification = notify;
+        init();
+    }
 
-    public void addTask(@NonNull IPPReaderTask task ){
-        synchronized (this){
-            m_tasks.add(task);
+    @Override
+    public void stop() {
+        m_isRunning = false;
+        synchronized(this){
+            m_notification = null;
+            m_tasks.clear();
         }
     }
 
-    public void waitForEnd(){
+    @Override
+    public void waitForExit() {
         try {
             m_thread.join();
         } catch (InterruptedException e) {
@@ -27,12 +36,23 @@ public class PPReaderService {
         }
     }
 
-    public void exit(){
-        m_isRunning = false;
+    public void addTask(@NonNull IPPReaderTask task ){
+        synchronized (this){
+            m_tasks.add(task);
+        }
+    }
+
+
+    @Override
+    public void clearTasks() {
         synchronized(this){
-            m_notification = null;
             m_tasks.clear();
         }
+    }
+
+    @Override
+    public boolean isIdle() {
+        return m_tasks.size() == 0;
     }
 
     private void  init(){
@@ -60,7 +80,7 @@ public class PPReaderService {
                 }
             }
 
-            IPPReaderTaskRet ret = task.run();
+            IPPReaderTaskRet ret =  task.run(m_manager,m_http);
             postRet(ret);
         }while (m_isRunning);
     }
@@ -79,9 +99,9 @@ public class PPReaderService {
     }
 
 
-    private PPReaderService(IPPReaderTaskNotification notification){
-        m_notification = notification;
-        init();
+    private PPReaderService(IPPReaderNovelEngineManager manager,IPPReaderHttp http){
+        m_manager = manager;
+        m_http = http;
     }
 
     private Thread m_thread;
@@ -89,4 +109,6 @@ public class PPReaderService {
     private volatile IPPReaderTaskNotification m_notification;
     private volatile ArrayList<IPPReaderTask> m_tasks = new ArrayList<IPPReaderTask>();
     private volatile boolean m_isRunning = true;
+    IPPReaderNovelEngineManager m_manager;
+    IPPReaderHttp m_http;
 }
