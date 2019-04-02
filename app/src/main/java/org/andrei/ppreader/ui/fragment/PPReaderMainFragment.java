@@ -10,8 +10,11 @@ import android.view.ViewGroup;
 import org.andrei.ppreader.R;
 import org.andrei.ppreader.data.IPPReaderDataManager;
 import org.andrei.ppreader.data.PPReaderNovel;
+import org.andrei.ppreader.service.IPPReaderService;
+import org.andrei.ppreader.service.IPPReaderServiceFactory;
 import org.andrei.ppreader.service.IPPReaderTaskNotification;
 import org.andrei.ppreader.service.IPPReaderTaskRet;
+import org.andrei.ppreader.service.PPReaderService;
 import org.andrei.ppreader.ui.adapter.PPReaderMainAdapter;
 import org.andrei.ppreader.ui.fragment.helper.PPReaderSelectNovelRet;
 
@@ -19,9 +22,10 @@ import io.reactivex.functions.Consumer;
 
 public class PPReaderMainFragment extends Fragment implements IPPReaderTaskNotification {
 
-    public void init(final IPPReaderDataManager dataManager,final IPPReaderTaskNotification notification){
+    public void init(final IPPReaderDataManager dataManager, final IPPReaderTaskNotification notification,final IPPReaderServiceFactory serviceFactory){
         m_dataManager = dataManager;
-
+        m_notification = notification;
+        m_serviceFactory = serviceFactory;
     }
 
     @Override
@@ -34,8 +38,9 @@ public class PPReaderMainFragment extends Fragment implements IPPReaderTaskNotif
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
 
-        PPReaderListFragment lineFragment = (PPReaderListFragment)m_fragments[0];
-        //lineFragment.init(m_dataManager,this);
+        PPReaderListFragment listFragment = (PPReaderListFragment)m_fragments[0];
+
+        listFragment.init(m_dataManager,this, m_serviceFactory.createServiceInstance());
 
         super.onActivityCreated(savedInstanceState);
         getActivity().findViewById(android.R.id.content).setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE|View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
@@ -65,6 +70,8 @@ public class PPReaderMainFragment extends Fragment implements IPPReaderTaskNotif
     private Fragment[] m_fragments = {new PPReaderListFragment(),new PPReaderSearchFragment(),new PPReaderSettingFragment()};
     private IPPReaderDataManager m_dataManager;
     private IPPReaderTaskNotification m_notification;
+    private IPPReaderServiceFactory m_serviceFactory;
+
 
 
 }

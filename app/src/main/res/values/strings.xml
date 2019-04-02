@@ -8,6 +8,12 @@
     <string name="novel_list_remove">删除</string>
     <string name="novel_list_search">搜索</string>
     <string name="novel_list_remove_msg">是否要删除%1$s？</string>
+    <string name="novel_search_title">书城搜索</string>
+    <string name="novel_search_list">书架</string>
+    <string name="novel_search_setting">设置</string>
+    <string name="novel_search_hint">搜索书名</string>
+    <string name="novel_search_loading">正在搜索中...</string>
+    <string name="novel_search_foot">加载中...</string>
     <string name="btn_ok">确定</string>
     <string name="btn_cancel">取消</string>
 

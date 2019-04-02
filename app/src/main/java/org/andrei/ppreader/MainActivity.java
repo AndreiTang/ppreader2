@@ -15,8 +15,11 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import org.andrei.ppreader.data.IPPReaderDataManager;
+import org.andrei.ppreader.data.PPReaderDataManager;
+import org.andrei.ppreader.service.IPPReaderServiceFactory;
 import org.andrei.ppreader.service.IPPReaderTaskNotification;
 import org.andrei.ppreader.service.IPPReaderTaskRet;
+import org.andrei.ppreader.service.PPReaderServiceFactory;
 import org.andrei.ppreader.service.PPReaderUpdateNovelRet;
 import org.andrei.ppreader.ui.fragment.PPReaderMainFragment;
 import org.andrei.ppreader.ui.fragment.PPReaderStartFragment;
@@ -56,9 +59,17 @@ public class MainActivity extends FragmentActivity implements IPPReaderTaskNotif
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Integer>() {
             @Override
             public void accept(Integer integer) throws Exception {
+                IPPReaderDataManager dataManager = new PPReaderDataManager();
+                IPPReaderServiceFactory serviceFactory = new PPReaderServiceFactory();
+
                 PPReaderMainFragment main = new PPReaderMainFragment();
+                main.init(dataManager,MainActivity.this,serviceFactory);
+
                 PPReaderTextFragment text = new PPReaderTextFragment();
                 text.addListener(MainActivity.this);
+
+
+
 
                 getSupportFragmentManager().beginTransaction().
                         replace(R.id.ppreader_root,main,PPReaderMainFragment.class.getName()).
