@@ -5,8 +5,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.GridView;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.jakewharton.rxbinding2.view.RxView;
@@ -18,7 +20,9 @@ import org.andrei.ppreader.service.IPPReaderService;
 import org.andrei.ppreader.service.IPPReaderTaskNotification;
 import org.andrei.ppreader.service.IPPReaderTaskRet;
 import org.andrei.ppreader.service.PPReaderSearchNovelsRet;
+import org.andrei.ppreader.service.PPReaderSearchNovelsTask;
 import org.andrei.ppreader.service.PPReaderSearchUrlsRet;
+import org.andrei.ppreader.service.PPReaderSearchUrlsTask;
 import org.andrei.ppreader.service.PPReaderUpdateNovelRet;
 import org.andrei.ppreader.service.PPReaderUpdateNovelsTask;
 import org.andrei.ppreader.service.ServiceError;
@@ -55,6 +59,9 @@ public class PPReaderSearchFragment extends Fragment {
     }
 
     private void initUI(){
+
+        m_footView = getLayoutInflater().inflate(R.layout.view_ppreader_search_foot, null);
+
         TextView tv = getView().findViewById(R.id.main_item_title);
         tv.setText(R.string.novel_search_title);
 
@@ -84,6 +91,46 @@ public class PPReaderSearchFragment extends Fragment {
             }
         });
 
+        ListView lv = getView().findViewById(R.id.novel_search_ret_list);
+        lv.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if(firstVisibleItem + visibleItemCount >= totalItemCount && m_service.isIdle() && m_urls.size() > 0){
+                    String url = m_urls.remove(0);
+                    PPReaderSearchNovelsTask task = new PPReaderSearchNovelsTask(url,m_engineName);
+                    m_service.addTask(task);
+                }
+            }
+        });
+
+        SearchView sv = (SearchView) getView().findViewById(R.id.novel_search);
+        sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                m_service.stop();
+                removeFootView();
+                ListView lv = getView().findViewById(R.id.novel_search_ret_list);
+                ((PPReaderSearchAdapter)lv.getAdapter()).clear();
+                getView().findViewById(R.id.novel_search_ret_list).setVisibility(View.GONE);
+                getView().findViewById(R.id.novel_search_error_mask).setVisibility(View.GONE);
+                getView().findViewById(R.id.novel_search_loading_mask).setVisibility(View.VISIBLE);
+
+                PPReaderSearchUrlsTask task = new PPReaderSearchUrlsTask(query);
+                m_service.addTask(task);
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
     }
 
     private void initAdapter(){
@@ -105,7 +152,9 @@ public class PPReaderSearchFragment extends Fragment {
                     if(ret.getRetCode() == ServiceError.ERR_OK){
                         m_urls = ((PPReaderSearchUrlsRet)ret).m_urls;
                         String url= m_urls.remove(0);
-                        m_service.addTask(null);
+                        String engineName = ((PPReaderSearchUrlsRet)ret).engineName;
+                        PPReaderSearchNovelsTask task = new PPReaderSearchNovelsTask(url,engineName);
+                        m_service.addTask(task);
                     }
                     else{
                         getView().findViewById(R.id.novel_search_ret_list).setVisibility(View.GONE);
@@ -131,17 +180,41 @@ public class PPReaderSearchFragment extends Fragment {
                     ListView lv = getView().findViewById(R.id.novel_search_ret_list);
                     PPReaderSearchAdapter adapter = (PPReaderSearchAdapter)lv.getAdapter();
                     adapter.addNovel(novel);
+                    getView().findViewById(R.id.novel_search_ret_list).setVisibility(View.VISIBLE);
+                    if(m_service.isIdle()){
+                        removeFootView();
+                    }
+                    else{
+                        insertFootView();
+                    }
                 }
-
-
             }
         });
+    }
+
+    private void insertFootView() {
+        ListView lv = (ListView) getView().findViewById(R.id.novel_search_ret_list);
+        if (lv == null || lv.getChildCount() == 0 || m_service.isIdle() || lv.getFooterViewsCount() == 1) {
+            return;
+        }
+        int pos = lv.getLastVisiblePosition();
+        View v = lv.getChildAt(pos);
+        if (v != null && v.getBottom() >= lv.getBottom() && lv.getFooterViewsCount() == 0) {
+            lv.addFooterView(m_footView);
+        }
+    }
+
+    private void removeFootView(){
+        ListView lv = (ListView) getView().findViewById(R.id.novel_search_ret_list);
+        if (lv.getFooterViewsCount() == 1) {
+            lv.removeFooterView(m_footView);
+        }
     }
 
     private IPPReaderDataManager m_dataManager;
     private IPPReaderTaskNotification m_notification;
     private IPPReaderService m_service;
     private ArrayList<String> m_urls;
-
-
+    private String m_engineName;
+    private View m_footView;
 }

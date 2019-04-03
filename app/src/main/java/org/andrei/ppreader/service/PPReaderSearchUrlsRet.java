@@ -14,4 +14,5 @@ public class PPReaderSearchUrlsRet implements IPPReaderTaskRet {
     }
 
     public ArrayList<String> m_urls = new ArrayList<>();
+    public String engineName;
 }
