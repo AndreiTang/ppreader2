@@ -20,5 +20,6 @@ public class PPReaderUpdateNovelRet implements IPPReaderTaskRet {
 
     public PPReaderNovel novel;
     public ArrayList<PPReaderChapter> delta ;
+    public int type = 0;
     public int retCode = 0;
 }

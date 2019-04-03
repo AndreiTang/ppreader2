@@ -152,8 +152,8 @@ public class PPReaderSearchFragment extends Fragment {
                     if(ret.getRetCode() == ServiceError.ERR_OK){
                         m_urls = ((PPReaderSearchUrlsRet)ret).m_urls;
                         String url= m_urls.remove(0);
-                        String engineName = ((PPReaderSearchUrlsRet)ret).engineName;
-                        PPReaderSearchNovelsTask task = new PPReaderSearchNovelsTask(url,engineName);
+                        m_engineName = ((PPReaderSearchUrlsRet)ret).engineName;
+                        PPReaderSearchNovelsTask task = new PPReaderSearchNovelsTask(url,m_engineName);
                         m_service.addTask(task);
                     }
                     else{
@@ -177,6 +177,8 @@ public class PPReaderSearchFragment extends Fragment {
                 }
                 else if(ret.type().compareTo(PPReaderUpdateNovelRet.class.getName()) == 0 && ret.getRetCode() == ServiceError.ERR_OK){
                     PPReaderNovel novel = ((PPReaderUpdateNovelRet)ret).novel;
+                    novel.type = ((PPReaderUpdateNovelRet) ret).type;
+                    novel.chapters.addAll(((PPReaderUpdateNovelRet) ret).delta);
                     ListView lv = getView().findViewById(R.id.novel_search_ret_list);
                     PPReaderSearchAdapter adapter = (PPReaderSearchAdapter)lv.getAdapter();
                     adapter.addNovel(novel);

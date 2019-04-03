@@ -124,12 +124,14 @@ public class PPReaderListFragment extends Fragment {
             @Override
             public void onNotify(IPPReaderTaskRet ret) {
                 PPReaderUpdateNovelRet r = (PPReaderUpdateNovelRet)ret;
-                PPReaderNovel novel = r.novel;
+                PPReaderNovel novel = m_dataManager.getNovel(r.novel.id);
                 if(novel == null){
                     return;
                 }
                 if(r.delta.size() > 0){
                     novel.isUpdated = true;
+                    novel.type = r.type;
+                    novel.chapters.addAll(r.delta);
                     GridView gv = getView().findViewById(R.id.novel_list);
                     PPReaderListAdapter adapter = (PPReaderListAdapter)gv.getAdapter();
                     if(adapter != null){

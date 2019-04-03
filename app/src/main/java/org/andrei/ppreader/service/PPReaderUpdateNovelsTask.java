@@ -16,13 +16,15 @@ public class PPReaderUpdateNovelsTask implements IPPReaderTask {
     public IPPReaderTaskRet run(IPPReaderNovelEngineManager manager,final IPPReaderHttp http) {
         IPPReaderNovelEngine engine = manager.get(m_novel.engineName);
         PPReaderUpdateNovelRet ret = new PPReaderUpdateNovelRet();
-        ret.novel = m_novel.id;
+        ret.novel = m_novel;
         if(engine == null){
             ret.retCode = ServiceError.ERR_NOT_ENGINE;
         }
         ArrayList<PPReaderChapter> delta = new ArrayList<>();
-        ret.retCode = engine.update(m_novel,http,delta);
+        Integer type = new Integer(0);
+        ret.retCode = engine.update(m_novel,http,delta,type);
         ret.delta = delta;
+        ret.type = type;
         return ret;
     }
 
