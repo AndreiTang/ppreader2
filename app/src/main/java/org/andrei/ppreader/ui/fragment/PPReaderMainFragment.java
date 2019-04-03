@@ -39,7 +39,6 @@ public class PPReaderMainFragment extends Fragment implements IPPReaderTaskNotif
     public void onActivityCreated(Bundle savedInstanceState) {
 
         PPReaderListFragment listFragment = (PPReaderListFragment)m_fragments[0];
-
         listFragment.init(m_dataManager,this, m_serviceFactory.createServiceInstance());
 
         super.onActivityCreated(savedInstanceState);

@@ -63,6 +63,7 @@ public class PPReaderService implements IPPReaderService {
                 process();
             }
         });
+        m_isRunning = true;
         m_thread.start();
     }
 

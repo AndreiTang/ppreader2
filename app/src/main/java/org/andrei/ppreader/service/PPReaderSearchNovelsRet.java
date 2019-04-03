@@ -1,11 +1,10 @@
 package org.andrei.ppreader.service;
 
-import org.andrei.ppreader.data.PPReaderChapter;
 import org.andrei.ppreader.data.PPReaderNovel;
 
 import java.util.ArrayList;
 
-public class PPReaderUpdateNovelRet implements IPPReaderTaskRet {
+public class PPReaderSearchNovelsRet implements IPPReaderTaskRet {
     @Override
     public String type() {
         return this.getClass().getName();
@@ -13,12 +12,8 @@ public class PPReaderUpdateNovelRet implements IPPReaderTaskRet {
 
     @Override
     public int getRetCode() {
-        return retCode;
+        return 0;
     }
 
-
-
-    public PPReaderNovel novel;
-    public ArrayList<PPReaderChapter> delta ;
-    public int retCode = 0;
+    public ArrayList<PPReaderNovel> m_novels;
 }
