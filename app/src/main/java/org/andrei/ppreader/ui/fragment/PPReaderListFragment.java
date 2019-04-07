@@ -18,7 +18,7 @@ import org.andrei.ppreader.service.IPPReaderService;
 import org.andrei.ppreader.service.IPPReaderTaskNotification;
 import org.andrei.ppreader.service.IPPReaderTaskRet;
 import org.andrei.ppreader.service.PPReaderUpdateNovelRet;
-import org.andrei.ppreader.service.PPReaderUpdateNovelsTask;
+import org.andrei.ppreader.service.PPReaderUpdateNovelTask;
 import org.andrei.ppreader.ui.adapter.PPReaderListAdapter;
 import org.andrei.ppreader.ui.fragment.helper.PPReaderTextRet;
 
@@ -58,7 +58,7 @@ public class PPReaderListFragment extends Fragment {
         initService();
 
         for( int i = 0; i < m_dataManager.getNovelCount(); i++ ){
-            PPReaderUpdateNovelsTask task = new PPReaderUpdateNovelsTask(m_dataManager.getNovel(i));
+            PPReaderUpdateNovelTask task = new PPReaderUpdateNovelTask(m_dataManager.getNovel(i));
             m_service.addTask(task);
         }
     }

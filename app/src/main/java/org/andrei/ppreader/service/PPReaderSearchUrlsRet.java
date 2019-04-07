@@ -10,9 +10,10 @@ public class PPReaderSearchUrlsRet implements IPPReaderTaskRet {
 
     @Override
     public int getRetCode() {
-        return 0;
+        return retCode;
     }
 
-    public ArrayList<String> m_urls = new ArrayList<>();
+    public ArrayList<String> urls = new ArrayList<>();
     public String engineName;
+    public int retCode;
 }

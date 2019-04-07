@@ -12,8 +12,10 @@ public class PPReaderSearchNovelsRet implements IPPReaderTaskRet {
 
     @Override
     public int getRetCode() {
-        return 0;
+        return m_retCode;
     }
 
-    public ArrayList<PPReaderNovel> m_novels;
+    public ArrayList<PPReaderNovel> novels;
+
+    public int m_retCode;
 }

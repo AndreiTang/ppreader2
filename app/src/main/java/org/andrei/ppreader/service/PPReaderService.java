@@ -8,8 +8,8 @@ import java.util.ArrayList;
 
 
 public class PPReaderService implements IPPReaderService {
-    public static PPReaderService createInstance(IPPReaderNovelEngineManager manager,IPPReaderHttp http){
-        return new PPReaderService(manager,http);
+    public static PPReaderService createInstance(){
+        return new PPReaderService();
     }
 
     @Override
@@ -81,9 +81,13 @@ public class PPReaderService implements IPPReaderService {
                 }
             }
 
-            IPPReaderTaskRet ret =  task.run(m_manager,m_http);
+            IPPReaderTaskRet ret =  run(task);
             postRet(ret);
         }while (m_isRunning);
+    }
+
+    private IPPReaderTaskRet run(IPPReaderTask task){
+        return null;
     }
 
     private void postRet(final IPPReaderTaskRet ret){
@@ -100,9 +104,8 @@ public class PPReaderService implements IPPReaderService {
     }
 
 
-    private PPReaderService(IPPReaderNovelEngineManager manager,IPPReaderHttp http){
-        m_manager = manager;
-        m_http = http;
+    private PPReaderService(){
+
     }
 
     private Thread m_thread;
@@ -110,6 +113,5 @@ public class PPReaderService implements IPPReaderService {
     private volatile IPPReaderTaskNotification m_notification;
     private volatile ArrayList<IPPReaderTask> m_tasks = new ArrayList<IPPReaderTask>();
     private volatile boolean m_isRunning = true;
-    IPPReaderNovelEngineManager m_manager;
-    IPPReaderHttp m_http;
+
 }

@@ -24,7 +24,7 @@ public class MockActivity extends FragmentActivity {
 
         PPReaderListFragment fragment = new PPReaderListFragment();
         IPPReaderDataManager dataManager = new MockDataManager();
-        IPPReaderService service = PPReaderService.createInstance(new MockEngineManager(),null);
+        IPPReaderService service = PPReaderService.createInstance();
         fragment.init(dataManager, new IPPReaderTaskNotification() {
             @Override
             public void onNotify(IPPReaderTaskRet ret) {

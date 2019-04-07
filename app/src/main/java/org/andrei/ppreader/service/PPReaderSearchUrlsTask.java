@@ -1,14 +1,19 @@
 package org.andrei.ppreader.service;
 
+import org.andrei.ppreader.util.TaskNames;
+
 public class PPReaderSearchUrlsTask implements IPPReaderTask {
 
     public PPReaderSearchUrlsTask(final String name){
-       m_name = name;
-    }
-    @Override
-    public IPPReaderTaskRet run(IPPReaderNovelEngineManager manager, IPPReaderHttp http) {
-        return null;
+       this.name = name;
     }
 
-    private String m_name;
+    @Override
+    public String type() {
+        return TaskNames.SEARCH_URLS;
+    }
+
+    public String name;
+
+
 }

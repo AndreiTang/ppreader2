@@ -23,7 +23,7 @@ public class TestActivity1 extends FragmentActivity {
         setContentView(R.layout.activity_test1);
         PPReaderListFragment fragment =  (PPReaderListFragment) getSupportFragmentManager().findFragmentById(R.id.test_frag);
         IPPReaderDataManager dataManager = new MockDataManager();
-        IPPReaderService service = PPReaderService.createInstance(new MockEngineManager(),null);
+        IPPReaderService service = PPReaderService.createInstance();
         fragment.init(dataManager, new IPPReaderTaskNotification() {
             @Override
             public void onNotify(IPPReaderTaskRet ret) {

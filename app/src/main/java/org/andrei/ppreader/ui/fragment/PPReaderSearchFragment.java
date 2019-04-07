@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.GridView;
+import android.widget.HeaderViewListAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -24,9 +24,8 @@ import org.andrei.ppreader.service.PPReaderSearchNovelsTask;
 import org.andrei.ppreader.service.PPReaderSearchUrlsRet;
 import org.andrei.ppreader.service.PPReaderSearchUrlsTask;
 import org.andrei.ppreader.service.PPReaderUpdateNovelRet;
-import org.andrei.ppreader.service.PPReaderUpdateNovelsTask;
+import org.andrei.ppreader.service.PPReaderUpdateNovelTask;
 import org.andrei.ppreader.service.ServiceError;
-import org.andrei.ppreader.ui.adapter.PPReaderListAdapter;
 import org.andrei.ppreader.ui.adapter.PPReaderSearchAdapter;
 import org.andrei.ppreader.ui.fragment.helper.PPReaderTextRet;
 
@@ -103,6 +102,7 @@ public class PPReaderSearchFragment extends Fragment {
                     String url = m_urls.remove(0);
                     PPReaderSearchNovelsTask task = new PPReaderSearchNovelsTask(url,m_engineName);
                     m_service.addTask(task);
+                    insertFootView();
                 }
             }
         });
@@ -113,8 +113,8 @@ public class PPReaderSearchFragment extends Fragment {
             public boolean onQueryTextSubmit(String query) {
                 m_service.stop();
                 removeFootView();
-                ListView lv = getView().findViewById(R.id.novel_search_ret_list);
-                ((PPReaderSearchAdapter)lv.getAdapter()).clear();
+                PPReaderSearchAdapter adapter = getAdapter();
+                adapter.clear();
                 getView().findViewById(R.id.novel_search_ret_list).setVisibility(View.GONE);
                 getView().findViewById(R.id.novel_search_error_mask).setVisibility(View.GONE);
                 getView().findViewById(R.id.novel_search_loading_mask).setVisibility(View.VISIBLE);
@@ -150,7 +150,7 @@ public class PPReaderSearchFragment extends Fragment {
             public void onNotify(IPPReaderTaskRet ret) {
                 if(ret.type().compareTo(PPReaderSearchUrlsRet.class.getName()) == 0){
                     if(ret.getRetCode() == ServiceError.ERR_OK){
-                        m_urls = ((PPReaderSearchUrlsRet)ret).m_urls;
+                        m_urls = ((PPReaderSearchUrlsRet)ret).urls;
                         String url= m_urls.remove(0);
                         m_engineName = ((PPReaderSearchUrlsRet)ret).engineName;
                         PPReaderSearchNovelsTask task = new PPReaderSearchNovelsTask(url,m_engineName);
@@ -159,6 +159,7 @@ public class PPReaderSearchFragment extends Fragment {
                     else{
                         getView().findViewById(R.id.novel_search_ret_list).setVisibility(View.GONE);
                         getView().findViewById(R.id.novel_search_error_mask).setVisibility(View.VISIBLE);
+                        getView().findViewById(R.id.novel_search_loading_mask).setVisibility(View.GONE);
                         TextView tv = getView().findViewById(R .id.novel_search_err_msg);
                         if(ret.getRetCode() == ServiceError.ERR_NOT_FOUND){
                             tv.setText(R.string.err_not_found);
@@ -169,9 +170,9 @@ public class PPReaderSearchFragment extends Fragment {
                     }
                 }
                 else if(ret.type().compareTo(PPReaderSearchNovelsRet.class.getName()) == 0 && ret.getRetCode() == ServiceError.ERR_OK){
-                    ArrayList<PPReaderNovel> novels = ((PPReaderSearchNovelsRet)ret).m_novels;
+                    ArrayList<PPReaderNovel> novels = ((PPReaderSearchNovelsRet)ret).novels;
                     for(PPReaderNovel novel : novels){
-                        PPReaderUpdateNovelsTask task = new PPReaderUpdateNovelsTask(novel);
+                        PPReaderUpdateNovelTask task = new PPReaderUpdateNovelTask(novel);
                         m_service.addTask(task);
                     }
                 }
@@ -179,8 +180,7 @@ public class PPReaderSearchFragment extends Fragment {
                     PPReaderNovel novel = ((PPReaderUpdateNovelRet)ret).novel;
                     novel.type = ((PPReaderUpdateNovelRet) ret).type;
                     novel.chapters.addAll(((PPReaderUpdateNovelRet) ret).delta);
-                    ListView lv = getView().findViewById(R.id.novel_search_ret_list);
-                    PPReaderSearchAdapter adapter = (PPReaderSearchAdapter)lv.getAdapter();
+                    PPReaderSearchAdapter adapter = getAdapter();
                     adapter.addNovel(novel);
                     getView().findViewById(R.id.novel_search_ret_list).setVisibility(View.VISIBLE);
                     if(m_service.isIdle()){
@@ -189,6 +189,7 @@ public class PPReaderSearchFragment extends Fragment {
                     else{
                         insertFootView();
                     }
+                    getView().findViewById(R.id.novel_search_loading_mask).setVisibility(View.GONE);
                 }
             }
         });
@@ -211,6 +212,22 @@ public class PPReaderSearchFragment extends Fragment {
         if (lv.getFooterViewsCount() == 1) {
             lv.removeFooterView(m_footView);
         }
+    }
+
+    private PPReaderSearchAdapter getAdapter(){
+        ListView lv = getView().findViewById(R.id.novel_search_ret_list);
+        PPReaderSearchAdapter adapter = null;
+        if(lv.getAdapter() == null){
+            return null;
+        }
+        if(lv.getAdapter() instanceof PPReaderSearchAdapter){
+            adapter = (PPReaderSearchAdapter)lv.getAdapter();
+        }
+        else{
+            HeaderViewListAdapter ha = (HeaderViewListAdapter)lv.getAdapter();
+            adapter = (PPReaderSearchAdapter)ha.getWrappedAdapter();
+        }
+        return  adapter;
     }
 
     private IPPReaderDataManager m_dataManager;

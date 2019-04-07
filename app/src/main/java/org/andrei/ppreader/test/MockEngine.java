@@ -8,13 +8,19 @@ import org.andrei.ppreader.service.IPPReaderNovelEngine;
 import java.util.ArrayList;
 
 public class MockEngine implements IPPReaderNovelEngine {
+
     @Override
-    public int search(String url, IPPReaderHttp http, ArrayList<PPReaderNovel> novels) {
+    public int searchUrls(String name, IPPReaderHttp http, ArrayList<String> novels) {
         return 0;
     }
 
     @Override
-    public int update(PPReaderNovel novel, IPPReaderHttp http, ArrayList<PPReaderChapter> delta) {
+    public int searchNovels(String url, IPPReaderHttp http, ArrayList<PPReaderNovel> novels) {
+        return 0;
+    }
+
+    @Override
+    public int update(PPReaderNovel novel, IPPReaderHttp http, ArrayList<PPReaderChapter> delta, Integer type) {
         delta.add(new PPReaderChapter());
         try {
             Thread.sleep(2000);

@@ -117,7 +117,7 @@ public class MainActivity extends FragmentActivity implements IPPReaderTaskNotif
         else if(ret.type().compareTo(PPReaderUpdateNovelRet .class.getName()) == 0){
             PPReaderUpdateNovelRet updateNovelRet = (PPReaderUpdateNovelRet)ret;
             PPReaderTextFragment text = (PPReaderTextFragment)getSupportFragmentManager().findFragmentByTag(PPReaderTextFragment.class.getName());
-            text.onAddChapters(updateNovelRet.novel,updateNovelRet.delta);
+            text.onAddChapters(updateNovelRet.novel.id,updateNovelRet.delta);
         }
         else if(ret.type().compareTo(PPReaderAddNovelRet.class.getName()) == 0){
             PPReaderAddNovelRet addNovelRet = (PPReaderAddNovelRet)ret;
