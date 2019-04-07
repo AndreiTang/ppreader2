@@ -79,6 +79,14 @@ public class MockService implements IPPReaderService{
                 m_notify.onNotify(ret);
 
             }
+            else if(t.name.compareTo("7") == 0){
+                m_isIdle = true;
+                ret.engineName = "";
+                ret.urls.add("url2");
+                ret.urls.add("url4");
+                m_notify.onNotify(ret);
+
+            }
 
 
 
@@ -149,6 +157,10 @@ public class MockService implements IPPReaderService{
                 novel.img = "https://fm.x88dushu.com/10/10861/10861s.jpg";
                 novel.name = "巡狩大明";
                 ret.novels.add(novel);
+            }
+
+            if(t.url.compareTo("url4") == 0 ){
+                return;
             }
 
             m_notify.onNotify(ret);

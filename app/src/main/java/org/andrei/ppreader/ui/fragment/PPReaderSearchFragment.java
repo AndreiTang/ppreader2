@@ -90,7 +90,7 @@ public class PPReaderSearchFragment extends Fragment {
             }
         });
 
-        ListView lv = getView().findViewById(R.id.novel_search_ret_list);
+        final ListView lv = getView().findViewById(R.id.novel_search_ret_list);
         lv.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {

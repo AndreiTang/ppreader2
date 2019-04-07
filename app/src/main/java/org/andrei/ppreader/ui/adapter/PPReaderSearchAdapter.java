@@ -25,7 +25,7 @@ public class PPReaderSearchAdapter extends BaseAdapter {
 
     public PPReaderSearchAdapter(Fragment parent, IPPReaderTaskNotification notification){
         m_parent = parent;
-        m_notification = m_notification;
+        m_notification = notification;
     }
 
     @Override
