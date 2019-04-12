@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.preference.PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+
+
+
+    <android.support.v7.preference.SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="rr"
+        android:summary="test1"
+        android:title="test2"/>
+
+
+
+</android.support.v7.preference.PreferenceScreen>

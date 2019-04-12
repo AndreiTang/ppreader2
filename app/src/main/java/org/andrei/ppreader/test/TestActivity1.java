@@ -31,5 +31,7 @@ public class TestActivity1 extends FragmentActivity {
                 Log.i("test",r.novel.name);
             }
         },service);
+
+        Log.i("test","end");
     }
 }

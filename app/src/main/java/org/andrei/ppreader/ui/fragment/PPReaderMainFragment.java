@@ -66,7 +66,7 @@ public class PPReaderMainFragment extends Fragment implements IPPReaderTaskNotif
         fragment.addNovel(novel);
     }
 
-    private Fragment[] m_fragments = {new PPReaderListFragment(),new PPReaderSearchFragment(),new PPReaderSettingFragment()};
+    private Fragment[] m_fragments = {new PPReaderListFragment(),new PPReaderSearchFragment()};
     private IPPReaderDataManager m_dataManager;
     private IPPReaderTaskNotification m_notification;
     private IPPReaderServiceFactory m_serviceFactory;

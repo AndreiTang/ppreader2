@@ -14,6 +14,11 @@
     <string name="novel_search_hint">搜索书名</string>
     <string name="novel_search_loading">正在搜索中...</string>
     <string name="novel_search_foot">加载中...</string>
+
+    <string name="novel_setting_title">我的设置</string>
+    <string name="novel_setting_search">搜索</string>
+    <string name="novel_setting_list">书架</string>
+
     <string name="novel_type_ing">连载</string>
     <string name="novel_type_over">完结</string>
     <string name="err_not_found">主人，没找到啊...</string>

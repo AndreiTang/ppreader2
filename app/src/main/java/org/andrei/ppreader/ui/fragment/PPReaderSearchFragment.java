@@ -2,6 +2,7 @@ package org.andrei.ppreader.ui.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,8 +37,9 @@ import io.reactivex.functions.Consumer;
 
 public class PPReaderSearchFragment extends Fragment {
 
-    public void init(final IPPReaderDataManager dataManager, final IPPReaderTaskNotification notification, final IPPReaderService service){
-        m_dataManager = dataManager;
+
+
+    public void init(final IPPReaderTaskNotification notification, final IPPReaderService service){
         m_notification = notification;
         m_service = service;
     }
@@ -55,6 +57,29 @@ public class PPReaderSearchFragment extends Fragment {
         initUI();
         initAdapter();
         initService();
+        if(savedInstanceState != null){
+            m_urls = (ArrayList<String>)savedInstanceState.getSerializable(KEY_URLS);
+            ArrayList<PPReaderNovel> novels = (ArrayList<PPReaderNovel>)savedInstanceState.getSerializable(KEY_NOVELS);
+
+            ListView lv = getView().findViewById(R.id.novel_search_ret_list);
+            PPReaderSearchAdapter adapter = (PPReaderSearchAdapter)lv.getAdapter();
+            for(PPReaderNovel novel : novels){
+               adapter.addNovel(novel);
+            }
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState){
+        super.onSaveInstanceState(savedInstanceState);
+        if(m_urls != null && m_urls.size() > 0){
+            savedInstanceState.putSerializable(KEY_URLS,m_urls);
+        }
+
+        PPReaderSearchAdapter adapter = getAdapter();
+        if(adapter != null){
+            adapter.saveInstanceState(savedInstanceState,KEY_NOVELS);
+        }
     }
 
     private void initUI(){
@@ -98,7 +123,7 @@ public class PPReaderSearchFragment extends Fragment {
             }
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if(firstVisibleItem + visibleItemCount >= totalItemCount && m_service.isIdle() && m_urls.size() > 0){
+                if(firstVisibleItem + visibleItemCount >= totalItemCount && m_service.isIdle() && m_urls != null && m_urls.size() > 0){
                     String url = m_urls.remove(0);
                     PPReaderSearchNovelsTask task = new PPReaderSearchNovelsTask(url,m_engineName);
                     m_service.addTask(task);
@@ -230,7 +255,9 @@ public class PPReaderSearchFragment extends Fragment {
         return  adapter;
     }
 
-    private IPPReaderDataManager m_dataManager;
+    private final static String KEY_URLS = "urls";
+    private final static String KEY_NOVELS = "novels";
+
     private IPPReaderTaskNotification m_notification;
     private IPPReaderService m_service;
     private ArrayList<String> m_urls;

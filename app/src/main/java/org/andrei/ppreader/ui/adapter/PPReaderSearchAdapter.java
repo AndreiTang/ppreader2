@@ -1,5 +1,6 @@
 package org.andrei.ppreader.ui.adapter;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +47,12 @@ public class PPReaderSearchAdapter extends BaseAdapter {
     public void addNovel(PPReaderNovel novel){
         m_novels.add(novel);
         notifyDataSetChanged();
+    }
+
+    public void saveInstanceState(Bundle savedInstanceState,String key){
+        if(m_novels.size() > 0){
+            savedInstanceState.putSerializable(key,m_novels);
+        }
     }
 
     public void clear(){

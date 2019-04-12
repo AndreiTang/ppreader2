@@ -1,11 +1,13 @@
 package org.andrei.ppreader.data;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class PPReaderNovel {
+public class PPReaderNovel implements Serializable {
 
     public static final int TYPE_ING = 0;
     public static final int TYPE_OVER = 1;
+    private static final long serialVersionUID = -1307596945261426047L;
 
     public int currIndex;
     public String id;
