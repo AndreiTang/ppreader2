@@ -3,6 +3,7 @@ package org.andrei.ppreader.ui.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -79,6 +80,8 @@ public class PPReaderSettingFragment extends Fragment {
 
 
     }
+
+
 
     private IPPReaderTaskNotification m_notification;
 }

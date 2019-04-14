@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.preference.PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <org.andrei.ppreader.ui.fragment.preference.PPReaderNovelEnginePreference
+        android:key="key"
+        android:title="@string/novel_setting_engine_title"
+        android:summary="@string/novel_setting_engine_summary"
+        />
+
+
+</android.support.v7.preference.PreferenceScreen>

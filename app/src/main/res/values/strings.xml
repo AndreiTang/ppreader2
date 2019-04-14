@@ -18,6 +18,8 @@
     <string name="novel_setting_title">我的设置</string>
     <string name="novel_setting_search">搜索</string>
     <string name="novel_setting_list">书架</string>
+    <string name="novel_setting_engine_title">小说引擎设置</string>
+    <string name="novel_setting_engine_summary">可根据需要选择小说引擎，并对搜索顺序进行摆列</string>
 
     <string name="novel_type_ing">连载</string>
     <string name="novel_type_over">完结</string>

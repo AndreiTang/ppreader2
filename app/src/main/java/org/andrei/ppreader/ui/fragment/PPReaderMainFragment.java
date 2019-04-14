@@ -47,6 +47,19 @@ public class PPReaderMainFragment extends Fragment implements IPPReaderTaskNotif
         PPReaderMainAdapter adapter = new PPReaderMainAdapter(this.getChildFragmentManager(),m_fragments);
         ViewPager vp = (ViewPager)getView().findViewById(R.id.main_viewpager);
         vp.setAdapter(adapter);
+
+        if(savedInstanceState != null){
+            int index = savedInstanceState.getInt(KEY_INDEX);
+            vp.setCurrentItem(index);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState){
+        super.onSaveInstanceState(savedInstanceState);
+        ViewPager vp = (ViewPager)getView().findViewById(R.id.main_viewpager);
+        int index = vp.getCurrentItem();
+        savedInstanceState.putInt(KEY_INDEX,index);
     }
 
     @Override
@@ -70,6 +83,7 @@ public class PPReaderMainFragment extends Fragment implements IPPReaderTaskNotif
     private IPPReaderDataManager m_dataManager;
     private IPPReaderTaskNotification m_notification;
     private IPPReaderServiceFactory m_serviceFactory;
+    private final static String KEY_INDEX = "key_index";
 
 
 

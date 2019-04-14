@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import org.andrei.ppreader.data.IPPReaderDataManager;
 import org.andrei.ppreader.data.PPReaderDataManager;
+import org.andrei.ppreader.data.PPReaderNovel;
 import org.andrei.ppreader.service.IPPReaderServiceFactory;
 import org.andrei.ppreader.service.IPPReaderTaskNotification;
 import org.andrei.ppreader.service.IPPReaderTaskRet;
@@ -28,6 +29,8 @@ import org.andrei.ppreader.ui.fragment.helper.PPReaderAddNovelRet;
 import org.andrei.ppreader.ui.fragment.helper.PPReaderSelectNovelRet;
 import org.andrei.ppreader.ui.fragment.helper.PPReaderText;
 import org.andrei.ppreader.ui.fragment.helper.PPReaderTextRet;
+
+import java.util.ArrayList;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -43,43 +46,50 @@ public class MainActivity extends FragmentActivity implements IPPReaderTaskNotif
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Fragment start = new PPReaderStartFragment();
-        getSupportFragmentManager().beginTransaction().add(R.id.ppreader_root,start).commit();
+        if(savedInstanceState == null){
+            firstRun();
+        }
+        else{
 
-        Observable.create(new ObservableOnSubscribe<Integer>() {
-            @Override
-            public void subscribe(ObservableEmitter<Integer> e) throws Exception {
-//                IPPReaderDataManager dataManager = null;
-//                int ret = dataManager.load();
-//                e.onNext(ret);
-                Thread.sleep(3000);
-                e.onNext(1);
-                e.onComplete();
+            int frag = savedInstanceState.getInt(KEY_FRAGMENTS,-1);
+            if(frag == -1){
+                firstRun();
+                return;
             }
-        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Integer>() {
-            @Override
-            public void accept(Integer integer) throws Exception {
-                IPPReaderDataManager dataManager = new PPReaderDataManager();
-                IPPReaderServiceFactory serviceFactory = new PPReaderServiceFactory();
-
-                PPReaderMainFragment main = new PPReaderMainFragment();
-                main.init(dataManager,MainActivity.this,serviceFactory);
-
-                PPReaderTextFragment text = new PPReaderTextFragment();
-                text.addListener(MainActivity.this);
-
-
-
-
-                getSupportFragmentManager().beginTransaction().
-                        replace(R.id.ppreader_root,main,PPReaderMainFragment.class.getName()).
-                        add(R.id.ppreader_root,text,PPReaderTextFragment.class.getName()).
-                        hide(text).
-                        commit();
+            ArrayList<PPReaderNovel> novels = (ArrayList<PPReaderNovel>) savedInstanceState.getSerializable(KEY_NOVELS);
+            PPReaderMainFragment main = (PPReaderMainFragment)getSupportFragmentManager().findFragmentByTag(PPReaderMainFragment.class.getName());
+            PPReaderTextFragment text = (PPReaderTextFragment)getSupportFragmentManager().findFragmentByTag(PPReaderTextFragment.class.getName());
+            if(frag == 1){
+                getSupportFragmentManager().beginTransaction().hide(main).show(text).commit();
             }
-        });
+            else{
+                getSupportFragmentManager().beginTransaction().hide(text).show(main).commit();
+            }
+
+        }
 
         changeStatusBarColor();
+
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState){
+        super.onSaveInstanceState(savedInstanceState);
+
+        PPReaderMainFragment main = (PPReaderMainFragment)getSupportFragmentManager().findFragmentByTag(PPReaderMainFragment.class.getName());
+        PPReaderTextFragment text = (PPReaderTextFragment)getSupportFragmentManager().findFragmentByTag(PPReaderTextFragment.class.getName());
+
+        if(main == null || text == null){
+            return;
+        }
+
+        int frag = 0;
+        if(text.isVisible()){
+            frag = 1;
+        }
+
+        savedInstanceState.putInt(KEY_FRAGMENTS,frag);
+
 
     }
 
@@ -136,4 +146,45 @@ public class MainActivity extends FragmentActivity implements IPPReaderTaskNotif
             window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
     }
+
+    private void firstRun(){
+        Fragment start = new PPReaderStartFragment();
+        getSupportFragmentManager().beginTransaction().add(R.id.ppreader_root,start).commit();
+
+        Observable.create(new ObservableOnSubscribe<Integer>() {
+            @Override
+            public void subscribe(ObservableEmitter<Integer> e) throws Exception {
+//                IPPReaderDataManager dataManager = null;
+//                int ret = dataManager.load();
+//                e.onNext(ret);
+                Thread.sleep(3000);
+                e.onNext(1);
+                e.onComplete();
+            }
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Integer>() {
+            @Override
+            public void accept(Integer integer) throws Exception {
+                IPPReaderDataManager dataManager = new PPReaderDataManager();
+                IPPReaderServiceFactory serviceFactory = new PPReaderServiceFactory();
+
+                PPReaderMainFragment main = new PPReaderMainFragment();
+                main.init(dataManager,MainActivity.this,serviceFactory);
+
+                PPReaderTextFragment text = new PPReaderTextFragment();
+                text.addListener(MainActivity.this);
+
+
+
+
+                getSupportFragmentManager().beginTransaction().
+                        replace(R.id.ppreader_root,main,PPReaderMainFragment.class.getName()).
+                        add(R.id.ppreader_root,text,PPReaderTextFragment.class.getName()).
+                        hide(text).
+                        commit();
+            }
+        });
+    }
+
+    private final static String KEY_FRAGMENTS = "key_fragments";
+    private final static String KEY_NOVELS = "key_novels";
 }
