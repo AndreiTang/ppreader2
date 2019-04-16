@@ -10,6 +10,6 @@ public interface IPPReaderDataManager {
     public PPReaderNovel getNovel(String id);
     public int getNovelCount();
     public void removeNovel(String id);
-
-
+    public ArrayList<PPReaderEngineInfo> getEngineInfos();
+    public void setEngineInfos(ArrayList<PPReaderEngineInfo> infos);
 }

@@ -10,10 +10,16 @@ import android.support.v7.preference.PreferenceFragmentCompat;
 
 
 import org.andrei.ppreader.R;
+import org.andrei.ppreader.data.IPPReaderDataManager;
 import org.andrei.ppreader.ui.fragment.preference.PPReaderNovelEngineDialog;
 import org.andrei.ppreader.ui.fragment.preference.PPReaderNovelEnginePreference;
 
 public class PPReaderPreferenceFragment extends PreferenceFragmentCompat {
+
+    public void init(final IPPReaderDataManager dataManager){
+        m_dataManager = dataManager;
+    }
+
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         addPreferencesFromResource(R.xml.view_ppreader_setting);
@@ -25,7 +31,7 @@ public class PPReaderPreferenceFragment extends PreferenceFragmentCompat {
         PPReaderNovelEngineDialog dlg = null;
         if(preference instanceof PPReaderNovelEnginePreference){
             dlg = new PPReaderNovelEngineDialog();
-
+            dlg.init(m_dataManager);
         }
         if(dlg != null){
             dlg.setTargetFragment(this,0);
@@ -40,5 +46,7 @@ public class PPReaderPreferenceFragment extends PreferenceFragmentCompat {
 
 
     }
+
+    private IPPReaderDataManager m_dataManager;
 
 }

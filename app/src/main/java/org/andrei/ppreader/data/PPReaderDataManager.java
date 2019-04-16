@@ -48,5 +48,25 @@ public class PPReaderDataManager implements IPPReaderDataManager {
         }
     }
 
+    @Override
+    public ArrayList<PPReaderEngineInfo> getEngineInfos() {
+        ArrayList<PPReaderEngineInfo> infos = new ArrayList<>();
+        PPReaderEngineInfo info = new PPReaderEngineInfo();
+        info.name = "88读书";
+        infos.add(info);
+
+        info = new PPReaderEngineInfo();
+        info.name = "飘天读书";
+        infos.add(info);
+
+
+        return infos;
+    }
+
+    @Override
+    public void setEngineInfos(ArrayList<PPReaderEngineInfo> infos) {
+
+    }
+
     protected ArrayList<PPReaderNovel> m_novels = new ArrayList<>();
 }

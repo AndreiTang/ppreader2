@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.jakewharton.rxbinding2.view.RxView;
 
 import org.andrei.ppreader.R;
+import org.andrei.ppreader.data.IPPReaderDataManager;
 import org.andrei.ppreader.service.IPPReaderTaskNotification;
 import org.andrei.ppreader.ui.fragment.helper.PPReaderTextRet;
 
@@ -22,7 +23,8 @@ import io.reactivex.functions.Consumer;
 
 public class PPReaderSettingFragment extends Fragment {
 
-    public void init(final IPPReaderTaskNotification notification){
+    public void init(final IPPReaderDataManager dataManager,final IPPReaderTaskNotification notification){
+        m_dataManager = dataManager;
         m_notification = notification;
     }
 
@@ -41,8 +43,6 @@ public class PPReaderSettingFragment extends Fragment {
         initUI();
 
     }
-
-
 
     private void initUI(){
         TextView tv = getView().findViewById(R.id.main_item_title);
@@ -74,16 +74,16 @@ public class PPReaderSettingFragment extends Fragment {
             }
         });
 
-        Fragment fragment = new PPReaderPreferenceFragment();
+        PPReaderPreferenceFragment fragment = new PPReaderPreferenceFragment();
+        fragment.init(m_dataManager);
         getActivity().getSupportFragmentManager().beginTransaction().add(R.id.setting_container,fragment).commit();
-
-
 
     }
 
 
 
     private IPPReaderTaskNotification m_notification;
+    private IPPReaderDataManager m_dataManager;
 }
 
 
