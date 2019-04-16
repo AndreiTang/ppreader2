@@ -2,6 +2,7 @@ package org.andrei.ppreader.test;
 
 import org.andrei.ppreader.data.IPPReaderDataManager;
 import org.andrei.ppreader.data.PPReaderDataManager;
+import org.andrei.ppreader.data.PPReaderEngineInfo;
 import org.andrei.ppreader.data.PPReaderNovel;
 
 import java.util.ArrayList;
@@ -33,6 +34,18 @@ public class MockDataManager extends PPReaderDataManager {
         novel.name = "大明领主";
         novel.id = "4";
         m_novels.add(novel);
+
+
+        ArrayList<PPReaderEngineInfo> infos = new ArrayList<>();
+        PPReaderEngineInfo info = new PPReaderEngineInfo();
+        info.name = "88读书";
+        infos.add(info);
+
+        info = new PPReaderEngineInfo();
+        info.name = "飘天读书";
+        infos.add(info);
+
+        m_infos = infos;
     }
 
 
