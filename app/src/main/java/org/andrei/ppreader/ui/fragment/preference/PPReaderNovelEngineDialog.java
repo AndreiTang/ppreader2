@@ -30,6 +30,7 @@ public class PPReaderNovelEngineDialog extends PreferenceDialogFragmentCompat {
         lv.setDivider(cd);
         lv.setDividerHeight(5);
 
+        
 
         cd = new ColorDrawable(Color.RED);
         lv.setSelector(cd);

@@ -9,14 +9,17 @@ import org.andrei.ppreader.R;
 public class PPReaderNovelEnginePreference extends DialogPreference {
     public PPReaderNovelEnginePreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
+        setDialogTitle("");
     }
 
     public PPReaderNovelEnginePreference(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        setDialogTitle("");
     }
 
     public PPReaderNovelEnginePreference(Context context, AttributeSet attrs) {
         super(context, attrs);
+        setDialogTitle("");
     }
 
     public PPReaderNovelEnginePreference(Context context) {
