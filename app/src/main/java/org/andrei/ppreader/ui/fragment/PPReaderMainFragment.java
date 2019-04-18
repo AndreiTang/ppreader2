@@ -3,6 +3,7 @@ package org.andrei.ppreader.ui.fragment;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,12 +18,15 @@ import org.andrei.ppreader.service.IPPReaderTaskRet;
 import org.andrei.ppreader.service.PPReaderService;
 import org.andrei.ppreader.ui.adapter.PPReaderMainAdapter;
 import org.andrei.ppreader.ui.fragment.helper.PPReaderSelectNovelRet;
+import org.andrei.ppreader.ui.fragment.helper.PPReaderTextRet;
+
+import java.util.List;
 
 import io.reactivex.functions.Consumer;
 
 public class PPReaderMainFragment extends Fragment implements IPPReaderTaskNotification {
 
-    public void init(final IPPReaderDataManager dataManager, final IPPReaderTaskNotification notification,final IPPReaderServiceFactory serviceFactory){
+    public void init(final IPPReaderDataManager dataManager, final IPPReaderTaskNotification notification, final IPPReaderServiceFactory serviceFactory){
         m_dataManager = dataManager;
         m_notification = notification;
         m_serviceFactory = serviceFactory;
@@ -37,21 +41,49 @@ public class PPReaderMainFragment extends Fragment implements IPPReaderTaskNotif
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-
-        PPReaderListFragment listFragment = (PPReaderListFragment)m_fragments[0];
-        listFragment.init(m_dataManager,this, m_serviceFactory.createServiceInstance());
-
         super.onActivityCreated(savedInstanceState);
+
         getActivity().findViewById(android.R.id.content).setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE|View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
 
-        PPReaderMainAdapter adapter = new PPReaderMainAdapter(this.getChildFragmentManager(),m_fragments);
-        ViewPager vp = (ViewPager)getView().findViewById(R.id.main_viewpager);
-        vp.setAdapter(adapter);
+        ViewPager vp = getView().findViewById(R.id.main_viewpager);
+        vp.setOffscreenPageLimit(2);
+        Fragment[] fragments = new Fragment[3];
 
-        if(savedInstanceState != null){
+        if(savedInstanceState == null) {
+
+            PPReaderListFragment listFragment = new PPReaderListFragment();
+            fragments[0] = listFragment;
+            listFragment.init(m_dataManager, this, m_serviceFactory.createServiceInstance());
+            m_listFragment = listFragment;
+
+            PPReaderSearchFragment searchFragment = new PPReaderSearchFragment();
+            fragments[1] = searchFragment;
+            searchFragment.init(this, m_serviceFactory.createServiceInstance());
+
+            PPReaderSettingFragment settingFragment = new PPReaderSettingFragment();
+            fragments[2] = settingFragment;
+            settingFragment.init(m_dataManager, this);
+
+        }
+        else{
             int index = savedInstanceState.getInt(KEY_INDEX);
             vp.setCurrentItem(index);
+
+            getChildFragmentManager().getFragments().toArray(fragments);
+
+            PPReaderListFragment listFragment = (PPReaderListFragment)fragments[0];
+            listFragment.init(m_dataManager, this, m_serviceFactory.createServiceInstance());
+            m_listFragment = listFragment;
+
+            PPReaderSearchFragment searchFragment = (PPReaderSearchFragment)fragments[1];
+            searchFragment.init(this, m_serviceFactory.createServiceInstance());
+
+            PPReaderSettingFragment settingFragment = (PPReaderSettingFragment)fragments[2];
+            settingFragment.init(m_dataManager, this);
         }
+
+        PPReaderMainAdapter adapter = new PPReaderMainAdapter(this.getChildFragmentManager(), fragments);
+        vp.setAdapter(adapter);
     }
 
     @Override
@@ -67,6 +99,10 @@ public class PPReaderMainFragment extends Fragment implements IPPReaderTaskNotif
         if(ret.type().compareTo(PPReaderSelectNovelRet.class.getName()) == 0 && m_notification != null){
             m_notification.onNotify(ret);
         }
+        else if(ret.type().compareTo(PPReaderTextRet.TYPE_TO_LIST_PAGE) == 0 && m_notification != null){
+            PPReaderTextRet tr = (PPReaderTextRet)ret;
+            switchFragment(tr.index);
+        }
     }
 
     public void switchFragment(int index){
@@ -75,11 +111,15 @@ public class PPReaderMainFragment extends Fragment implements IPPReaderTaskNotif
     }
 
     public void addNovel(final PPReaderNovel novel){
-        PPReaderListFragment fragment = (PPReaderListFragment)m_fragments[0];
-        fragment.addNovel(novel);
+        m_listFragment.addNovel(novel);
     }
 
-    private Fragment[] m_fragments = {new PPReaderListFragment(),new PPReaderSearchFragment()};
+    @Override
+    public void onStart(){
+        super.onStart();
+    }
+
+    private PPReaderListFragment m_listFragment;
     private IPPReaderDataManager m_dataManager;
     private IPPReaderTaskNotification m_notification;
     private IPPReaderServiceFactory m_serviceFactory;

@@ -3,6 +3,7 @@ package org.andrei.ppreader.ui.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,17 +32,11 @@ import io.reactivex.functions.Consumer;
  */
 public class PPReaderListFragment extends Fragment {
 
-
-    public PPReaderListFragment() {
-        // Required empty public constructor
-    }
-
     public void init(final IPPReaderDataManager dataManager, final IPPReaderTaskNotification notification, final IPPReaderService service){
         m_dataManager = dataManager;
         m_notification = notification;
         m_service = service;
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,6 +48,7 @@ public class PPReaderListFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
+
         initUI();
         initAdapter();
         initService();
@@ -145,5 +141,4 @@ public class PPReaderListFragment extends Fragment {
     private IPPReaderDataManager m_dataManager;
     private IPPReaderTaskNotification m_notification;
     private IPPReaderService m_service;
-
 }

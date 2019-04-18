@@ -37,8 +37,6 @@ import io.reactivex.functions.Consumer;
 
 public class PPReaderSearchFragment extends Fragment {
 
-
-
     public void init(final IPPReaderTaskNotification notification, final IPPReaderService service){
         m_notification = notification;
         m_service = service;
@@ -63,8 +61,10 @@ public class PPReaderSearchFragment extends Fragment {
 
             ListView lv = getView().findViewById(R.id.novel_search_ret_list);
             PPReaderSearchAdapter adapter = (PPReaderSearchAdapter)lv.getAdapter();
-            for(PPReaderNovel novel : novels){
-               adapter.addNovel(novel);
+            if(novels != null && novels.size() > 0){
+                for(PPReaderNovel novel : novels){
+                    adapter.addNovel(novel);
+                }
             }
         }
     }
@@ -103,7 +103,7 @@ public class PPReaderSearchFragment extends Fragment {
         });
 
         tv = getView().findViewById(R.id.main_item_right_btn);
-        tv.setText(R.string.novel_list_search);
+        tv.setText(R.string.novel_search_setting);
         RxView.clicks(tv).throttleFirst(1, TimeUnit.SECONDS).subscribe(new Consumer<Object>() {
             @Override
             public void accept(Object o) throws Exception{

@@ -28,8 +28,6 @@ public class PPReaderSettingFragment extends Fragment {
         m_notification = notification;
     }
 
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -40,11 +38,11 @@ public class PPReaderSettingFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
-        initUI();
+        initUI(savedInstanceState);
 
     }
 
-    private void initUI(){
+    private void initUI(Bundle savedInstanceState){
         TextView tv = getView().findViewById(R.id.main_item_title);
         tv.setText(R.string.novel_setting_title);
 
@@ -74,10 +72,15 @@ public class PPReaderSettingFragment extends Fragment {
             }
         });
 
-        PPReaderPreferenceFragment fragment = new PPReaderPreferenceFragment();
-        fragment.init(m_dataManager);
-        getActivity().getSupportFragmentManager().beginTransaction().add(R.id.setting_container,fragment).commit();
-
+        if(savedInstanceState != null){
+            PPReaderPreferenceFragment fragment = (PPReaderPreferenceFragment)getActivity().getSupportFragmentManager().findFragmentById(R.id.setting_container);
+            fragment.init(m_dataManager);
+        }
+        else{
+            PPReaderPreferenceFragment fragment = new PPReaderPreferenceFragment();
+            fragment.init(m_dataManager);
+            getActivity().getSupportFragmentManager().beginTransaction().add(R.id.setting_container,fragment).commit();
+        }
     }
 
 
