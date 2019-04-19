@@ -171,7 +171,7 @@ public class MainActivity extends FragmentActivity implements IPPReaderTaskNotif
                 main.init(dataManager,MainActivity.this,serviceFactory);
 
                 PPReaderTextFragment text = new PPReaderTextFragment();
-                text.addListener(MainActivity.this);
+                //text.addListener(MainActivity.this);
 
 
 

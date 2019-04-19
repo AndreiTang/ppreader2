@@ -23,7 +23,7 @@
         </activity>
         <activity android:name=".test.MockActivity2">
         </activity>
-        <activity android:name=".test.MockActivity3">
+        <activity android:name=".test.MockActivity5">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

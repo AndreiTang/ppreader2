@@ -29,6 +29,11 @@ import java.util.ArrayList;
 
 public class PPReaderTextFragment extends Fragment {
 
+    public void init(IPPReaderService service,IPPReaderTaskNotification notification){
+        m_service = service;
+        m_notify = notification;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -38,7 +43,9 @@ public class PPReaderTextFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        //init(savedInstanceState);
+        m_bars = new PPReaderTextBars();
+        init(savedInstanceState);
+        loadNovel();
     }
 
     @Override
@@ -54,15 +61,12 @@ public class PPReaderTextFragment extends Fragment {
 
     public void setNovel(final PPReaderNovel novel){
         m_novel = novel;
-        m_service.clearTasks();
-        m_pageMgr.load(novel);
-        m_text.setCurrentItem(novel.currIndex);
-        setBarInfo(m_novel.currIndex);
+        if(m_isActive){
+            loadNovel();
+        }
     }
 
-    public void addListener(IPPReaderTaskNotification notification){
-        m_notify = notification;
-    }
+
 
     public void onAddChapters(final String novelId, final ArrayList<PPReaderChapter> chapters){
         if(novelId.compareTo(m_novel.id) != 0){
@@ -72,6 +76,16 @@ public class PPReaderTextFragment extends Fragment {
             m_pageMgr.addItem(chapters.get(i));
         }
         m_text.notifyDataSetChanged();
+    }
+
+    private void loadNovel(){
+        if(m_novel == null){
+            return;
+        }
+        m_service.clearTasks();
+        m_pageMgr.load(m_novel);
+        m_text.setCurrentItem(m_novel.currIndex);
+        setBarInfo(m_novel.currIndex);
     }
 
     private void init(Bundle savedInstanceState){
@@ -101,10 +115,11 @@ public class PPReaderTextFragment extends Fragment {
         initViewPager();
         initPanel();
         initCatalog();
+        m_isActive = true;
     }
 
     private void initViewPager(){
-        ViewPager vp = null;
+        ViewPager vp = getView().findViewById(R.id.novel_text_pager);
         m_text = new PPReaderText(vp, new PPReaderTextAdapter(getActivity(), m_pageMgr));
         m_text.addListener(new IPPReaderTaskNotification() {
             @Override
@@ -148,6 +163,7 @@ public class PPReaderTextFragment extends Fragment {
     }
 
     private void initCatalog(){
+        m_catalog = new PPReaderTextCatalog();
         m_catalog.addListener(new IPPReaderTaskNotification() {
             @Override
             public void onNotify(IPPReaderTaskRet ret) {
@@ -163,6 +179,9 @@ public class PPReaderTextFragment extends Fragment {
 
     private void setBarInfo(int position){
         PPReaderTextPage page = m_pageMgr.getItem(position);
+        if(page == null){
+            return;
+        }
         String pageNo = Integer.toString(position+1) + "/" + Integer.toString(m_pageMgr.getCount());
         m_bars.updateInfo(page.title,pageNo);
     }
@@ -176,4 +195,5 @@ public class PPReaderTextFragment extends Fragment {
     private PPReaderTextPanel m_panel;
     private PPReaderTextCatalog m_catalog;
     private IPPReaderTaskNotification m_notify;
+    private boolean m_isActive = false;
 }
