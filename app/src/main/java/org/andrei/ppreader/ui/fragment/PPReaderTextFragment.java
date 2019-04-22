@@ -66,8 +66,6 @@ public class PPReaderTextFragment extends Fragment {
         }
     }
 
-
-
     public void onAddChapters(final String novelId, final ArrayList<PPReaderChapter> chapters){
         if(novelId.compareTo(m_novel.id) != 0){
             return;

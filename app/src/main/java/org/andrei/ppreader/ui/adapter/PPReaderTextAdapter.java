@@ -17,7 +17,7 @@ import org.andrei.ppreader.ui.adapter.helper.PPReaderTextFragmentViews;
 public class PPReaderTextAdapter extends PagerAdapter {
 
     public PPReaderTextAdapter(@NonNull final Activity parent, @NonNull  final IPPReaderPageManager pageMgr){
-        m_viewMgr = new PPReaderTextFragmentViewManager(this);
+        m_viewMgr = new PPReaderTextFragmentViewManager();
         m_pageMgr = pageMgr;
         m_parent = parent;
     }
@@ -36,6 +36,9 @@ public class PPReaderTextAdapter extends PagerAdapter {
     public Object instantiateItem(ViewGroup container, final int position){
         final View v = m_parent.getLayoutInflater().inflate(R.layout.view_ppreader_text,null);
         PPReaderTextPage page = m_pageMgr.getItem(position);
+        if(page.status == PPReaderTextPage.STATUS_TEXT_NO_SLICE){
+            
+        }
         PPReaderTextFragmentViews views = m_viewMgr.addView(v,page,position);
         return v;
     }
@@ -46,10 +49,10 @@ public class PPReaderTextAdapter extends PagerAdapter {
             PPReaderTextFragmentViews vs = m_viewMgr.getItem(i);
             PPReaderTextPage page = m_pageMgr.getItem(vs.pos);
             if(!vs.page.equals(page)){
-                m_viewMgr.updateView(page);
+                m_viewMgr.updateView(i,page);
             }
             else if(page.status != vs.status){
-                m_viewMgr.updateView(page);
+                m_viewMgr.updateView(i,page);
             }
         }
         return super.getItemPosition(object);
@@ -65,7 +68,6 @@ public class PPReaderTextAdapter extends PagerAdapter {
         m_viewMgr.addListener(notification);
     }
 
-    private final static int m_viewID = 0;
     private PPReaderTextFragmentViewManager m_viewMgr;
     private IPPReaderPageManager m_pageMgr;
     private Activity m_parent;

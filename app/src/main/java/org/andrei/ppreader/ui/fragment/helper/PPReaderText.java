@@ -39,7 +39,6 @@ public class PPReaderText {
 
     public void addListener(IPPReaderTaskNotification notification){
         m_notification = notification;
-        m_adapter.addListener(notification);
     }
 
     public void notifyDataSetChanged(){

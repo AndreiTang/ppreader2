@@ -9,8 +9,8 @@ import org.andrei.ppreader.service.IPPReaderTaskNotification;
 
 public class PPReaderTextFragmentViewManager {
 
-    public PPReaderTextFragmentViewManager(@NonNull PagerAdapter adapter){
-        m_adapter = adapter;
+    public PPReaderTextFragmentViewManager(){
+
     }
 
     public void addListener(@NonNull IPPReaderTaskNotification notification){
@@ -18,6 +18,9 @@ public class PPReaderTextFragmentViewManager {
     }
 
     public PPReaderTextFragmentViews addView(final View view, final PPReaderTextPage page, int pos){
+
+
+
         return null;
     }
 
@@ -33,11 +36,10 @@ public class PPReaderTextFragmentViewManager {
         return 0;
     }
 
-    public void updateView(final PPReaderTextPage page){
+    public void updateView(int index,final PPReaderTextPage page){
 
     }
 
-    private PagerAdapter m_adapter;
     private IPPReaderTaskNotification m_notify;
 
 }
