@@ -6,17 +6,12 @@ import org.andrei.ppreader.service.IPPReaderTaskNotification;
 
 public class PPReaderTextPanel {
 
-    public PPReaderTextPanel(final View v){
+    public PPReaderTextPanel(final View v,final IPPReaderTaskNotification notification){
 
     }
 
     public void show(){
 
     }
-
-    public void addListener(IPPReaderTaskNotification notification){
-
-    }
-
 
 }

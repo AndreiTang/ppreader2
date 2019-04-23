@@ -18,7 +18,9 @@ public class PPReaderPageManager implements IPPReaderPageManager {
 
     public PPReaderTextPage getItem(int index){
         if(index >= m_pages.size()){
-            return null;
+            PPReaderTextPage page = new PPReaderTextPage();
+            page.status = PPReaderTextPage.STATUS_INVALID;
+            return page;
         }
         return m_pages.get(index);
     }

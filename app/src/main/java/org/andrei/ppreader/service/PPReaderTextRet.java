@@ -1,10 +1,10 @@
 package org.andrei.ppreader.service;
 
-public class PPReaderTextTaskRet implements IPPReaderTaskRet {
+public class PPReaderTextRet implements IPPReaderTaskRet {
 
     @Override
     public String type() {
-        return PPReaderTextTaskRet.class.getName();
+        return PPReaderTextRet.class.getName();
     }
 
     @Override

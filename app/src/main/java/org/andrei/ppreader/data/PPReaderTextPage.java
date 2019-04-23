@@ -3,6 +3,7 @@ package org.andrei.ppreader.data;
 import java.util.ArrayList;
 
 public class PPReaderTextPage {
+    public final static int STATUS_INVALID = -1;
     public final static int STATUS_OK = 0;
     public final static int STATUS_TEXT_NO_SLICE = 1;
     public final static int STATUS_LOADING = 2;

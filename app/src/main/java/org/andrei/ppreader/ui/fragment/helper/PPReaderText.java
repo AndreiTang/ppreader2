@@ -7,7 +7,13 @@ import org.andrei.ppreader.service.IPPReaderTaskNotification;
 import org.andrei.ppreader.ui.adapter.PPReaderTextAdapter;
 
 public class PPReaderText {
-    public PPReaderText(final ViewPager vp, final PPReaderTextAdapter adapter){
+    public PPReaderText(final ViewPager vp, final PPReaderTextAdapter adapter,final IPPReaderTaskNotification notification){
+
+        m_notification = notification;
+        m_vp = vp;
+        m_adapter = adapter;
+        vp.setAdapter(m_adapter);
+
         vp.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -30,15 +36,9 @@ public class PPReaderText {
             }
         });
 
-        m_vp = vp;
-        m_adapter = adapter;
-        vp.setAdapter(m_adapter);
 
 
-    }
 
-    public void addListener(IPPReaderTaskNotification notification){
-        m_notification = notification;
     }
 
     public void notifyDataSetChanged(){
@@ -55,8 +55,6 @@ public class PPReaderText {
     public int getCurrentIndex(){
         return m_vp.getCurrentItem();
     }
-
-
 
     private IPPReaderTaskNotification m_notification;
     private PPReaderTextAdapter m_adapter;

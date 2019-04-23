@@ -16,8 +16,8 @@ import org.andrei.ppreader.ui.adapter.helper.PPReaderTextFragmentViews;
 
 public class PPReaderTextAdapter extends PagerAdapter {
 
-    public PPReaderTextAdapter(@NonNull final Activity parent, @NonNull  final IPPReaderPageManager pageMgr){
-        m_viewMgr = new PPReaderTextFragmentViewManager();
+    public PPReaderTextAdapter(@NonNull final Activity parent, @NonNull  final IPPReaderPageManager pageMgr, IPPReaderTaskNotification notification){
+        m_viewMgr = new PPReaderTextFragmentViewManager(notification);
         m_pageMgr = pageMgr;
         m_parent = parent;
     }
@@ -62,10 +62,6 @@ public class PPReaderTextAdapter extends PagerAdapter {
     public void destroyItem(ViewGroup container, int position, Object object) {
         container.removeView((View) object);
         m_viewMgr.removeView((View) object);
-    }
-
-    public void addListener(final IPPReaderTaskNotification notification){
-        m_viewMgr.addListener(notification);
     }
 
     private PPReaderTextFragmentViewManager m_viewMgr;
