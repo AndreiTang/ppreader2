@@ -80,6 +80,7 @@ public class PPReaderTextFragmentViewManager {
             text.append("This is dummy\n");
             text.append("J\n");
             text.append("J\n");
+            text.append("J\n");
             text.append(page.text);
             vs.textView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override

@@ -1,6 +1,7 @@
 package org.andrei.ppreader.ui.adapter.helper;
 
 import android.text.Layout;
+import android.view.Gravity;
 import android.widget.TextView;
 
 import org.andrei.ppreader.data.IPPReaderDataManager;
@@ -55,6 +56,9 @@ public class PPReaderPageManager implements IPPReaderPageManager {
             int end = tv.getLayout().getLineEnd(i);
             String lineText = text.substring(begin, end);
             pageTextHeight += lineHeight;
+            if(i == lineCount - 1 && lineText.indexOf('\n')==-1){
+                lineText += '\n';
+            }
 
             if (pageTextHeight < tv.getHeight()) {
                 item.texts.add(lineText);
@@ -62,9 +66,10 @@ public class PPReaderPageManager implements IPPReaderPageManager {
                 i--;
                 //the the font size of title is bigger than lines in body. So the line size in body decrease 1
                 if (offset == 0) {
-                    for(int t = 0 ; t < 4 ; t++){
+                    for(int t = 0 ; t < 5 ; t++){
                         item.texts.remove(0);
                     }
+                    item.gravity = Gravity.BOTTOM;
 
                 }
 
@@ -75,8 +80,14 @@ public class PPReaderPageManager implements IPPReaderPageManager {
                     item.status = PPReaderTextPage.STATUS_OK;
                     m_pages.add(index+offset,item);
                     pageTextHeight = 0;
+                    item.gravity = Gravity.CENTER_VERTICAL;
                 }
             }
+        }
+
+        //the last part will be top , if parts is more than 1.
+        if(item.offset != 0){
+            item.gravity = Gravity.TOP;
         }
         page.status = PPReaderTextPage.STATUS_OK;
     }
