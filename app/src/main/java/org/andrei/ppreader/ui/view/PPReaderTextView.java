@@ -26,8 +26,17 @@ public class PPReaderTextView extends TextView {
     }
 
     public void setText(PPReaderTextPage page){
+        String str="";
+        if(page.offset == 0){
+            String title = page.title + "\r\n";
+            str += title;
+            str +=  "\r\n";
+        }
 
+        for(String txt :page.texts){
+            str += txt;
+        }
+        setText(str);
     }
-
 
 }

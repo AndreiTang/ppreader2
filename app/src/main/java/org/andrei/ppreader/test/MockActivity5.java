@@ -32,6 +32,7 @@ public class MockActivity5 extends FragmentActivity {
 
         PPReaderChapter chapter = new PPReaderChapter();
         chapter.id = "1";
+        chapter.url = "1";
         chapter.title = "一梦五百年(上)";
         chapter.text = "凉风习习，夜色迷离，轻纱般的薄雾缭绕着安静的县城。\n" +
                 "\n" +
@@ -121,6 +122,7 @@ public class MockActivity5 extends FragmentActivity {
 
         chapter = new PPReaderChapter();
         chapter.id = "2";
+        chapter.url = "2";
         chapter.title = "一梦五百年(中)";
         chapter.text = "沈默不能入眠，他借着幽暗的天光，端详着趴在桌子上的…父亲，心中久久无法平静。\n" +
                 "\n" +

@@ -1,5 +1,7 @@
 package org.andrei.ppreader.data;
 
+import org.andrei.ppreader.ui.fragment.helper.PPReaderCommonRet;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -22,10 +24,16 @@ public class PPReaderNovel implements Serializable {
     public ArrayList<PPReaderChapter> chapters = new ArrayList<>();
 
     public int getChapterIndex(String chapterId){
-        return  0;
+        for(int i = 0 ; i <chapters.size(); i++){
+            PPReaderChapter chapter = chapters.get(i);
+            if(chapter.id.compareTo(chapterId) == 0){
+                return i;
+            }
+        }
+        return  -1;
     }
 
     public PPReaderChapter getChapter(int index){
-        return null;
+        return chapters.get(index);
     }
 }

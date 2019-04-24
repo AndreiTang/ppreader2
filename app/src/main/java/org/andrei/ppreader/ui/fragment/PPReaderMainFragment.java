@@ -3,7 +3,6 @@ package org.andrei.ppreader.ui.fragment;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,18 +10,12 @@ import android.view.ViewGroup;
 import org.andrei.ppreader.R;
 import org.andrei.ppreader.data.IPPReaderDataManager;
 import org.andrei.ppreader.data.PPReaderNovel;
-import org.andrei.ppreader.service.IPPReaderService;
 import org.andrei.ppreader.service.IPPReaderServiceFactory;
 import org.andrei.ppreader.service.IPPReaderTaskNotification;
 import org.andrei.ppreader.service.IPPReaderTaskRet;
-import org.andrei.ppreader.service.PPReaderService;
 import org.andrei.ppreader.ui.adapter.PPReaderMainAdapter;
 import org.andrei.ppreader.ui.fragment.helper.PPReaderSelectNovelRet;
-import org.andrei.ppreader.ui.fragment.helper.PPReaderTextRet;
-
-import java.util.List;
-
-import io.reactivex.functions.Consumer;
+import org.andrei.ppreader.ui.fragment.helper.PPReaderCommonRet;
 
 public class PPReaderMainFragment extends Fragment implements IPPReaderTaskNotification {
 
@@ -99,8 +92,8 @@ public class PPReaderMainFragment extends Fragment implements IPPReaderTaskNotif
         if(ret.type().compareTo(PPReaderSelectNovelRet.class.getName()) == 0 && m_notification != null){
             m_notification.onNotify(ret);
         }
-        else if(ret.type().compareTo(PPReaderTextRet.TYPE_TO_LIST_PAGE) == 0 && m_notification != null){
-            PPReaderTextRet tr = (PPReaderTextRet)ret;
+        else if(ret.type().compareTo(PPReaderCommonRet.TYPE_TO_LIST_PAGE) == 0 && m_notification != null){
+            PPReaderCommonRet tr = (PPReaderCommonRet)ret;
             switchFragment(tr.index);
         }
     }

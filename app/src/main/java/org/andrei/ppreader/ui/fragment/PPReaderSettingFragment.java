@@ -1,10 +1,7 @@
 package org.andrei.ppreader.ui.fragment;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.preference.Preference;
-import android.support.v7.preference.PreferenceFragmentCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +12,7 @@ import com.jakewharton.rxbinding2.view.RxView;
 import org.andrei.ppreader.R;
 import org.andrei.ppreader.data.IPPReaderDataManager;
 import org.andrei.ppreader.service.IPPReaderTaskNotification;
-import org.andrei.ppreader.ui.fragment.helper.PPReaderTextRet;
+import org.andrei.ppreader.ui.fragment.helper.PPReaderCommonRet;
 
 import java.util.concurrent.TimeUnit;
 
@@ -51,7 +48,7 @@ public class PPReaderSettingFragment extends Fragment {
         RxView.clicks(tv).throttleFirst(1, TimeUnit.SECONDS).subscribe(new Consumer<Object>() {
             @Override
             public void accept(Object o) throws Exception{
-                PPReaderTextRet ret = new PPReaderTextRet(PPReaderTextRet.TYPE_TO_LIST_PAGE);
+                PPReaderCommonRet ret = new PPReaderCommonRet(PPReaderCommonRet.TYPE_TO_LIST_PAGE);
                 ret.index = 1;
                 if(m_notification != null){
                     m_notification.onNotify(ret);
@@ -64,7 +61,7 @@ public class PPReaderSettingFragment extends Fragment {
         RxView.clicks(tv).throttleFirst(1, TimeUnit.SECONDS).subscribe(new Consumer<Object>() {
             @Override
             public void accept(Object o) throws Exception{
-                PPReaderTextRet ret = new PPReaderTextRet(PPReaderTextRet.TYPE_TO_LIST_PAGE);
+                PPReaderCommonRet ret = new PPReaderCommonRet(PPReaderCommonRet.TYPE_TO_LIST_PAGE);
                 ret.index = 0;
                 if(m_notification != null){
                     m_notification.onNotify(ret);

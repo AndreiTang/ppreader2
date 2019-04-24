@@ -4,15 +4,10 @@ import android.graphics.Color;
 import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.util.TypedValue;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.TextView;
 
 import org.andrei.ppreader.data.IPPReaderDataManager;
 import org.andrei.ppreader.data.PPReaderDataManager;
@@ -27,15 +22,13 @@ import org.andrei.ppreader.ui.fragment.PPReaderStartFragment;
 import org.andrei.ppreader.ui.fragment.PPReaderTextFragment;
 import org.andrei.ppreader.ui.fragment.helper.PPReaderAddNovelRet;
 import org.andrei.ppreader.ui.fragment.helper.PPReaderSelectNovelRet;
-import org.andrei.ppreader.ui.fragment.helper.PPReaderText;
-import org.andrei.ppreader.ui.fragment.helper.PPReaderTextRet;
+import org.andrei.ppreader.ui.fragment.helper.PPReaderCommonRet;
 
 import java.util.ArrayList;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
@@ -110,8 +103,8 @@ public class MainActivity extends FragmentActivity implements IPPReaderTaskNotif
 
     @Override
     public void onNotify(IPPReaderTaskRet ret) {
-        if(ret.type().compareTo(PPReaderTextRet.TYPE_TO_LIST_PAGE) == 0){
-            PPReaderTextRet textRet = (PPReaderTextRet)ret;
+        if(ret.type().compareTo(PPReaderCommonRet.TYPE_TO_LIST_PAGE) == 0){
+            PPReaderCommonRet textRet = (PPReaderCommonRet)ret;
             PPReaderMainFragment main = (PPReaderMainFragment)getSupportFragmentManager().findFragmentByTag(PPReaderMainFragment.class.getName());
             main.switchFragment(textRet.index);
             PPReaderTextFragment text = (PPReaderTextFragment)getSupportFragmentManager().findFragmentByTag(PPReaderTextFragment.class.getName());

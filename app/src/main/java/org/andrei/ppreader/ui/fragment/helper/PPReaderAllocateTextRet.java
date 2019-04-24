@@ -1,6 +1,7 @@
 package org.andrei.ppreader.ui.fragment.helper;
 
 import android.text.Layout;
+import android.widget.TextView;
 
 import org.andrei.ppreader.data.PPReaderTextPage;
 import org.andrei.ppreader.service.IPPReaderTaskRet;
@@ -17,6 +18,6 @@ public class PPReaderAllocateTextRet implements IPPReaderTaskRet {
     }
 
     public int index;
-    public Layout layout;
+    public TextView tv;
     public PPReaderTextPage page;
 }

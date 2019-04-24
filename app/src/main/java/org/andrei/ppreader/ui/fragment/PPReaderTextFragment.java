@@ -16,10 +16,12 @@ import org.andrei.ppreader.service.IPPReaderTaskNotification;
 import org.andrei.ppreader.service.IPPReaderTaskRet;
 import org.andrei.ppreader.service.PPReaderTextRet;
 import org.andrei.ppreader.service.PPReaderTextTask;
+import org.andrei.ppreader.service.ServiceError;
 import org.andrei.ppreader.ui.adapter.PPReaderTextAdapter;
 import org.andrei.ppreader.ui.adapter.helper.IPPReaderPageManager;
 import org.andrei.ppreader.ui.adapter.helper.PPReaderPageManager;
 import org.andrei.ppreader.ui.fragment.helper.PPReaderAllocateTextRet;
+import org.andrei.ppreader.ui.fragment.helper.PPReaderCommonRet;
 import org.andrei.ppreader.ui.fragment.helper.PPReaderText;
 import org.andrei.ppreader.ui.fragment.helper.PPReaderTextBars;
 import org.andrei.ppreader.ui.fragment.helper.PPReaderTextCatalog;
@@ -61,26 +63,30 @@ public class PPReaderTextFragment extends Fragment implements IPPReaderTaskNotif
 
     @Override
     public void onNotify(IPPReaderTaskRet ret) {
-        if(ret.type().compareTo(org.andrei.ppreader.ui.fragment.helper.PPReaderTextRet.TYPE_CURR) == 0){
-            int pos = ((org.andrei.ppreader.ui.fragment.helper.PPReaderTextRet)ret).index;
+        if(ret.type().compareTo(PPReaderCommonRet.TYPE_CURR) == 0){
+            int pos = ((PPReaderCommonRet)ret).index;
             setBarInfo(pos);
             fetchText(pos);
         }
-        else if(ret.type().compareTo(org.andrei.ppreader.ui.fragment.helper.PPReaderTextRet.TYPE_DB_CLICK) == 0){
+        else if(ret.type().compareTo(PPReaderCommonRet.TYPE_FETCH_TEXT) == 0){
+            PPReaderCommonRet r = (PPReaderCommonRet)ret;
+            fetchText(r.index);
+        }
+        else if(ret.type().compareTo(PPReaderCommonRet.TYPE_DB_CLICK) == 0){
             m_panel.show();
         }
-        else if(ret.type().compareTo(org.andrei.ppreader.ui.fragment.helper.PPReaderTextRet.TYPE_SHOW_CATALOG) == 0){
+        else if(ret.type().compareTo(PPReaderCommonRet.TYPE_SHOW_CATALOG) == 0){
             int pos = m_text.getCurrentIndex();
             PPReaderTextPage page = m_pageMgr.getItem(pos);
             int index = m_novel.getChapterIndex(page.chapterId);
             m_catalog.show(index);
         }
-        else if(ret.type().compareTo(org.andrei.ppreader.ui.fragment.helper.PPReaderTextRet.TYPE_TO_LIST_PAGE) == 0){
+        else if(ret.type().compareTo(PPReaderCommonRet.TYPE_TO_LIST_PAGE) == 0){
             //directly tell activity to switch to list page.
             m_notify.onNotify(ret);
         }
-        else if(ret.type().compareTo(org.andrei.ppreader.ui.fragment.helper.PPReaderTextRet.TYPE_SET_CURR) == 0){
-            int index = ((org.andrei.ppreader.ui.fragment.helper.PPReaderTextRet)ret).index;
+        else if(ret.type().compareTo(PPReaderCommonRet.TYPE_SET_CURR) == 0){
+            int index = ((PPReaderCommonRet)ret).index;
             PPReaderChapter chapter = m_novel.getChapter(index);
             int pos = m_pageMgr.getChapterFirstPageIndex(chapter.id);
             m_text.setCurrentItem(pos);
@@ -95,14 +101,24 @@ public class PPReaderTextFragment extends Fragment implements IPPReaderTaskNotif
                 return;
             }
 
-            m_pageMgr.updateText(textTaskRet.chapterId,textTaskRet.text);
+            if(textTaskRet.getRetCode() == ServiceError.ERR_OK){
+                m_pageMgr.updateText(textTaskRet.chapterId,textTaskRet.text);
+            }
+            else {
+                int index = m_pageMgr.getChapterFirstPageIndex(textTaskRet.chapterId);
+                PPReaderTextPage page = m_pageMgr.getItem(index);
+                page.status  = PPReaderTextPage.STATUS_FAIL;
+            }
             m_text.notifyDataSetChanged();
         }
         else if(ret.type().compareTo(PPReaderAllocateTextRet.class.getName())==0){
             PPReaderAllocateTextRet r = (PPReaderAllocateTextRet)ret;
 
-            m_pageMgr.injectText(r.index,r.layout);
-            m_text.notifyDataSetChanged();
+            PPReaderTextPage item = m_pageMgr.getItem(r.index);
+            if(item.equals(r.page)){
+                m_pageMgr.injectText(r.index,r.tv);
+                m_text.notifyDataSetChanged();
+            }
         }
     }
 

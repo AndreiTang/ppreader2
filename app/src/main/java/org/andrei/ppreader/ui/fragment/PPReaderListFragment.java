@@ -3,7 +3,6 @@ package org.andrei.ppreader.ui.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +20,7 @@ import org.andrei.ppreader.service.IPPReaderTaskRet;
 import org.andrei.ppreader.service.PPReaderUpdateNovelRet;
 import org.andrei.ppreader.service.PPReaderUpdateNovelTask;
 import org.andrei.ppreader.ui.adapter.PPReaderListAdapter;
-import org.andrei.ppreader.ui.fragment.helper.PPReaderTextRet;
+import org.andrei.ppreader.ui.fragment.helper.PPReaderCommonRet;
 
 import java.util.concurrent.TimeUnit;
 
@@ -92,7 +91,7 @@ public class PPReaderListFragment extends Fragment {
         RxView.clicks(tv).throttleFirst(1, TimeUnit.SECONDS).subscribe(new Consumer<Object>() {
             @Override
             public void accept(Object o) throws Exception{
-                PPReaderTextRet ret = new PPReaderTextRet(PPReaderTextRet.TYPE_TO_LIST_PAGE);
+                PPReaderCommonRet ret = new PPReaderCommonRet(PPReaderCommonRet.TYPE_TO_LIST_PAGE);
                 ret.index = 1;
                 if(m_notification != null){
                     m_notification.onNotify(ret);

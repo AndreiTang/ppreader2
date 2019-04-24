@@ -1,6 +1,5 @@
 package org.andrei.ppreader.ui.fragment.helper;
 
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 
 import org.andrei.ppreader.service.IPPReaderTaskNotification;
@@ -25,7 +24,7 @@ public class PPReaderText {
                 if(m_notification == null){
                     return;
                 }
-                PPReaderTextRet ret = new PPReaderTextRet(PPReaderTextRet.TYPE_CURR);
+                PPReaderCommonRet ret = new PPReaderCommonRet(PPReaderCommonRet.TYPE_CURR);
                 ret.index = position;
                 m_notification.onNotify(ret);
             }

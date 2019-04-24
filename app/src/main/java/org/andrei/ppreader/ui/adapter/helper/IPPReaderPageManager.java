@@ -14,7 +14,7 @@ public interface IPPReaderPageManager {
 
     public int getIndex(final PPReaderTextPage page);
 
-    public void injectText(int index, Layout txtLayout);
+    public void injectText(int index, TextView tv);
 
     public void updateText(final String chapterId, final String text);
 

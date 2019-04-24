@@ -35,10 +35,8 @@ public class PPReaderTextAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(ViewGroup container, final int position){
         final View v = m_parent.getLayoutInflater().inflate(R.layout.view_ppreader_text,null);
+        container.addView(v);
         PPReaderTextPage page = m_pageMgr.getItem(position);
-        if(page.status == PPReaderTextPage.STATUS_TEXT_NO_SLICE){
-            
-        }
         PPReaderTextFragmentViews views = m_viewMgr.addView(v,page,position);
         return v;
     }
@@ -48,11 +46,12 @@ public class PPReaderTextAdapter extends PagerAdapter {
         for(int i = 0; i < m_viewMgr.getCount(); i++){
             PPReaderTextFragmentViews vs = m_viewMgr.getItem(i);
             PPReaderTextPage page = m_pageMgr.getItem(vs.pos);
+            vs.page = page;
             if(!vs.page.equals(page)){
-                m_viewMgr.updateView(i,page);
+                m_viewMgr.updateView(vs);
             }
-            else if(page.status != vs.status){
-                m_viewMgr.updateView(i,page);
+            else if(vs.page.equals(page) && page.status != vs.status){
+                m_viewMgr.updateView(vs);
             }
         }
         return super.getItemPosition(object);

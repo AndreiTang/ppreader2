@@ -15,7 +15,8 @@ public class PPReaderTextPage {
     public String chapterId;
     public int chapterIndex;
     public int offset;
+    public boolean isLastPart = false;
     public String text;
     public String title;
-    public ArrayList<String> m_texts = new ArrayList<>();
+    public ArrayList<String> texts = new ArrayList<>();
 }
