@@ -1,25 +1,26 @@
 package org.andrei.ppreader.ui.adapter.helper;
 
-import android.text.Layout;
 import android.view.Gravity;
 import android.widget.TextView;
 
-import org.andrei.ppreader.data.IPPReaderDataManager;
 import org.andrei.ppreader.data.PPReaderChapter;
 import org.andrei.ppreader.data.PPReaderNovel;
 import org.andrei.ppreader.data.PPReaderTextPage;
-import org.andrei.ppreader.ui.fragment.helper.PPReaderText;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 public class PPReaderPageManager implements IPPReaderPageManager {
 
-    public int getCount(){
+    public int getCount() {
         return m_pages.size();
     }
 
-    public PPReaderTextPage getItem(int index){
-        if(index >= m_pages.size()){
+    public PPReaderTextPage getItem(int index) {
+        if (index >= m_pages.size()) {
             PPReaderTextPage page = new PPReaderTextPage();
             page.status = PPReaderTextPage.STATUS_INVALID;
             return page;
@@ -27,18 +28,18 @@ public class PPReaderPageManager implements IPPReaderPageManager {
         return m_pages.get(index);
     }
 
-    public int getIndex(final PPReaderTextPage page){
-        for(int i = 0; i < m_pages.size(); i++){
+    public int getIndex(final PPReaderTextPage page) {
+        for (int i = 0; i < m_pages.size(); i++) {
             PPReaderTextPage item = m_pages.get(i);
-            if(item.equals(page)){
+            if (item.equals(page)) {
                 return i;
             }
         }
         return -1;
     }
 
-    public void injectText(int index, TextView tv){
-        if(index == -1 || index >= m_pages.size()){
+    public void injectText(int index, TextView tv) {
+        if (index == -1 || index >= m_pages.size()) {
             return;
         }
         PPReaderTextPage page = m_pages.get(index);
@@ -56,9 +57,6 @@ public class PPReaderPageManager implements IPPReaderPageManager {
             int end = tv.getLayout().getLineEnd(i);
             String lineText = text.substring(begin, end);
             pageTextHeight += lineHeight;
-            if(i == lineCount - 1 && lineText.indexOf('\n')==-1){
-                lineText += '\n';
-            }
 
             if (pageTextHeight < tv.getHeight()) {
                 item.texts.add(lineText);
@@ -66,7 +64,7 @@ public class PPReaderPageManager implements IPPReaderPageManager {
                 i--;
                 //the the font size of title is bigger than lines in body. So the line size in body decrease 1
                 if (offset == 0) {
-                    for(int t = 0 ; t < 5 ; t++){
+                    for (int t = 0; t < 5; t++) {
                         item.texts.remove(0);
                     }
                     item.gravity = Gravity.BOTTOM;
@@ -78,7 +76,7 @@ public class PPReaderPageManager implements IPPReaderPageManager {
                     item = new PPReaderTextPage();
                     item.offset = offset;
                     item.status = PPReaderTextPage.STATUS_OK;
-                    m_pages.add(index+offset,item);
+                    m_pages.add(index + offset, item);
                     pageTextHeight = 0;
                     item.gravity = Gravity.CENTER_VERTICAL;
                 }
@@ -86,7 +84,7 @@ public class PPReaderPageManager implements IPPReaderPageManager {
         }
 
         //the last part will be top , if parts is more than 1.
-        if(item.offset != 0){
+        if (item.offset != 0) {
             item.gravity = Gravity.TOP;
         }
         page.status = PPReaderTextPage.STATUS_OK;
@@ -94,8 +92,8 @@ public class PPReaderPageManager implements IPPReaderPageManager {
 
     @Override
     public void updateText(String chapterId, String text) {
-        for(PPReaderTextPage page: m_pages){
-            if(page.chapterId.compareTo(chapterId) == 0){
+        for (PPReaderTextPage page : m_pages) {
+            if (page.chapterId.compareTo(chapterId) == 0) {
                 page.text = text;
                 break;
             }
@@ -104,7 +102,7 @@ public class PPReaderPageManager implements IPPReaderPageManager {
 
     @Override
     public void load(PPReaderNovel novel) {
-        for(int i = 0; i <  novel.chapters.size() ; i++){
+        for (int i = 0; i < novel.chapters.size(); i++) {
             PPReaderChapter chapter = novel.chapters.get(i);
             addItem(chapter);
         }
@@ -113,10 +111,10 @@ public class PPReaderPageManager implements IPPReaderPageManager {
     @Override
     public void addItem(PPReaderChapter chapter) {
         PPReaderTextPage page = new PPReaderTextPage();
-        page.text = chapter.text;
+        page.text = cleanText(chapter.text);
         page.chapterId = chapter.id;
         page.title = chapter.title;
-        if(page.text.length() > 0){
+        if (page.text.length() > 0) {
             page.status = PPReaderTextPage.STATUS_TEXT_NO_SLICE;
         }
         page.chapterIndex = m_pages.size();
@@ -125,13 +123,32 @@ public class PPReaderPageManager implements IPPReaderPageManager {
 
     @Override
     public int getChapterFirstPageIndex(String chapterId) {
-        for(int i = 0; i < m_pages.size(); i++){
+        for (int i = 0; i < m_pages.size(); i++) {
             PPReaderTextPage item = m_pages.get(i);
-            if(item.chapterId.compareTo(chapterId) == 0){
+            if (item.chapterId.compareTo(chapterId) == 0) {
                 return i;
             }
         }
         return -1;
+    }
+
+    private String cleanText(String text) {
+        StringBuilder sb = new StringBuilder();
+        try {
+            ByteArrayInputStream stream = new ByteArrayInputStream(text.getBytes());
+            BufferedReader br = new BufferedReader(new InputStreamReader(stream));
+            String line = br.readLine();
+            while (line != null){
+                if(line.length() > 0){
+                    sb.append(line);
+                    sb.append("\n");
+                }
+                line = br.readLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return sb.toString();
     }
 
     private ArrayList<PPReaderTextPage> m_pages = new ArrayList<>();
