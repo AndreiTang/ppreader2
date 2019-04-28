@@ -75,6 +75,9 @@ public class PPReaderPageManager implements IPPReaderPageManager {
                     offset++;
                     item = new PPReaderTextPage();
                     item.offset = offset;
+                    item.chapterIndex= page.chapterIndex;
+                    item.title = page.title;
+                    item.chapterId = page.chapterId;
                     item.status = PPReaderTextPage.STATUS_OK;
                     m_pages.add(index + offset, item);
                     pageTextHeight = 0;

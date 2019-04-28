@@ -21,6 +21,12 @@
     <string name="novel_setting_engine_title">小说引擎设置</string>
     <string name="novel_setting_engine_summary">可根据需要选择小说引擎，并对搜索顺序进行摆列</string>
 
+
+    <string name="novel_panel_list">书架</string>
+    <string name="novel_panel_cache">缓存</string>
+    <string name="novel_panel_dict">目录</string>
+    <string name="novel_panel_search">搜索</string>
+
     <string name="novel_type_ing">连载</string>
     <string name="novel_type_over">完结</string>
     <string name="err_not_found">主人，没找到啊...</string>
@@ -29,6 +35,12 @@
     <string name="novel_reader_err_msg">主人，再戮我一下...</string>
     <string name="btn_ok">确定</string>
     <string name="btn_cancel">取消</string>
+
+    <string name="novel_catalog_prev">上一页</string>
+    <string name="novel_catalog_next">下一页</string>
+    <string name="novel_catalog_range">目录列表</string>
+    <string name="novel_catalog_chapter">第%1$d章-第%2$d章</string>
+    <string name="novel_catalog_duration">%1$d小时%2$d分</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

@@ -1,9 +1,15 @@
 package org.andrei.ppreader.ui.fragment.helper;
 
 import android.support.v4.view.ViewPager;
+import android.view.MotionEvent;
+
+import com.jakewharton.rxbinding2.view.RxView;
 
 import org.andrei.ppreader.service.IPPReaderTaskNotification;
 import org.andrei.ppreader.ui.adapter.PPReaderTextAdapter;
+import org.andrei.ppreader.ui.view.helper.PPReaderRxBinding;
+
+import io.reactivex.functions.Consumer;
 
 public class PPReaderText {
     public PPReaderText(final ViewPager vp, final PPReaderTextAdapter adapter,final IPPReaderTaskNotification notification){
@@ -35,9 +41,14 @@ public class PPReaderText {
             }
         });
 
-
-
-
+        PPReaderRxBinding.dbClicks(vp).subscribe(new Consumer<MotionEvent>() {
+            @Override
+            public void accept(MotionEvent motionEvent) throws Exception {
+                PPReaderDBClicksRet ret = new PPReaderDBClicksRet();
+                ret.event = motionEvent;
+                m_notification.onNotify(ret);
+            }
+        });
     }
 
     public void notifyDataSetChanged(){

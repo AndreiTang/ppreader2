@@ -6,6 +6,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import org.andrei.ppreader.R;
 import org.andrei.ppreader.data.PPReaderChapter;
@@ -22,10 +23,11 @@ import org.andrei.ppreader.ui.adapter.helper.IPPReaderPageManager;
 import org.andrei.ppreader.ui.adapter.helper.PPReaderPageManager;
 import org.andrei.ppreader.ui.fragment.helper.PPReaderAllocateTextRet;
 import org.andrei.ppreader.ui.fragment.helper.PPReaderCommonRet;
+import org.andrei.ppreader.ui.fragment.helper.PPReaderDBClicksRet;
 import org.andrei.ppreader.ui.fragment.helper.PPReaderText;
 import org.andrei.ppreader.ui.fragment.helper.PPReaderTextBars;
 import org.andrei.ppreader.ui.fragment.helper.PPReaderTextCatalog;
-import org.andrei.ppreader.ui.fragment.helper.PPReaderTextPanel;
+import org.andrei.ppreader.ui.view.PPReaderControlPanel;
 
 import java.util.ArrayList;
 
@@ -48,6 +50,9 @@ public class PPReaderTextFragment extends Fragment implements IPPReaderTaskNotif
 
         init(savedInstanceState);
         loadNovel();
+
+        final View root = this.getActivity().findViewById(android.R.id.content);
+        root.findViewById(android.R.id.content).setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
     }
 
     @Override
@@ -72,8 +77,10 @@ public class PPReaderTextFragment extends Fragment implements IPPReaderTaskNotif
             PPReaderCommonRet r = (PPReaderCommonRet)ret;
             fetchText(r.index);
         }
-        else if(ret.type().compareTo(PPReaderCommonRet.TYPE_DB_CLICK) == 0){
-            m_panel.show();
+        else if(ret.type().compareTo(PPReaderDBClicksRet.class.getName()) == 0){
+            PPReaderDBClicksRet r = (PPReaderDBClicksRet)ret;
+            PPReaderControlPanel panel = getView().findViewById(R.id.novel_text_panel);
+            panel.show((int)r.event.getRawX(),(int)r.event.getRawY());
         }
         else if(ret.type().compareTo(PPReaderCommonRet.TYPE_SHOW_CATALOG) == 0){
             int pos = m_text.getCurrentIndex();
@@ -90,6 +97,7 @@ public class PPReaderTextFragment extends Fragment implements IPPReaderTaskNotif
             PPReaderChapter chapter = m_novel.getChapter(index);
             int pos = m_pageMgr.getChapterFirstPageIndex(chapter.id);
             m_text.setCurrentItem(pos);
+            getView().findViewById(R.id.novel_text_catalog).setVisibility(View.GONE);
         }
         else if(ret.type().compareTo(PPReaderTextRet.class.getName()) == 0){
             if(ret.getRetCode() != 0 ){
@@ -153,14 +161,18 @@ public class PPReaderTextFragment extends Fragment implements IPPReaderTaskNotif
     }
 
     private void init(Bundle savedInstanceState){
-        View v = null;
-        m_panel = new PPReaderTextPanel(v,this);
-        m_bars = new PPReaderTextBars();
-        m_catalog = new PPReaderTextCatalog(this);
+        PPReaderControlPanel panel = getView().findViewById(R.id.novel_text_panel);
+        panel.addListener(this);
+        View actionBar = getView().findViewById(R.id.novel_action_bar);
+        TextView bottomBar = getView().findViewById(R.id.novel_bottom_bar);
+        m_bars = new PPReaderTextBars(actionBar,bottomBar,getActivity());
+        View catalogView = getView().findViewById(R.id.novel_text_catalog);
+        m_catalog = new PPReaderTextCatalog(catalogView,m_novel,this,this);
         m_pageMgr = new PPReaderPageManager();
         m_service.start(this);
         ViewPager vp = getView().findViewById(R.id.novel_text_pager);
         m_text = new PPReaderText(vp, new PPReaderTextAdapter(getActivity(), m_pageMgr,this),this);
+
         m_isActive = true;
     }
 
@@ -169,7 +181,7 @@ public class PPReaderTextFragment extends Fragment implements IPPReaderTaskNotif
         if(page == null){
             return;
         }
-        String pageNo = Integer.toString(position+1) + "/" + Integer.toString(m_pageMgr.getCount());
+        String pageNo = Integer.toString(page.chapterIndex+1) + "/" + Integer.toString(m_novel.chapters.size());
         m_bars.updateInfo(page.title,pageNo);
     }
 
@@ -193,7 +205,6 @@ public class PPReaderTextFragment extends Fragment implements IPPReaderTaskNotif
     private PPReaderText m_text;
     private PPReaderTextBars m_bars;
     private PPReaderNovel m_novel;
-    private PPReaderTextPanel m_panel;
     private PPReaderTextCatalog m_catalog;
     private IPPReaderTaskNotification m_notify;
     private boolean m_isActive = false;
