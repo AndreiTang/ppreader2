@@ -6,6 +6,8 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import org.andrei.ppreader.R;
@@ -59,10 +61,26 @@ public class PPReaderTextFragment extends Fragment implements IPPReaderTaskNotif
     public void onHiddenChanged(boolean hidden){
         super.onHiddenChanged(hidden);
         if(hidden){
-
+            m_novel.duration += System.currentTimeMillis() - m_beginTime;
+            m_beginTime  = 0;
         }
         else{
+            m_beginTime = System.currentTimeMillis();
+        }
+    }
 
+    @Override
+    public void onStart(){
+        super.onStart();
+        m_beginTime = System.currentTimeMillis();
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        if(m_beginTime != 0){
+            m_novel.duration += System.currentTimeMillis() - m_beginTime;
+            m_beginTime  = 0;
         }
     }
 
@@ -70,8 +88,15 @@ public class PPReaderTextFragment extends Fragment implements IPPReaderTaskNotif
     public void onNotify(IPPReaderTaskRet ret) {
         if(ret.type().compareTo(PPReaderCommonRet.TYPE_CURR) == 0){
             int pos = ((PPReaderCommonRet)ret).index;
+            PPReaderTextPage page = m_pageMgr.getItem(pos);
+            if(page.status == PPReaderTextPage.STATUS_INVALID){
+                return;
+            }
             setBarInfo(pos);
             fetchText(pos);
+            m_novel.currIndex = page.chapterIndex;
+            PPReaderChapter chapter = m_novel.chapters.get(page.chapterIndex);
+            chapter.offset = page.offset;
         }
         else if(ret.type().compareTo(PPReaderCommonRet.TYPE_FETCH_TEXT) == 0){
             PPReaderCommonRet r = (PPReaderCommonRet)ret;
@@ -86,7 +111,8 @@ public class PPReaderTextFragment extends Fragment implements IPPReaderTaskNotif
             int pos = m_text.getCurrentIndex();
             PPReaderTextPage page = m_pageMgr.getItem(pos);
             int index = m_novel.getChapterIndex(page.chapterId);
-            m_catalog.show(index);
+            long duration = (m_novel.duration + System.currentTimeMillis() - m_beginTime)/1000;
+            m_catalog.show(index,duration);
         }
         else if(ret.type().compareTo(PPReaderCommonRet.TYPE_TO_LIST_PAGE) == 0){
             //directly tell activity to switch to list page.
@@ -158,6 +184,19 @@ public class PPReaderTextFragment extends Fragment implements IPPReaderTaskNotif
         if(m_novel.currIndex == 0){
             fetchText(0);
         }
+
+        final PPReaderChapter chapter = m_novel.chapters.get(m_novel.currIndex);
+        if(chapter.offset > 0){
+            final ListView lv = getView().findViewById(R.id.novel_text_pager);
+            lv.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    lv.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    int index = m_pageMgr.getChapterFirstPageIndex(chapter.id) + chapter.offset;
+                    lv.setSelection(index);
+                }
+            });
+        }
     }
 
     private void init(Bundle savedInstanceState){
@@ -208,6 +247,7 @@ public class PPReaderTextFragment extends Fragment implements IPPReaderTaskNotif
     private PPReaderTextCatalog m_catalog;
     private IPPReaderTaskNotification m_notify;
     private boolean m_isActive = false;
+    private long m_beginTime;
 
 
 }

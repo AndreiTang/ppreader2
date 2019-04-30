@@ -31,7 +31,7 @@ public class PPReaderTextCatalog {
         init();
     }
 
-    public void show(int curr){
+    public void show(int curr, long duration){
         m_catalogView.setVisibility(View.VISIBLE);
         ListView l = m_catalogView.findViewById(R.id.novel_catalog_chapter_list);
         PPReaderCatalogAdapter adapter = new PPReaderCatalogAdapter(m_novel,m_notification,m_fragment);
@@ -51,6 +51,13 @@ public class PPReaderTextCatalog {
             }
         }, m_fragment);
         l.setAdapter(ra);
+
+        long h = duration/3600;
+        long m = (duration%3600)/60;
+        String ds = m_fragment.getString(R.string.novel_catalog_duration);
+        ds = String.format(ds,h,m);
+        TextView tv = m_fragment.getView().findViewById(R.id.novel_catalog_duration);
+        tv.setText(ds);
     }
 
     private void init(){
