@@ -36,8 +36,9 @@ import java.util.ArrayList;
 public class PPReaderTextFragment extends Fragment implements IPPReaderTaskNotification {
 
     public void init(IPPReaderService service,IPPReaderTaskNotification notification){
-        m_service = service;
         m_notify = notification;
+        m_pageMgr = new PPReaderPageManager();
+        m_text = new PPReaderText(m_pageMgr,service,this );
     }
 
     @Override
@@ -88,19 +89,7 @@ public class PPReaderTextFragment extends Fragment implements IPPReaderTaskNotif
     public void onNotify(IPPReaderTaskRet ret) {
         if(ret.type().compareTo(PPReaderCommonRet.TYPE_CURR) == 0){
             int pos = ((PPReaderCommonRet)ret).index;
-            PPReaderTextPage page = m_pageMgr.getItem(pos);
-            if(page.status == PPReaderTextPage.STATUS_INVALID){
-                return;
-            }
             setBarInfo(pos);
-            fetchText(pos);
-            m_novel.currIndex = page.chapterIndex;
-            PPReaderChapter chapter = m_novel.chapters.get(page.chapterIndex);
-            chapter.offset = page.offset;
-        }
-        else if(ret.type().compareTo(PPReaderCommonRet.TYPE_FETCH_TEXT) == 0){
-            PPReaderCommonRet r = (PPReaderCommonRet)ret;
-            fetchText(r.index);
         }
         else if(ret.type().compareTo(PPReaderDBClicksRet.class.getName()) == 0){
             PPReaderDBClicksRet r = (PPReaderDBClicksRet)ret;
@@ -125,35 +114,6 @@ public class PPReaderTextFragment extends Fragment implements IPPReaderTaskNotif
             m_text.setCurrentItem(pos);
             getView().findViewById(R.id.novel_text_catalog).setVisibility(View.GONE);
         }
-        else if(ret.type().compareTo(PPReaderTextRet.class.getName()) == 0){
-            if(ret.getRetCode() != 0 ){
-                return;
-            }
-
-            PPReaderTextRet textTaskRet = (PPReaderTextRet)ret;
-            if(textTaskRet.novelId.compareTo(m_novel.id) != 0){
-                return;
-            }
-
-            if(textTaskRet.getRetCode() == ServiceError.ERR_OK){
-                m_pageMgr.updateText(textTaskRet.chapterId,textTaskRet.text);
-            }
-            else {
-                int index = m_pageMgr.getChapterFirstPageIndex(textTaskRet.chapterId);
-                PPReaderTextPage page = m_pageMgr.getItem(index);
-                page.status  = PPReaderTextPage.STATUS_FAIL;
-            }
-            m_text.notifyDataSetChanged();
-        }
-        else if(ret.type().compareTo(PPReaderAllocateTextRet.class.getName())==0){
-            PPReaderAllocateTextRet r = (PPReaderAllocateTextRet)ret;
-
-            PPReaderTextPage item = m_pageMgr.getItem(r.index);
-            if(item.equals(r.page)){
-                m_pageMgr.injectText(r.index,r.tv);
-                m_text.notifyDataSetChanged();
-            }
-        }
     }
 
     public void setNovel(final PPReaderNovel novel){
@@ -177,40 +137,24 @@ public class PPReaderTextFragment extends Fragment implements IPPReaderTaskNotif
         if(m_novel == null){
             return;
         }
-        m_service.clearTasks();
-        m_pageMgr.load(m_novel);
-        m_text.setCurrentItem(m_novel.currIndex);
+        m_text.loadNovel(m_novel);
         setBarInfo(m_novel.currIndex);
-        if(m_novel.currIndex == 0){
-            fetchText(0);
-        }
-
-        final PPReaderChapter chapter = m_novel.chapters.get(m_novel.currIndex);
-        if(chapter.offset > 0){
-            final ListView lv = getView().findViewById(R.id.novel_text_pager);
-            lv.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                @Override
-                public void onGlobalLayout() {
-                    lv.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                    int index = m_pageMgr.getChapterFirstPageIndex(chapter.id) + chapter.offset;
-                    lv.setSelection(index);
-                }
-            });
-        }
     }
 
     private void init(Bundle savedInstanceState){
         PPReaderControlPanel panel = getView().findViewById(R.id.novel_text_panel);
         panel.addListener(this);
+
         View actionBar = getView().findViewById(R.id.novel_action_bar);
         TextView bottomBar = getView().findViewById(R.id.novel_bottom_bar);
         m_bars = new PPReaderTextBars(actionBar,bottomBar,getActivity());
+
         View catalogView = getView().findViewById(R.id.novel_text_catalog);
         m_catalog = new PPReaderTextCatalog(catalogView,m_novel,this,this);
-        m_pageMgr = new PPReaderPageManager();
-        m_service.start(this);
+
         ViewPager vp = getView().findViewById(R.id.novel_text_pager);
-        m_text = new PPReaderText(vp, new PPReaderTextAdapter(getActivity(), m_pageMgr,this),this);
+        m_text.init(vp,this);
+
 
         m_isActive = true;
     }
@@ -224,23 +168,8 @@ public class PPReaderTextFragment extends Fragment implements IPPReaderTaskNotif
         m_bars.updateInfo(page.title,pageNo);
     }
 
-    private void fetchText(int pos){
-        PPReaderTextPage page = m_pageMgr.getItem(pos);
-        if(page.status == PPReaderTextPage.STATUS_INIT){
-            page.status = PPReaderTextPage.STATUS_LOADING;
-            m_text.notifyDataSetChanged();
-
-            PPReaderTextTask task = new PPReaderTextTask();
-            task.chapterId = page.chapterId;
-            task.novelId = m_novel.id;
-            task.chapterUrl = m_novel.getChapter(page.chapterIndex).url;
-            m_service.addTask(task);
-        }
-    }
-
 
     private IPPReaderPageManager m_pageMgr;
-    private IPPReaderService m_service;
     private PPReaderText m_text;
     private PPReaderTextBars m_bars;
     private PPReaderNovel m_novel;
@@ -248,6 +177,5 @@ public class PPReaderTextFragment extends Fragment implements IPPReaderTaskNotif
     private IPPReaderTaskNotification m_notify;
     private boolean m_isActive = false;
     private long m_beginTime;
-
 
 }

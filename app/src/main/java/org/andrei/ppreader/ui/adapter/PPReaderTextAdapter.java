@@ -3,6 +3,7 @@ package org.andrei.ppreader.ui.adapter;
 
 import android.app.Activity;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +17,7 @@ import org.andrei.ppreader.ui.adapter.helper.PPReaderTextFragmentViews;
 
 public class PPReaderTextAdapter extends PagerAdapter {
 
-    public PPReaderTextAdapter(@NonNull final Activity parent, @NonNull  final IPPReaderPageManager pageMgr, IPPReaderTaskNotification notification){
+    public PPReaderTextAdapter(final Fragment parent,  final IPPReaderPageManager pageMgr, IPPReaderTaskNotification notification){
         m_viewMgr = new PPReaderTextFragmentViewManager(notification);
         m_pageMgr = pageMgr;
         m_parent = parent;
@@ -65,5 +66,5 @@ public class PPReaderTextAdapter extends PagerAdapter {
 
     private PPReaderTextFragmentViewManager m_viewMgr;
     private IPPReaderPageManager m_pageMgr;
-    private Activity m_parent;
+    private Fragment m_parent;
 }

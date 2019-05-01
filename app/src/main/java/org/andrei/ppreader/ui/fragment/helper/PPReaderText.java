@@ -1,23 +1,73 @@
 package org.andrei.ppreader.ui.fragment.helper;
 
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.MotionEvent;
+import android.view.ViewTreeObserver;
 
-import com.jakewharton.rxbinding2.view.RxView;
-
+import org.andrei.ppreader.data.PPReaderChapter;
+import org.andrei.ppreader.data.PPReaderNovel;
+import org.andrei.ppreader.data.PPReaderTextPage;
+import org.andrei.ppreader.service.IPPReaderService;
 import org.andrei.ppreader.service.IPPReaderTaskNotification;
+import org.andrei.ppreader.service.IPPReaderTaskRet;
+import org.andrei.ppreader.service.PPReaderTextRet;
+import org.andrei.ppreader.service.PPReaderTextTask;
+import org.andrei.ppreader.service.ServiceError;
 import org.andrei.ppreader.ui.adapter.PPReaderTextAdapter;
+import org.andrei.ppreader.ui.adapter.helper.IPPReaderPageManager;
 import org.andrei.ppreader.ui.view.helper.PPReaderRxBinding;
 
 import io.reactivex.functions.Consumer;
 
-public class PPReaderText {
-    public PPReaderText(final ViewPager vp, final PPReaderTextAdapter adapter,final IPPReaderTaskNotification notification){
+public class PPReaderText implements IPPReaderTaskNotification {
 
+    public PPReaderText(final IPPReaderPageManager pageManager, IPPReaderService service, final IPPReaderTaskNotification notification) {
+        m_pageManager = pageManager;
+        m_service = service;
         m_notification = notification;
+    }
+
+    @Override
+    public void onNotify(IPPReaderTaskRet ret) {
+        if (ret.type().compareTo(PPReaderTextRet.class.getName()) == 0) {
+            if (ret.getRetCode() != 0) {
+                return;
+            }
+
+            PPReaderTextRet textTaskRet = (PPReaderTextRet) ret;
+            if (textTaskRet.novelId.compareTo(m_novel.id) != 0) {
+                return;
+            }
+
+            if (textTaskRet.getRetCode() == ServiceError.ERR_OK) {
+                m_pageManager.updateText(textTaskRet.chapterId, textTaskRet.text);
+            } else {
+                int index = m_pageManager.getChapterFirstPageIndex(textTaskRet.chapterId);
+                PPReaderTextPage page = m_pageManager.getItem(index);
+                page.status = PPReaderTextPage.STATUS_FAIL;
+            }
+            m_adapter.notifyDataSetChanged();
+        }
+        else if(ret.type().compareTo(PPReaderAllocateTextRet.class.getName())==0){
+            PPReaderAllocateTextRet r = (PPReaderAllocateTextRet)ret;
+
+            PPReaderTextPage item = m_pageManager.getItem(r.index);
+            if(item.equals(r.page)){
+                m_pageManager.injectText(r.index,r.tv);
+                m_adapter.notifyDataSetChanged();
+            }
+        }
+        else if(ret.type().compareTo(PPReaderCommonRet.TYPE_FETCH_TEXT) == 0){
+            PPReaderCommonRet r = (PPReaderCommonRet)ret;
+            fetchText(r.index);
+        }
+    }
+
+    public void init(final ViewPager vp, final Fragment parent) {
         m_vp = vp;
-        m_adapter = adapter;
-        vp.setAdapter(m_adapter);
+        m_adapter = new PPReaderTextAdapter(parent, m_pageManager, this);
+        m_vp.setAdapter(m_adapter);
 
         vp.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -27,9 +77,15 @@ public class PPReaderText {
 
             @Override
             public void onPageSelected(int position) {
-                if(m_notification == null){
+                if (m_notification == null) {
                     return;
                 }
+
+                PPReaderTextPage page = m_pageManager.getItem(position);
+                m_novel.currIndex = page.chapterIndex;
+                PPReaderChapter chapter = m_novel.chapters.get(page.chapterIndex);
+                chapter.offset = page.offset;
+
                 PPReaderCommonRet ret = new PPReaderCommonRet(PPReaderCommonRet.TYPE_CURR);
                 ret.index = position;
                 m_notification.onNotify(ret);
@@ -49,26 +105,68 @@ public class PPReaderText {
                 m_notification.onNotify(ret);
             }
         });
+
+        m_service.start(this);
+
     }
 
-    public void notifyDataSetChanged(){
+    public void loadNovel(final PPReaderNovel novel) {
+        m_novel = novel;
+
+        m_service.clearTasks();
+        m_pageManager.load(m_novel);
+        m_vp.setCurrentItem(m_novel.currIndex);
+        if (m_novel.currIndex == 0) {
+            fetchText(0);
+        }
+
+        final PPReaderChapter chapter = m_novel.chapters.get(m_novel.currIndex);
+        if (chapter.offset > 0) {
+            m_vp.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    m_vp.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    int index = m_pageManager.getChapterFirstPageIndex(chapter.id) + chapter.offset;
+                    m_vp.setCurrentItem(index);
+                }
+            });
+        }
+    }
+
+    public void notifyDataSetChanged() {
         m_adapter.notifyDataSetChanged();
     }
 
-    public void setCurrentItem(int index){
+    public void setCurrentItem(int index) {
         m_vp.setCurrentItem(index);
-        if(index == 0){
+        if (index == 0) {
             m_adapter.notifyDataSetChanged();
         }
     }
 
-    public int getCurrentIndex(){
+    public int getCurrentIndex() {
         return m_vp.getCurrentItem();
     }
 
+    private void fetchText(int pos) {
+        PPReaderTextPage page = m_pageManager.getItem(pos);
+        if (page.status == PPReaderTextPage.STATUS_INIT) {
+            page.status = PPReaderTextPage.STATUS_LOADING;
+            m_adapter.notifyDataSetChanged();
+
+            PPReaderTextTask task = new PPReaderTextTask();
+            task.chapterId = page.chapterId;
+            task.novelId = m_novel.id;
+            task.chapterUrl = m_novel.getChapter(page.chapterIndex).url;
+            m_service.addTask(task);
+        }
+    }
+
     private IPPReaderTaskNotification m_notification;
+    private IPPReaderPageManager m_pageManager;
+    private IPPReaderService m_service;
+    private PPReaderNovel m_novel;
     private PPReaderTextAdapter m_adapter;
     private ViewPager m_vp;
-
 
 }
