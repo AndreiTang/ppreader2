@@ -129,7 +129,6 @@ public class MockActivity5 extends FragmentActivity {
         novel.chapters.add(chapter);
 
         chapter = new PPReaderChapter();
-        chapter.offset = 1;
         chapter.id = "2";
         chapter.url = "2";
         chapter.title = "一梦五百年(中)";
