@@ -54,7 +54,7 @@ public class PPReaderTextFragment extends Fragment implements IPPReaderTaskNotif
             m_novel = (PPReaderNovel) savedInstanceState.getSerializable(NOVEL);
         }
 
-        init(savedInstanceState);
+        init();
         loadNovel();
 
         final View root = this.getActivity().findViewById(android.R.id.content);
@@ -152,7 +152,7 @@ public class PPReaderTextFragment extends Fragment implements IPPReaderTaskNotif
         setBarInfo(m_novel.currIndex);
     }
 
-    private void init(Bundle savedInstanceState){
+    private void init(){
         PPReaderControlPanel panel = getView().findViewById(R.id.novel_text_panel);
         panel.addListener(this);
 

@@ -23,7 +23,7 @@ public class PPReaderTextFragmentViewManager {
         m_notify = notification;
     }
 
-    public PPReaderTextFragmentViews addView(final View view, final PPReaderTextPage page, final int pos){
+    public void addView(final View view, final PPReaderTextPage page, final int pos){
 
         final PPReaderTextFragmentViews vs = new PPReaderTextFragmentViews();
         vs.root = view;
@@ -46,7 +46,6 @@ public class PPReaderTextFragmentViewManager {
         );
         m_views.add(vs);
         updateItem(vs);
-        return null;
     }
 
     public void removeView(final View view){
@@ -74,6 +73,9 @@ public class PPReaderTextFragmentViewManager {
     private void updateItem(final PPReaderTextFragmentViews vs){
         final PPReaderTextPage page = vs.page;
         if(page.status == PPReaderTextPage.STATUS_TEXT_NO_SLICE){
+            vs.textView.setVisibility(View.VISIBLE);
+            vs.errView.setVisibility(View.GONE);
+            vs.maskView.setVisibility(View.GONE);
             final StringBuilder text = new StringBuilder();
             text.append("J\n");
             //using dummy title to occupy title place which is just one line.
@@ -84,6 +86,7 @@ public class PPReaderTextFragmentViewManager {
             text.append("J\n");
             text.append(page.text);
             final TextView textView = vs.textView;
+            textView.setText(text);
             textView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {
@@ -93,11 +96,11 @@ public class PPReaderTextFragmentViewManager {
                     }
                     PPReaderAllocateTextRet ret = new PPReaderAllocateTextRet();
                     ret.page = page;
-                    ret.tv = vs.textView;
+                    ret.tv = textView;
                     m_notify.onNotify(ret);
                 }
             });
-            textView.setText(text);
+
         }
         else if(page.status == PPReaderTextPage.STATUS_OK){
             vs.textView.setVisibility(View.VISIBLE);
