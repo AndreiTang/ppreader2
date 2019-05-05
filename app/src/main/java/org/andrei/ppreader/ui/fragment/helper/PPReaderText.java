@@ -1,6 +1,10 @@
 package org.andrei.ppreader.ui.fragment.helper;
 
+import android.database.DataSetObserver;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.MotionEvent;
 import android.view.ViewTreeObserver;
@@ -51,12 +55,9 @@ public class PPReaderText implements IPPReaderTaskNotification {
         }
         else if(ret.type().compareTo(PPReaderAllocateTextRet.class.getName())==0){
             PPReaderAllocateTextRet r = (PPReaderAllocateTextRet)ret;
-
-            PPReaderTextPage item = m_pageManager.getItem(r.index);
-            if(item.equals(r.page)){
-                m_pageManager.injectText(r.index,r.tv);
-                m_adapter.notifyDataSetChanged();
-            }
+            int index = m_pageManager.getIndex(r.page);
+            m_pageManager.injectText(index,r.tv);
+            m_adapter.notifyDataSetChanged();
         }
         else if(ret.type().compareTo(PPReaderCommonRet.TYPE_FETCH_TEXT) == 0){
             PPReaderCommonRet r = (PPReaderCommonRet)ret;
@@ -77,15 +78,20 @@ public class PPReaderText implements IPPReaderTaskNotification {
 
             @Override
             public void onPageSelected(int position) {
-                if (m_notification == null) {
-                    return;
-                }
 
                 PPReaderTextPage page = m_pageManager.getItem(position);
                 m_novel.currIndex = page.chapterIndex;
                 PPReaderChapter chapter = m_novel.chapters.get(page.chapterIndex);
                 chapter.offset = page.offset;
 
+                if(page.status == PPReaderTextPage.STATUS_LOADED){
+                    page.status = PPReaderTextPage.STATUS_TEXT_NO_SLICE;
+                    notifyDataSetChanged();
+                }
+
+                if (m_notification == null) {
+                    return;
+                }
                 PPReaderCommonRet ret = new PPReaderCommonRet(PPReaderCommonRet.TYPE_CURR);
                 ret.index = position;
                 m_notification.onNotify(ret);
@@ -114,20 +120,32 @@ public class PPReaderText implements IPPReaderTaskNotification {
         m_novel = novel;
 
         m_service.clearTasks();
+        final PPReaderChapter chapter = m_novel.chapters.get(m_novel.currIndex);
+        final int offset = chapter.offset;
+
         m_pageManager.load(m_novel);
+        m_adapter.notifyDataSetChanged();
         m_vp.setCurrentItem(m_novel.currIndex);
         if (m_novel.currIndex == 0) {
             fetchText(0);
+            PPReaderTextPage page = m_pageManager.getItem(0);
+            if(page.status == PPReaderTextPage.STATUS_LOADED){
+                page.status = PPReaderTextPage.STATUS_TEXT_NO_SLICE;
+            }
         }
 
-        final PPReaderChapter chapter = m_novel.chapters.get(m_novel.currIndex);
-        if (chapter.offset > 0) {
-            m_vp.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+
+        if (offset > 0) {
+            m_adapter.registerDataSetObserver(new DataSetObserver() {
                 @Override
-                public void onGlobalLayout() {
-                    m_vp.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                    int index = m_pageManager.getChapterFirstPageIndex(chapter.id) + chapter.offset;
+                public void onChanged() {
+                    super.onChanged();
+                    m_adapter.unregisterDataSetObserver(this);
+                    int index = m_pageManager.getChapterFirstPageIndex(chapter.id) + offset;
                     m_vp.setCurrentItem(index);
+                    PPReaderCommonRet ret = new PPReaderCommonRet(PPReaderCommonRet.TYPE_CURR);
+                    ret.index = index;
+                    m_notification.onNotify(ret);
                 }
             });
         }

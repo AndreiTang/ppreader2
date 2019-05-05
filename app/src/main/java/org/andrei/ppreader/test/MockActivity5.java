@@ -8,6 +8,7 @@ import org.andrei.ppreader.data.PPReaderChapter;
 import org.andrei.ppreader.data.PPReaderNovel;
 import org.andrei.ppreader.service.IPPReaderTaskNotification;
 import org.andrei.ppreader.service.IPPReaderTaskRet;
+import org.andrei.ppreader.ui.fragment.PPReaderMainFragment;
 import org.andrei.ppreader.ui.fragment.PPReaderTextFragment;
 
 public class MockActivity5 extends FragmentActivity {
@@ -16,7 +17,15 @@ public class MockActivity5 extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mock);
 
-        PPReaderTextFragment textFragment = new PPReaderTextFragment();
+        PPReaderTextFragment textFragment = null;
+        if(savedInstanceState != null) {
+            textFragment = (PPReaderTextFragment) getSupportFragmentManager().findFragmentById(R.id.mock_root);
+        }
+        else{
+            textFragment = new PPReaderTextFragment();
+            getSupportFragmentManager().beginTransaction().add(R.id.mock_root,textFragment).commit();
+        }
+
         textFragment.init(new MockService(), new IPPReaderTaskNotification() {
             @Override
             public void onNotify(IPPReaderTaskRet ret) {
@@ -24,10 +33,9 @@ public class MockActivity5 extends FragmentActivity {
             }
         });
 
-        getSupportFragmentManager().beginTransaction().add(R.id.mock_root,textFragment).commit();
-
         PPReaderNovel novel = new PPReaderNovel();
         novel.id = "1";
+        novel.currIndex = 1;
         novel.name = "官居一品";
 
         PPReaderChapter chapter = new PPReaderChapter();
@@ -121,6 +129,7 @@ public class MockActivity5 extends FragmentActivity {
         novel.chapters.add(chapter);
 
         chapter = new PPReaderChapter();
+        chapter.offset = 1;
         chapter.id = "2";
         chapter.url = "2";
         chapter.title = "一梦五百年(中)";

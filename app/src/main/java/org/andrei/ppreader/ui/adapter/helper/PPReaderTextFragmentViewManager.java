@@ -2,6 +2,7 @@ package org.andrei.ppreader.ui.adapter.helper;
 
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.TextView;
 
 import com.jakewharton.rxbinding2.view.RxView;
 
@@ -82,18 +83,21 @@ public class PPReaderTextFragmentViewManager {
             text.append("J\n");
             text.append("J\n");
             text.append(page.text);
-            vs.textView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            final TextView textView = vs.textView;
+            textView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {
-                    vs.textView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    textView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    if(page.status != PPReaderTextPage.STATUS_TEXT_NO_SLICE){
+                        return;
+                    }
                     PPReaderAllocateTextRet ret = new PPReaderAllocateTextRet();
-                    ret.index = vs.pos;
                     ret.page = page;
                     ret.tv = vs.textView;
                     m_notify.onNotify(ret);
                 }
             });
-            vs.textView.setText(text);
+            textView.setText(text);
         }
         else if(page.status == PPReaderTextPage.STATUS_OK){
             vs.textView.setVisibility(View.VISIBLE);

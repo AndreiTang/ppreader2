@@ -118,7 +118,7 @@ public class PPReaderPageManager implements IPPReaderPageManager {
         page.chapterId = chapter.id;
         page.title = chapter.title;
         if (page.text.length() > 0) {
-            page.status = PPReaderTextPage.STATUS_TEXT_NO_SLICE;
+            page.status = PPReaderTextPage.STATUS_LOADED;
         }
         page.chapterIndex = m_pages.size();
         m_pages.add(page);

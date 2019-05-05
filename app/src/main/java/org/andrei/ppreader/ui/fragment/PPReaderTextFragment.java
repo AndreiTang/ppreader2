@@ -50,6 +50,9 @@ public class PPReaderTextFragment extends Fragment implements IPPReaderTaskNotif
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        if(savedInstanceState != null){
+            m_novel = (PPReaderNovel) savedInstanceState.getSerializable(NOVEL);
+        }
 
         init(savedInstanceState);
         loadNovel();
@@ -82,6 +85,14 @@ public class PPReaderTextFragment extends Fragment implements IPPReaderTaskNotif
         if(m_beginTime != 0){
             m_novel.duration += System.currentTimeMillis() - m_beginTime;
             m_beginTime  = 0;
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState){
+        super.onSaveInstanceState(savedInstanceState);
+        if(m_novel != null){
+            savedInstanceState.putSerializable(NOVEL,m_novel);
         }
     }
 
@@ -169,6 +180,7 @@ public class PPReaderTextFragment extends Fragment implements IPPReaderTaskNotif
     }
 
 
+    private final static String NOVEL = "novel";
     private IPPReaderPageManager m_pageMgr;
     private PPReaderText m_text;
     private PPReaderTextBars m_bars;
