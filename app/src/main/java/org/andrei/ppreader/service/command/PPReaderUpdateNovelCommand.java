@@ -1,7 +1,16 @@
-package org.andrei.ppreader.service;
+package org.andrei.ppreader.service.command;
 
 import org.andrei.ppreader.data.PPReaderChapter;
 import org.andrei.ppreader.data.PPReaderNovel;
+import org.andrei.ppreader.service.IPPReaderHttp;
+import org.andrei.ppreader.service.IPPReaderNovelEngine;
+import org.andrei.ppreader.service.IPPReaderNovelEngineManager;
+import org.andrei.ppreader.service.IPPReaderServiceCommand;
+import org.andrei.ppreader.service.IPPReaderTask;
+import org.andrei.ppreader.service.IPPReaderTaskRet;
+import org.andrei.ppreader.service.PPReaderUpdateNovelRet;
+import org.andrei.ppreader.service.PPReaderUpdateNovelTask;
+import org.andrei.ppreader.service.ServiceError;
 
 import java.util.ArrayList;
 

@@ -1,7 +1,16 @@
-package org.andrei.ppreader.service;
+package org.andrei.ppreader.service.command;
 
 import org.andrei.ppreader.data.IPPReaderDataManager;
 import org.andrei.ppreader.data.PPReaderEngineInfo;
+import org.andrei.ppreader.service.IPPReaderHttp;
+import org.andrei.ppreader.service.IPPReaderNovelEngine;
+import org.andrei.ppreader.service.IPPReaderNovelEngineManager;
+import org.andrei.ppreader.service.IPPReaderServiceCommand;
+import org.andrei.ppreader.service.IPPReaderTask;
+import org.andrei.ppreader.service.IPPReaderTaskRet;
+import org.andrei.ppreader.service.PPReaderSearchUrlsRet;
+import org.andrei.ppreader.service.PPReaderSearchUrlsTask;
+import org.andrei.ppreader.service.ServiceError;
 
 public class PPReaderSearchUrlsCommand implements IPPReaderServiceCommand {
 
