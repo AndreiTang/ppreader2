@@ -49,8 +49,16 @@ public class PPReaderDataManager implements IPPReaderDataManager {
     }
 
     @Override
-    public ArrayList<PPReaderEngineInfo> getEngineInfos() {
-        return m_infos;
+    public PPReaderEngineInfo getEngineInfo(int index) {
+        return m_infos.get(index);
+    }
+
+    @Override
+    public int getEngineInfoCount(){
+        if(m_infos == null){
+            return -1;
+        }
+        return m_infos.size();
     }
 
     @Override

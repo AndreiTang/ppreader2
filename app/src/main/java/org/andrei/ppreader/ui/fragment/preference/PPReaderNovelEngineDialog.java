@@ -10,7 +10,10 @@ import android.widget.TextView;
 
 import org.andrei.ppreader.R;
 import org.andrei.ppreader.data.IPPReaderDataManager;
+import org.andrei.ppreader.data.PPReaderEngineInfo;
 import org.andrei.ppreader.ui.adapter.PPReaderEngineInfoAdapter;
+
+import java.util.ArrayList;
 
 public class PPReaderNovelEngineDialog extends PreferenceDialogFragmentCompat {
 
@@ -38,7 +41,11 @@ public class PPReaderNovelEngineDialog extends PreferenceDialogFragmentCompat {
         lv.setSelector(cd);
 
         final PPReaderEngineInfoAdapter adapter = new PPReaderEngineInfoAdapter();
-        adapter.init(this,m_dataManager.getEngineInfos());
+        ArrayList<PPReaderEngineInfo> infos = new ArrayList<>();
+        for(int i = 0; i < m_dataManager.getEngineInfoCount(); i++){
+            infos.add(m_dataManager.getEngineInfo(i));
+        }
+        adapter.init(this,infos);
         lv.setAdapter(adapter);
     }
 

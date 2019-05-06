@@ -39,48 +39,20 @@ public class PPReaderTextAdapter extends PagerAdapter {
         container.addView(v);
         PPReaderTextPage page = m_pageMgr.getItem(position);
         m_viewMgr.addView(v,page,position);
-        refreshViews();
+        m_viewMgr.updateAllViews(m_pageMgr);
         return v;
     }
 
     @Override
     public int getItemPosition(Object object) {
-        for(int i = 0; i < m_viewMgr.getCount(); i++){
-            PPReaderTextFragmentViews vs = m_viewMgr.getItem(i);
-            if(!vs.root.equals(object)){
-                continue;
-            }
-            PPReaderTextPage page = m_pageMgr.getItem(vs.pos);
-            if(!vs.page.equals(page)){
-                vs.page = page;
-                m_viewMgr.updateView(vs);
-            }
-            else if(vs.page.equals(page) && page.status != vs.status){
-                m_viewMgr.updateView(vs);
-            }
-            return PagerAdapter.POSITION_UNCHANGED;
-        }
-        return PagerAdapter.POSITION_NONE;
+        m_viewMgr.updateView(object,m_pageMgr);
+        return PagerAdapter.POSITION_UNCHANGED;
     }
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
         container.removeView((View) object);
         m_viewMgr.removeView((View) object);
-    }
-
-    private void refreshViews(){
-        for(int i = 0; i < m_viewMgr.getCount(); i++){
-            PPReaderTextFragmentViews vs = m_viewMgr.getItem(i);
-            PPReaderTextPage page = m_pageMgr.getItem(vs.pos);
-            if(!vs.page.equals(page)){
-                vs.page = page;
-                m_viewMgr.updateView(vs);
-            }
-            else if(vs.page.equals(page) && page.status != vs.status){
-                m_viewMgr.updateView(vs);
-            }
-        }
     }
 
     private PPReaderTextFragmentViewManager m_viewMgr;

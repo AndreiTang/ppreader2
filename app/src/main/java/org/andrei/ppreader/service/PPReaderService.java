@@ -8,8 +8,8 @@ import java.util.ArrayList;
 
 
 public class PPReaderService implements IPPReaderService {
-    public static PPReaderService createInstance(){
-        return new PPReaderService();
+    public static PPReaderService createInstance(IPPReaderServiceCommand cmd){
+        return new PPReaderService(cmd);
     }
 
     @Override
@@ -87,7 +87,7 @@ public class PPReaderService implements IPPReaderService {
     }
 
     private IPPReaderTaskRet run(IPPReaderTask task){
-        return null;
+        return m_cmd.run(task);
     }
 
     private void postRet(final IPPReaderTaskRet ret){
@@ -103,9 +103,8 @@ public class PPReaderService implements IPPReaderService {
         });
     }
 
-
-    private PPReaderService(){
-
+    private PPReaderService(IPPReaderServiceCommand cmd){
+        m_cmd = cmd;
     }
 
     private Thread m_thread;
@@ -113,5 +112,6 @@ public class PPReaderService implements IPPReaderService {
     private volatile IPPReaderTaskNotification m_notification;
     private volatile ArrayList<IPPReaderTask> m_tasks = new ArrayList<IPPReaderTask>();
     private volatile boolean m_isRunning = true;
+    private IPPReaderServiceCommand m_cmd;
 
 }
