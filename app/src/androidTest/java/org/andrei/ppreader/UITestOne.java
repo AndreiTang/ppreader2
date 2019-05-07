@@ -136,7 +136,7 @@ public class UITestOne  {
                 ttv.setHeight(1080);
                 ttv.setText("1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890");
                 int count = ttv.getLineCount();
-                mgr.injectText(0,ttv.getLayout());
+               // mgr.injectText(0,ttv.getLayout());
             }
         });
 

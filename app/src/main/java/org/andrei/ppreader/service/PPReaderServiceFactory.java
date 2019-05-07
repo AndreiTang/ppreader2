@@ -5,7 +5,7 @@ import org.andrei.ppreader.service.command.PPReaderCommandManager;
 
 public class PPReaderServiceFactory implements IPPReaderServiceFactory {
 
-    PPReaderServiceFactory(IPPReaderDataManager dataManager){
+    public PPReaderServiceFactory(IPPReaderDataManager dataManager){
         m_mgr = new PPReaderCommandManager(dataManager);
     }
 

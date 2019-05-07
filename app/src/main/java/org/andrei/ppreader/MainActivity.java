@@ -158,7 +158,7 @@ public class MainActivity extends FragmentActivity implements IPPReaderTaskNotif
             @Override
             public void accept(Integer integer) throws Exception {
                 IPPReaderDataManager dataManager = new PPReaderDataManager();
-                IPPReaderServiceFactory serviceFactory = new PPReaderServiceFactory();
+                IPPReaderServiceFactory serviceFactory = new PPReaderServiceFactory(null);
 
                 PPReaderMainFragment main = new PPReaderMainFragment();
                 main.init(dataManager,MainActivity.this,serviceFactory);

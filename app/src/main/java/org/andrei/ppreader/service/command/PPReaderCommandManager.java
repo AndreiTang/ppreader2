@@ -5,7 +5,7 @@ import org.andrei.ppreader.service.IPPReaderServiceCommand;
 import org.andrei.ppreader.service.IPPReaderTask;
 import org.andrei.ppreader.service.IPPReaderTaskRet;
 import org.andrei.ppreader.service.PPReaderHttp;
-import org.andrei.ppreader.service.PPReaderNovelEngineManager;
+import org.andrei.ppreader.service.engine.PPReaderNovelEngineManager;
 import org.andrei.ppreader.util.TaskNames;
 
 import java.util.HashMap;
@@ -17,8 +17,6 @@ public class PPReaderCommandManager implements IPPReaderServiceCommand {
         PPReaderHttp http = new PPReaderHttp();
         m_cmds.put(TaskNames.SEARCH_URLS,new PPReaderSearchUrlsCommand(engineManager,http,dataManager) );
         m_cmds.put(TaskNames.UPDATE_NOVEL,new PPReaderUpdateNovelCommand(engineManager,http));
-
-
     }
 
     @Override

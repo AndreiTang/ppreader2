@@ -1,5 +1,7 @@
 package org.andrei.ppreader.service;
 
+import org.jsoup.nodes.Document;
+
 public interface IPPReaderHttp {
-    String get(String url);
+    Document get(String url);
 }
