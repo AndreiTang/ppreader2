@@ -125,7 +125,6 @@ public class PPReaderSearchFragment extends Fragment {
                     String url = m_urls.remove(0);
                     PPReaderSearchNovelsTask task = new PPReaderSearchNovelsTask(url,m_engineName);
                     m_service.addTask(task);
-                    insertFootView();
                 }
             }
         });
@@ -135,6 +134,7 @@ public class PPReaderSearchFragment extends Fragment {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 m_service.stop();
+                m_service.waitForExit();
                 initService();
                 removeFootView();
                 PPReaderSearchAdapter adapter = getAdapter();
@@ -212,7 +212,7 @@ public class PPReaderSearchFragment extends Fragment {
                     PPReaderSearchAdapter adapter = getAdapter();
                     adapter.addNovel(novel);
                     getView().findViewById(R.id.novel_search_ret_list).setVisibility(View.VISIBLE);
-                    if(m_service.isIdle()){
+                    if(m_service.isIdle() && (m_urls == null || (m_urls != null && m_urls.size() == 0)) ){
                         removeFootView();
                     }
                     else{

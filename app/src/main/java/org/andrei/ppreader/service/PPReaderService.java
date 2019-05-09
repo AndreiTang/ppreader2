@@ -52,7 +52,7 @@ public class PPReaderService implements IPPReaderService {
 
     @Override
     public boolean isIdle() {
-        return m_tasks.size() == 0;
+        return  m_tasks.size() == 0;
     }
 
     private void  init(){
