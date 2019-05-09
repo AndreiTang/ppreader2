@@ -1,7 +1,7 @@
 package org.andrei.ppreader.test;
 
-import org.andrei.ppreader.service.IPPReaderNovelEngine;
-import org.andrei.ppreader.service.IPPReaderNovelEngineManager;
+import org.andrei.ppreader.service.engine.IPPReaderNovelEngine;
+import org.andrei.ppreader.service.engine.IPPReaderNovelEngineManager;
 
 public class MockEngineManager implements IPPReaderNovelEngineManager {
     @Override

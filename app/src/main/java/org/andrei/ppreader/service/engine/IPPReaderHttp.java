@@ -1,4 +1,4 @@
-package org.andrei.ppreader.service;
+package org.andrei.ppreader.service.engine;
 
 import org.jsoup.nodes.Document;
 

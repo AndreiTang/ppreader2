@@ -6,7 +6,9 @@ import org.andrei.ppreader.util.TaskNames;
 public class PPReaderUpdateNovelTask implements IPPReaderTask {
 
     public PPReaderUpdateNovelTask(PPReaderNovel novel) {
-        this.novel = novel;
+        this.url = novel.chapterUrl;
+        this.engineName = novel.engineName;
+        this.id = novel.id;
     }
 
     @Override
@@ -14,6 +16,8 @@ public class PPReaderUpdateNovelTask implements IPPReaderTask {
         return TaskNames.UPDATE_NOVEL;
     }
 
-    public PPReaderNovel novel;
+    public String url;
+    public String engineName;
+    public String id;
 
 }

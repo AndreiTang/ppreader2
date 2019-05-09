@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 
 import org.andrei.ppreader.data.PPReaderChapter;
 import org.andrei.ppreader.data.PPReaderNovel;
-import org.andrei.ppreader.service.IPPReaderNovelEngineManager;
+import org.andrei.ppreader.service.engine.IPPReaderNovelEngineManager;
 import org.andrei.ppreader.service.IPPReaderService;
 import org.andrei.ppreader.service.IPPReaderTask;
 import org.andrei.ppreader.service.IPPReaderTaskNotification;
@@ -167,7 +167,7 @@ public class MockService implements IPPReaderService{
         }
         else if(task.type().compareTo(TaskNames.UPDATE_NOVEL)==0){
             PPReaderUpdateNovelRet ret = new PPReaderUpdateNovelRet();
-            ret.novel = ((PPReaderUpdateNovelTask)task).novel;
+            ret.id = ((PPReaderUpdateNovelTask)task).id;
             ArrayList<PPReaderChapter> cs = new ArrayList<>();
             cs.add(new PPReaderChapter());
             ret.delta = cs;

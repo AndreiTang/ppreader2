@@ -2,8 +2,9 @@ package org.andrei.ppreader.test;
 
 import org.andrei.ppreader.data.PPReaderChapter;
 import org.andrei.ppreader.data.PPReaderNovel;
-import org.andrei.ppreader.service.IPPReaderHttp;
-import org.andrei.ppreader.service.IPPReaderNovelEngine;
+import org.andrei.ppreader.service.engine.IPPReaderHttp;
+import org.andrei.ppreader.service.engine.IPPReaderNovelEngine;
+import org.andrei.ppreader.service.engine.PPReaderNovelType;
 
 import java.util.ArrayList;
 
@@ -15,12 +16,12 @@ public class MockEngine implements IPPReaderNovelEngine {
     }
 
     @Override
-    public int searchNovels(String url, IPPReaderHttp http, ArrayList<PPReaderNovel> novels) {
+    public int searchNovels(String url,String nsmr, IPPReaderHttp http, ArrayList<PPReaderNovel> novels) {
         return 0;
     }
 
     @Override
-    public int update(PPReaderNovel novel, IPPReaderHttp http, ArrayList<PPReaderChapter> delta, Integer type) {
+    public int updateNovel(String novelUrl, IPPReaderHttp http, ArrayList<PPReaderChapter> delta, PPReaderNovelType type) {
         delta.add(new PPReaderChapter());
         try {
             Thread.sleep(2000);
@@ -29,6 +30,12 @@ public class MockEngine implements IPPReaderNovelEngine {
         }
         return 0;
     }
+
+    @Override
+    public int fetchChapterText(String url, IPPReaderHttp http, StringBuilder ret) {
+        return 0;
+    }
+
 
     @Override
     public String getName() {

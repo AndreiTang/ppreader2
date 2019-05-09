@@ -5,18 +5,24 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.widget.TextView;
 
+import org.andrei.ppreader.data.PPReaderChapter;
 import org.andrei.ppreader.data.PPReaderDataManager;
 import org.andrei.ppreader.data.PPReaderEngineInfo;
+import org.andrei.ppreader.data.PPReaderNovel;
 import org.andrei.ppreader.service.IPPReaderService;
 import org.andrei.ppreader.service.IPPReaderTask;
 import org.andrei.ppreader.service.IPPReaderTaskNotification;
 import org.andrei.ppreader.service.IPPReaderTaskRet;
+import org.andrei.ppreader.service.PPReaderFetchTextRet;
+import org.andrei.ppreader.service.PPReaderFetchTextTask;
 import org.andrei.ppreader.service.PPReaderSearchNovelsRet;
 import org.andrei.ppreader.service.PPReaderSearchNovelsTask;
 import org.andrei.ppreader.service.PPReaderSearchUrlsRet;
 import org.andrei.ppreader.service.PPReaderSearchUrlsTask;
 import org.andrei.ppreader.service.PPReaderService;
 import org.andrei.ppreader.service.PPReaderServiceFactory;
+import org.andrei.ppreader.service.PPReaderUpdateNovelRet;
+import org.andrei.ppreader.service.PPReaderUpdateNovelTask;
 import org.andrei.ppreader.service.ServiceError;
 import org.andrei.ppreader.service.engine.EngineNames;
 import org.andrei.ppreader.util.TaskNames;
@@ -72,9 +78,50 @@ public class ServiceTest {
                    service.addTask(task);
                }
                else if(ret.type().compareTo(PPReaderSearchNovelsRet.class.getName())==0){
-                   service.stop();
+
                    PPReaderSearchNovelsRet r = (PPReaderSearchNovelsRet)ret;
                    assertEquals(10,r.novels.size());
+                   n = r.novels.get(0);
+                   int c = n.name.compareTo("巡狩大明");
+                   assertEquals(0,c);
+
+                   PPReaderUpdateNovelTask task = new PPReaderUpdateNovelTask(n);
+                   service.addTask(task);
+               }
+               else if(ret.type().compareTo(PPReaderUpdateNovelRet.class.getName()) == 0){
+
+                   PPReaderUpdateNovelRet r = (PPReaderUpdateNovelRet)ret;
+                   int i = 0;
+                   if(r.delta.size() > 0 ){
+                       i = 1;
+                   }
+                   assertEquals(1,i);
+
+                   i = n.id.compareTo(r.id);
+                   assertEquals(0,i);
+                   n.chapters.addAll(r.delta);
+
+                   c = n.chapters.get(0);
+                   i = c.title.compareTo("古代时刻表");
+                   assertEquals(0,i);
+
+                   PPReaderFetchTextTask task = new PPReaderFetchTextTask(n,c);
+                   service.addTask(task);
+
+               }
+               else if(ret.type().compareTo(PPReaderFetchTextRet.class.getName()) == 0){
+                   service.stop();
+                   PPReaderFetchTextRet r = (PPReaderFetchTextRet)ret;
+                   int index = r.text.indexOf("鼠鼠在这时间最活跃");
+                   int i = 0;
+                   if(index != -1){
+                       i = 1;
+                   }
+                   assertEquals(1,i);
+                   i = r.chapterId.compareTo(c.id);
+                   assertEquals(0,i);
+                   i = r.novelId.compareTo(n.id);
+                   assertEquals(0,i);
                }
             }
         });
@@ -89,6 +136,7 @@ public class ServiceTest {
 
     }
 
-    private String name;
+    PPReaderNovel n;
+    PPReaderChapter c;
 
 }

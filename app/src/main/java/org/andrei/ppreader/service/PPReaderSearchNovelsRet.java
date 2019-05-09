@@ -15,7 +15,7 @@ public class PPReaderSearchNovelsRet implements IPPReaderTaskRet {
         return m_retCode;
     }
 
-    public ArrayList<PPReaderNovel> novels;
+    public ArrayList<PPReaderNovel> novels = new ArrayList<>();
 
     public int m_retCode;
 }

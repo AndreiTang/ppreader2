@@ -1,4 +1,6 @@
-package org.andrei.ppreader.service;
+package org.andrei.ppreader.service.engine;
+
+import org.andrei.ppreader.service.engine.IPPReaderNovelEngine;
 
 public interface IPPReaderNovelEngineManager {
     public IPPReaderNovelEngine get(final String name);

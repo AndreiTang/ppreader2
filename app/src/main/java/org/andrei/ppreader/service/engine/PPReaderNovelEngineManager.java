@@ -1,8 +1,5 @@
 package org.andrei.ppreader.service.engine;
 
-import org.andrei.ppreader.service.IPPReaderNovelEngine;
-import org.andrei.ppreader.service.IPPReaderNovelEngineManager;
-
 import java.util.ArrayList;
 
 public class PPReaderNovelEngineManager implements IPPReaderNovelEngineManager {

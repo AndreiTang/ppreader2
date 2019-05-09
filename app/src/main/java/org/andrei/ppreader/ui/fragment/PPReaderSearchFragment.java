@@ -195,12 +195,17 @@ public class PPReaderSearchFragment extends Fragment {
                 else if(ret.type().compareTo(PPReaderSearchNovelsRet.class.getName()) == 0 && ret.getRetCode() == ServiceError.ERR_OK){
                     ArrayList<PPReaderNovel> novels = ((PPReaderSearchNovelsRet)ret).novels;
                     for(PPReaderNovel novel : novels){
+                        m_novels.add(novel);
                         PPReaderUpdateNovelTask task = new PPReaderUpdateNovelTask(novel);
                         m_service.addTask(task);
                     }
                 }
                 else if(ret.type().compareTo(PPReaderUpdateNovelRet.class.getName()) == 0 && ret.getRetCode() == ServiceError.ERR_OK){
-                    PPReaderNovel novel = ((PPReaderUpdateNovelRet)ret).novel;
+                    String id = ((PPReaderUpdateNovelRet)ret).id;
+                    PPReaderNovel novel = getNovel(id);
+                    if(novel == null){
+                        return;
+                    }
                     novel.type = ((PPReaderUpdateNovelRet) ret).type;
                     novel.chapters.addAll(((PPReaderUpdateNovelRet) ret).delta);
                     PPReaderSearchAdapter adapter = getAdapter();
@@ -253,6 +258,16 @@ public class PPReaderSearchFragment extends Fragment {
         return  adapter;
     }
 
+    private PPReaderNovel getNovel(String id){
+        for(PPReaderNovel novel: m_novels){
+            if(novel.id.compareTo(id)==0){
+                m_novels.remove(novel);
+                return novel;
+            }
+        }
+        return null;
+    }
+
     private final static String KEY_URLS = "urls";
     private final static String KEY_NOVELS = "novels";
 
@@ -261,4 +276,5 @@ public class PPReaderSearchFragment extends Fragment {
     private ArrayList<String> m_urls;
     private String m_engineName;
     private View m_footView;
+    private ArrayList<PPReaderNovel> m_novels = new ArrayList<>();
 }

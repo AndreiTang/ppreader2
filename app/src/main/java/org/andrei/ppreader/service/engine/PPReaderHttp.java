@@ -1,5 +1,6 @@
-package org.andrei.ppreader.service;
+package org.andrei.ppreader.service.engine;
 
+import org.andrei.ppreader.service.engine.IPPReaderHttp;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 

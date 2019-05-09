@@ -2,9 +2,9 @@ package org.andrei.ppreader.service.command;
 
 import org.andrei.ppreader.data.IPPReaderDataManager;
 import org.andrei.ppreader.data.PPReaderEngineInfo;
-import org.andrei.ppreader.service.IPPReaderHttp;
-import org.andrei.ppreader.service.IPPReaderNovelEngine;
-import org.andrei.ppreader.service.IPPReaderNovelEngineManager;
+import org.andrei.ppreader.service.engine.IPPReaderHttp;
+import org.andrei.ppreader.service.engine.IPPReaderNovelEngine;
+import org.andrei.ppreader.service.engine.IPPReaderNovelEngineManager;
 import org.andrei.ppreader.service.IPPReaderServiceCommand;
 import org.andrei.ppreader.service.IPPReaderTask;
 import org.andrei.ppreader.service.IPPReaderTaskRet;

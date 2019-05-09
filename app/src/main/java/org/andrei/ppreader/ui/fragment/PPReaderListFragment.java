@@ -119,7 +119,7 @@ public class PPReaderListFragment extends Fragment {
             @Override
             public void onNotify(IPPReaderTaskRet ret) {
                 PPReaderUpdateNovelRet r = (PPReaderUpdateNovelRet)ret;
-                PPReaderNovel novel = m_dataManager.getNovel(r.novel.id);
+                PPReaderNovel novel = m_dataManager.getNovel(r.id);
                 if(novel == null){
                     return;
                 }
