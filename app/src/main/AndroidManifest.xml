@@ -20,15 +20,15 @@
         <activity android:name=".test.MockActivity">
         </activity>
         <activity android:name=".test.MockActivity1">
-        </activity>
-        <activity android:name=".test.MockActivity2">
-        </activity>
-        <activity android:name=".test.MockActivity5">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".test.MockActivity2">
+        </activity>
+        <activity android:name=".test.MockActivity5">
         </activity>
 
     </application>

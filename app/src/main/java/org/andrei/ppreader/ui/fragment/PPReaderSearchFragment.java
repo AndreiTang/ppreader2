@@ -135,6 +135,7 @@ public class PPReaderSearchFragment extends Fragment {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 m_service.stop();
+                initService();
                 removeFootView();
                 PPReaderSearchAdapter adapter = getAdapter();
                 adapter.clear();

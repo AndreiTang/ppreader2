@@ -8,6 +8,7 @@ import org.andrei.ppreader.R;
 
 import org.andrei.ppreader.service.IPPReaderTaskNotification;
 import org.andrei.ppreader.service.IPPReaderTaskRet;
+import org.andrei.ppreader.service.PPReaderServiceFactory;
 import org.andrei.ppreader.ui.fragment.PPReaderSearchFragment;
 import org.andrei.ppreader.ui.fragment.helper.PPReaderSelectNovelRet;
 
@@ -16,6 +17,8 @@ public class MockActivity1 extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mock);
+
+        PPReaderServiceFactory factory = new PPReaderServiceFactory(new MockDataManager());
 
         if(savedInstanceState != null){
             Log.i("andrei","in activity");
@@ -30,7 +33,7 @@ public class MockActivity1 extends FragmentActivity {
                             Log.i("Andrei",r.novel.name);
                         }
                     }
-                },new MockService());
+                },factory.createServiceInstance());
                 return;
             }
         }
@@ -44,7 +47,7 @@ public class MockActivity1 extends FragmentActivity {
                     Log.i("Andrei",r.novel.name);
                 }
             }
-        },new MockService());
+        },factory.createServiceInstance());
         getSupportFragmentManager().beginTransaction().add(R.id.mock_root,fragment).commit();
         Log.i("andrei","end");
     }
