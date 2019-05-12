@@ -1,7 +1,11 @@
 package org.andrei.ppreader.data;
 
-public class PPReaderEngineInfo {
+import java.io.Serializable;
+
+public class PPReaderEngineInfo implements Serializable {
+
+    private static final long serialVersionUID = -7431546053378881135L;
     public String name;
     public boolean isUsed = true;
-    public boolean isSelected = false;
+    public transient boolean isSelected = false;
 }
