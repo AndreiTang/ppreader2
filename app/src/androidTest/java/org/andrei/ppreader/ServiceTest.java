@@ -1,10 +1,12 @@
 package org.andrei.ppreader;
 
+import android.app.Instrumentation;
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.widget.TextView;
 
+import org.andrei.ppreader.data.IPPReaderDataManager;
 import org.andrei.ppreader.data.PPReaderChapter;
 import org.andrei.ppreader.data.PPReaderDataManager;
 import org.andrei.ppreader.data.PPReaderEngineInfo;
@@ -40,9 +42,16 @@ import static org.junit.Assert.assertEquals;
 @RunWith(AndroidJUnit4.class)
 public class ServiceTest {
 
+    static String path;
+    {
+        Context appContext = InstrumentationRegistry.getTargetContext();
+        path = appContext.getExternalFilesDir(null).getPath();
+    }
+
 
     static class MockDataManager extends PPReaderDataManager{
         public MockDataManager(){
+            super(path);
             ArrayList<PPReaderEngineInfo> infos = new ArrayList<>();
             PPReaderEngineInfo info = new PPReaderEngineInfo();
             info.name = EngineNames.ENGINE_88dushu;
@@ -64,7 +73,8 @@ public class ServiceTest {
     @Test
     public void testAllTask(){
 
-        PPReaderServiceFactory factory = new PPReaderServiceFactory(new MockDataManager());
+        final IPPReaderDataManager dataManager = new MockDataManager();
+        PPReaderServiceFactory factory = new PPReaderServiceFactory(dataManager);
         final IPPReaderService service = factory.createServiceInstance();
         service.start(new IPPReaderTaskNotification() {
             @Override
@@ -82,8 +92,12 @@ public class ServiceTest {
                    PPReaderSearchNovelsRet r = (PPReaderSearchNovelsRet)ret;
                    assertEquals(10,r.novels.size());
                    n = r.novels.get(0);
-                   int c = n.name.compareTo("巡狩大明");
+                   int c = n.name.compareTo("大明枭");
                    assertEquals(0,c);
+
+                   for(PPReaderNovel it : r.novels){
+                        dataManager.addNovel(it);
+                   }
 
                    PPReaderUpdateNovelTask task = new PPReaderUpdateNovelTask(n);
                    service.addTask(task);
@@ -102,7 +116,7 @@ public class ServiceTest {
                    n.chapters.addAll(r.delta);
 
                    c = n.chapters.get(0);
-                   i = c.title.compareTo("古代时刻表");
+                   i = c.title.compareTo("第一章 祟祯二年");
                    assertEquals(0,i);
 
                    PPReaderFetchTextTask task = new PPReaderFetchTextTask(n,c);
@@ -112,7 +126,7 @@ public class ServiceTest {
                else if(ret.type().compareTo(PPReaderFetchTextRet.class.getName()) == 0){
                    service.stop();
                    PPReaderFetchTextRet r = (PPReaderFetchTextRet)ret;
-                   int index = r.text.indexOf("鼠鼠在这时间最活跃");
+                   int index = r.text.indexOf("湖广熟");
                    int i = 0;
                    if(index != -1){
                        i = 1;
@@ -122,6 +136,32 @@ public class ServiceTest {
                    assertEquals(0,i);
                    i = r.novelId.compareTo(n.id);
                    assertEquals(0,i);
+
+
+                   PPReaderEngineInfo i2 = new PPReaderEngineInfo();
+                   i2.name = "USSB";
+                   i2.isUsed = true;
+                   i2.isSelected = true;
+                   ArrayList<PPReaderEngineInfo> ins = new ArrayList<>();
+                   ins.add(i2);
+                   dataManager.setEngineInfos(ins);
+
+                   dataManager.save();
+
+                   IPPReaderDataManager d = new MockDataManager();
+                   d.load();
+                   assertEquals(d.getNovelCount(),10);
+                   PPReaderNovel n1 = d.getNovel(0);
+                    i = 0;
+                    if(n1.chapters.size() > 0){
+                        i = 1;
+                    }
+                   assertEquals(1,i);
+
+                    PPReaderEngineInfo i3 = d.getEngineInfo(0);
+                    assertEquals(i3.name,"USSB");
+                    assertEquals(i3.isUsed,true);
+
                }
             }
         });

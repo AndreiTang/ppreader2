@@ -1,6 +1,7 @@
 package org.andrei.ppreader.data;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -21,7 +22,7 @@ public class PPReaderDataManager implements IPPReaderDataManager {
     @Override
     public int load() {
         loadNovels();
-
+        loadEngines();
         return 0;
     }
 
@@ -155,9 +156,8 @@ public class PPReaderDataManager implements IPPReaderDataManager {
         }
 
         Gson gson = new Gson();
-        PPReaderEngineInfo[] infos = gson.fromJson(txt,PPReaderEngineInfo[].class);
-
-
+        ArrayList<PPReaderEngineInfo> infos = gson.fromJson(txt,new TypeToken<ArrayList<PPReaderEngineInfo>>(){}.getType());
+        setEngineInfos(infos);
     }
 
     private void loadNovels() {

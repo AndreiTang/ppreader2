@@ -1,5 +1,6 @@
 package org.andrei.ppreader;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.v4.app.Fragment;
@@ -12,6 +13,7 @@ import android.view.WindowManager;
 import org.andrei.ppreader.data.IPPReaderDataManager;
 import org.andrei.ppreader.data.PPReaderDataManager;
 import org.andrei.ppreader.data.PPReaderNovel;
+import org.andrei.ppreader.service.IPPReaderService;
 import org.andrei.ppreader.service.IPPReaderServiceFactory;
 import org.andrei.ppreader.service.IPPReaderTaskNotification;
 import org.andrei.ppreader.service.IPPReaderTaskRet;
@@ -66,24 +68,22 @@ public class MainActivity extends FragmentActivity implements IPPReaderTaskNotif
     }
 
     @Override
+    public void onDestroy(){
+        super.onDestroy();
+        m_dataManager.save();
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle savedInstanceState){
         super.onSaveInstanceState(savedInstanceState);
 
-        PPReaderMainFragment main = (PPReaderMainFragment)getSupportFragmentManager().findFragmentByTag(PPReaderMainFragment.class.getName());
         PPReaderTextFragment text = (PPReaderTextFragment)getSupportFragmentManager().findFragmentByTag(PPReaderTextFragment.class.getName());
-
-        if(main == null || text == null){
-            return;
-        }
 
         int frag = 0;
         if(text.isVisible()){
             frag = 1;
         }
-
         savedInstanceState.putInt(KEY_FRAGMENTS,frag);
-
-
     }
 
     @Override
@@ -144,12 +144,15 @@ public class MainActivity extends FragmentActivity implements IPPReaderTaskNotif
         Fragment start = new PPReaderStartFragment();
         getSupportFragmentManager().beginTransaction().add(R.id.ppreader_root,start).commit();
 
+        Context appContext = getApplicationContext();
+        String path = appContext.getExternalFilesDir(null).getPath();
+        m_dataManager = new PPReaderDataManager(path);
+
         Observable.create(new ObservableOnSubscribe<Integer>() {
             @Override
             public void subscribe(ObservableEmitter<Integer> e) throws Exception {
-//                IPPReaderDataManager dataManager = null;
-//                int ret = dataManager.load();
-//                e.onNext(ret);
+                int ret = m_dataManager.load();
+                e.onNext(ret);
                 Thread.sleep(3000);
                 e.onNext(1);
                 e.onComplete();
@@ -157,17 +160,14 @@ public class MainActivity extends FragmentActivity implements IPPReaderTaskNotif
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Integer>() {
             @Override
             public void accept(Integer integer) throws Exception {
-                IPPReaderDataManager dataManager = new PPReaderDataManager();
                 IPPReaderServiceFactory serviceFactory = new PPReaderServiceFactory(null);
 
                 PPReaderMainFragment main = new PPReaderMainFragment();
-                main.init(dataManager,MainActivity.this,serviceFactory);
+                main.init(m_dataManager,MainActivity.this,serviceFactory);
 
                 PPReaderTextFragment text = new PPReaderTextFragment();
-                //text.addListener(MainActivity.this);
-
-
-
+                IPPReaderService service = serviceFactory.createServiceInstance();
+                text.init(service,MainActivity.this);
 
                 getSupportFragmentManager().beginTransaction().
                         replace(R.id.ppreader_root,main,PPReaderMainFragment.class.getName()).
@@ -180,4 +180,5 @@ public class MainActivity extends FragmentActivity implements IPPReaderTaskNotif
 
     private final static String KEY_FRAGMENTS = "key_fragments";
     private final static String KEY_NOVELS = "key_novels";
+    private IPPReaderDataManager m_dataManager;
 }

@@ -10,6 +10,7 @@ import java.util.ArrayList;
 public class MockDataManager extends PPReaderDataManager {
 
     public MockDataManager(){
+        super(null);
         PPReaderNovel novel = new PPReaderNovel();
         novel.img = "https://www.ptwxz.com/files/article/image/8/8875/8875s.jpg";
         novel.name = "大明傲骨";
