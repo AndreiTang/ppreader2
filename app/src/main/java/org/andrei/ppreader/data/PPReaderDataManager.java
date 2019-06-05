@@ -67,6 +67,11 @@ public class PPReaderDataManager implements IPPReaderDataManager {
         for (PPReaderNovel novel : m_novels) {
             if (id.compareTo(novel.id) == 0) {
                 m_novels.remove(novel);
+                String path = m_folder + "/" + novel.name + "-" + novel.id + ".json";
+                File file = new File(path);
+                if (file.exists()) {
+                    file.delete();
+                }
                 break;
             }
         }
@@ -152,6 +157,16 @@ public class PPReaderDataManager implements IPPReaderDataManager {
         }
 
         if(txt.length() == 0){
+
+            ArrayList<PPReaderEngineInfo> infos = new ArrayList<>();
+            PPReaderEngineInfo info = new PPReaderEngineInfo();
+            info.name = "88读书";
+            infos.add(info);
+
+            info = new PPReaderEngineInfo();
+            info.name = "飘天读书";
+            infos.add(info);
+            m_infos = infos;
             return;
         }
 

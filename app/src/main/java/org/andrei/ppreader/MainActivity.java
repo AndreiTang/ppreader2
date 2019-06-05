@@ -1,5 +1,6 @@
 package org.andrei.ppreader;
 
+import android.app.Application;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
@@ -12,6 +13,7 @@ import android.view.WindowManager;
 
 import org.andrei.ppreader.data.IPPReaderDataManager;
 import org.andrei.ppreader.data.PPReaderDataManager;
+import org.andrei.ppreader.data.PPReaderEngineInfo;
 import org.andrei.ppreader.data.PPReaderNovel;
 import org.andrei.ppreader.service.IPPReaderService;
 import org.andrei.ppreader.service.IPPReaderServiceFactory;
@@ -41,6 +43,11 @@ public class MainActivity extends FragmentActivity implements IPPReaderTaskNotif
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Context appContext = getApplicationContext();
+        String path = appContext.getExternalFilesDir(null).getPath();
+        m_dataManager = new PPReaderDataManager(path);
+
         if(savedInstanceState == null){
             firstRun();
         }
@@ -52,8 +59,21 @@ public class MainActivity extends FragmentActivity implements IPPReaderTaskNotif
                 return;
             }
             ArrayList<PPReaderNovel> novels = (ArrayList<PPReaderNovel>) savedInstanceState.getSerializable(KEY_NOVELS);
+            for(PPReaderNovel novel : novels){
+                m_dataManager.addNovel(novel);
+            }
+
+            ArrayList<PPReaderEngineInfo> infos = (ArrayList<PPReaderEngineInfo>)savedInstanceState.getSerializable(KEY_INFOS);
+            m_dataManager.setEngineInfos(infos);
+
+            IPPReaderServiceFactory factory = new PPReaderServiceFactory(m_dataManager);
+
             PPReaderMainFragment main = (PPReaderMainFragment)getSupportFragmentManager().findFragmentByTag(PPReaderMainFragment.class.getName());
+            main.init(m_dataManager,this,factory);
+
             PPReaderTextFragment text = (PPReaderTextFragment)getSupportFragmentManager().findFragmentByTag(PPReaderTextFragment.class.getName());
+            text.init(factory.createServiceInstance(),this);
+
             if(frag == 1){
                 getSupportFragmentManager().beginTransaction().hide(main).show(text).commit();
             }
@@ -64,7 +84,6 @@ public class MainActivity extends FragmentActivity implements IPPReaderTaskNotif
         }
 
         changeStatusBarColor();
-
     }
 
     @Override
@@ -84,6 +103,18 @@ public class MainActivity extends FragmentActivity implements IPPReaderTaskNotif
             frag = 1;
         }
         savedInstanceState.putInt(KEY_FRAGMENTS,frag);
+
+        ArrayList<PPReaderNovel> novels = new ArrayList<>();
+        for(int i = 0 ; i < m_dataManager.getNovelCount(); i++){
+            novels.add(m_dataManager.getNovel(i));
+        }
+        savedInstanceState.putSerializable(KEY_NOVELS,novels);
+
+        ArrayList<PPReaderEngineInfo> infos = new ArrayList<>();
+        for(int i = 0; i < m_dataManager.getEngineInfoCount(); i++){
+            infos.add(m_dataManager.getEngineInfo(i));
+        }
+        savedInstanceState.putSerializable(KEY_INFOS,infos);
     }
 
     @Override
@@ -144,9 +175,6 @@ public class MainActivity extends FragmentActivity implements IPPReaderTaskNotif
         Fragment start = new PPReaderStartFragment();
         getSupportFragmentManager().beginTransaction().add(R.id.ppreader_root,start).commit();
 
-        Context appContext = getApplicationContext();
-        String path = appContext.getExternalFilesDir(null).getPath();
-        m_dataManager = new PPReaderDataManager(path);
 
         Observable.create(new ObservableOnSubscribe<Integer>() {
             @Override
@@ -180,5 +208,6 @@ public class MainActivity extends FragmentActivity implements IPPReaderTaskNotif
 
     private final static String KEY_FRAGMENTS = "key_fragments";
     private final static String KEY_NOVELS = "key_novels";
+    private final static String KEY_INFOS = "key_infos";
     private IPPReaderDataManager m_dataManager;
 }
