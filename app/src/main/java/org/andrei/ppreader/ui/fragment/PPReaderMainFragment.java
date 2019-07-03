@@ -98,6 +98,14 @@ public class PPReaderMainFragment extends Fragment implements IPPReaderTaskNotif
         }
     }
 
+    @Override
+    public void onHiddenChanged(boolean hidden){
+        super.onHiddenChanged(hidden);
+        if(!hidden){
+            getActivity().findViewById(android.R.id.content).setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE|View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }
+    }
+
     public void switchFragment(int index){
         ViewPager vp = (ViewPager)getView().findViewById(R.id.main_viewpager);
         vp.setCurrentItem(index);

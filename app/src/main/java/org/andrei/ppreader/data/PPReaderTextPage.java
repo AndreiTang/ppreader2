@@ -16,7 +16,7 @@ public class PPReaderTextPage {
     public int chapterIndex;
     public int offset;
     public int gravity;
-    public String text;
+    public String text = "";
     public String title;
     public ArrayList<String> texts = new ArrayList<>();
 }

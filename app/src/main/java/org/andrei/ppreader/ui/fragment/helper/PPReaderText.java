@@ -15,6 +15,8 @@ import org.andrei.ppreader.data.PPReaderTextPage;
 import org.andrei.ppreader.service.IPPReaderService;
 import org.andrei.ppreader.service.IPPReaderTaskNotification;
 import org.andrei.ppreader.service.IPPReaderTaskRet;
+import org.andrei.ppreader.service.PPReaderFetchTextRet;
+import org.andrei.ppreader.service.PPReaderFetchTextTask;
 import org.andrei.ppreader.service.PPReaderTextRet;
 import org.andrei.ppreader.service.PPReaderTextTask;
 import org.andrei.ppreader.service.ServiceError;
@@ -34,18 +36,27 @@ public class PPReaderText implements IPPReaderTaskNotification {
 
     @Override
     public void onNotify(IPPReaderTaskRet ret) {
-        if (ret.type().compareTo(PPReaderTextRet.class.getName()) == 0) {
+        if (ret.type().compareTo(PPReaderFetchTextRet.class.getName()) == 0) {//
             if (ret.getRetCode() != 0) {
                 return;
             }
 
-            PPReaderTextRet textTaskRet = (PPReaderTextRet) ret;
+            PPReaderFetchTextRet textTaskRet = (PPReaderFetchTextRet) ret;
             if (textTaskRet.novelId.compareTo(m_novel.id) != 0) {
                 return;
             }
 
             if (textTaskRet.getRetCode() == ServiceError.ERR_OK) {
                 m_pageManager.updateText(textTaskRet.chapterId, textTaskRet.text);
+                int index = m_pageManager.getChapterFirstPageIndex(textTaskRet.chapterId);
+                PPReaderTextPage page = m_pageManager.getItem(index);
+                if(page.chapterIndex == m_novel.currIndex){
+                    page.status = PPReaderTextPage.STATUS_TEXT_NO_SLICE;
+                }
+                else{
+                    page.status = PPReaderTextPage.STATUS_LOADED;
+                }
+
             } else {
                 int index = m_pageManager.getChapterFirstPageIndex(textTaskRet.chapterId);
                 PPReaderTextPage page = m_pageManager.getItem(index);
@@ -172,10 +183,7 @@ public class PPReaderText implements IPPReaderTaskNotification {
             page.status = PPReaderTextPage.STATUS_LOADING;
             m_adapter.notifyDataSetChanged();
 
-            PPReaderTextTask task = new PPReaderTextTask();
-            task.chapterId = page.chapterId;
-            task.novelId = m_novel.id;
-            task.chapterUrl = m_novel.getChapter(page.chapterIndex).url;
+            PPReaderFetchTextTask task = new PPReaderFetchTextTask(m_novel,m_novel.getChapter(page.chapterIndex));
             m_service.addTask(task);
         }
     }

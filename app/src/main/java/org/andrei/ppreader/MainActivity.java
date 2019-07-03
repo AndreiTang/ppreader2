@@ -188,7 +188,7 @@ public class MainActivity extends FragmentActivity implements IPPReaderTaskNotif
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Integer>() {
             @Override
             public void accept(Integer integer) throws Exception {
-                IPPReaderServiceFactory serviceFactory = new PPReaderServiceFactory(null);
+                IPPReaderServiceFactory serviceFactory = new PPReaderServiceFactory(m_dataManager);
 
                 PPReaderMainFragment main = new PPReaderMainFragment();
                 main.init(m_dataManager,MainActivity.this,serviceFactory);

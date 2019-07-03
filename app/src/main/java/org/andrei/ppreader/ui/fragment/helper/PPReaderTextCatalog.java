@@ -23,9 +23,9 @@ import io.reactivex.functions.Consumer;
 
 public class PPReaderTextCatalog {
 
-    public PPReaderTextCatalog(View catalogView, PPReaderNovel novel, Fragment fragment,IPPReaderTaskNotification notification){
+    public PPReaderTextCatalog(View catalogView, Fragment fragment,IPPReaderTaskNotification notification){
         m_catalogView = catalogView;
-        m_novel = novel;
+       // m_novel = novel;
         m_notification = notification;
         m_fragment = fragment;
         init();
@@ -60,7 +60,8 @@ public class PPReaderTextCatalog {
         tv.setText(ds);
     }
 
-    private void init(){
+    public void setNovel(final PPReaderNovel novel){
+        m_novel = novel;
         TextView tv = m_catalogView.findViewById(R.id.novel_catalog_author);
         tv.setText(m_novel.author);
         tv = m_catalogView.findViewById(R.id.novel_catalog_name);
@@ -68,7 +69,9 @@ public class PPReaderTextCatalog {
         ImageView img = m_catalogView.findViewById(R.id.novel_catalog_img);
         Glide.with(m_catalogView).clear(img);
         Glide.with(m_catalogView).load(m_novel.img).apply(RequestOptions.fitCenterTransform()).into(img);
+    }
 
+    private void init(){
         //click to return reader page
         View v = m_catalogView.findViewById(R.id.novel_catalog_mask);
         RxView.clicks(v).throttleFirst(200, TimeUnit.MICROSECONDS).subscribe(new Consumer<Object>() {

@@ -57,19 +57,23 @@ public class PPReaderTextFragment extends Fragment implements IPPReaderTaskNotif
         init();
         loadNovel();
 
-        final View root = this.getActivity().findViewById(android.R.id.content);
-        root.findViewById(android.R.id.content).setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+        //final View root = this.getActivity().findViewById(android.R.id.content);
+        //root.findViewById(android.R.id.content).setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+        getActivity().findViewById(android.R.id.content).setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
     }
 
     @Override
     public void onHiddenChanged(boolean hidden){
         super.onHiddenChanged(hidden);
         if(hidden){
-            m_novel.duration += System.currentTimeMillis() - m_beginTime;
+            if(m_novel != null){
+                m_novel.duration += System.currentTimeMillis() - m_beginTime;
+            }
             m_beginTime  = 0;
         }
         else{
             m_beginTime = System.currentTimeMillis();
+            getActivity().findViewById(android.R.id.content).setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
         }
     }
 
@@ -129,6 +133,7 @@ public class PPReaderTextFragment extends Fragment implements IPPReaderTaskNotif
 
     public void setNovel(final PPReaderNovel novel){
         m_novel = novel;
+        m_catalog.setNovel(novel);
         if(m_isActive){
             loadNovel();
         }
@@ -161,7 +166,7 @@ public class PPReaderTextFragment extends Fragment implements IPPReaderTaskNotif
         m_bars = new PPReaderTextBars(actionBar,bottomBar,getActivity());
 
         View catalogView = getView().findViewById(R.id.novel_text_catalog);
-        m_catalog = new PPReaderTextCatalog(catalogView,m_novel,this,this);
+        m_catalog = new PPReaderTextCatalog(catalogView,this,this);
 
         ViewPager vp = getView().findViewById(R.id.novel_text_pager);
         m_text.init(vp,this);

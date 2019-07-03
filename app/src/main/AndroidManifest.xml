@@ -29,6 +29,7 @@
 
         </activity>
         <activity android:name=".test.MockActivity2">
+
         </activity>
         <activity android:name=".test.MockActivity5">
         </activity>

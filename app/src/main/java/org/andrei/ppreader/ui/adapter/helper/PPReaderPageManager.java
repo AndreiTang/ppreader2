@@ -97,7 +97,7 @@ public class PPReaderPageManager implements IPPReaderPageManager {
     public void updateText(String chapterId, String text) {
         for (PPReaderTextPage page : m_pages) {
             if (page.chapterId.compareTo(chapterId) == 0) {
-                page.text = text;
+                page.text = cleanText(text);
                 break;
             }
         }
@@ -114,10 +114,10 @@ public class PPReaderPageManager implements IPPReaderPageManager {
     @Override
     public void addItem(PPReaderChapter chapter) {
         PPReaderTextPage page = new PPReaderTextPage();
-        page.text = cleanText(chapter.text);
         page.chapterId = chapter.id;
         page.title = chapter.title;
         if (page.text.length() > 0) {
+            page.text = cleanText(chapter.text);
             page.status = PPReaderTextPage.STATUS_LOADED;
         }
         page.chapterIndex = m_pages.size();

@@ -23,7 +23,6 @@ public class PPReaderPreferenceFragment extends PreferenceFragmentCompat {
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         addPreferencesFromResource(R.xml.view_ppreader_setting);
-
     }
 
     @Override
