@@ -13,11 +13,13 @@ import org.andrei.ppreader.data.PPReaderNovel;
 import org.andrei.ppreader.service.IPPReaderServiceFactory;
 import org.andrei.ppreader.service.IPPReaderTaskNotification;
 import org.andrei.ppreader.service.IPPReaderTaskRet;
+import org.andrei.ppreader.service.PPReaderTaskType;
 import org.andrei.ppreader.ui.adapter.PPReaderMainAdapter;
+import org.andrei.ppreader.ui.fragment.helper.PPReaderBaseFragment;
 import org.andrei.ppreader.ui.fragment.helper.PPReaderSelectNovelRet;
 import org.andrei.ppreader.ui.fragment.helper.PPReaderCommonRet;
 
-public class PPReaderMainFragment extends Fragment implements IPPReaderTaskNotification {
+public class PPReaderMainFragment extends PPReaderBaseFragment implements IPPReaderTaskNotification {
 
     public void init(final IPPReaderDataManager dataManager, final IPPReaderTaskNotification notification, final IPPReaderServiceFactory serviceFactory){
         m_dataManager = dataManager;
@@ -106,6 +108,7 @@ public class PPReaderMainFragment extends Fragment implements IPPReaderTaskNotif
         }
     }
 
+    @PPReaderTaskType(type=PPReaderCommonRet.TYPE_TO_LIST_PAGE)
     public void switchFragment(int index){
         ViewPager vp = (ViewPager)getView().findViewById(R.id.main_viewpager);
         vp.setCurrentItem(index);
@@ -119,6 +122,7 @@ public class PPReaderMainFragment extends Fragment implements IPPReaderTaskNotif
     public void onStart(){
         super.onStart();
     }
+
 
     private PPReaderListFragment m_listFragment;
     private IPPReaderDataManager m_dataManager;
