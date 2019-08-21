@@ -20,6 +20,8 @@ import org.andrei.ppreader.R;
 import org.andrei.ppreader.data.IPPReaderDataManager;
 import org.andrei.ppreader.data.PPReaderNovel;
 import org.andrei.ppreader.service.IPPReaderTaskNotification;
+import org.andrei.ppreader.service.message.PPReaderMessageCenter;
+import org.andrei.ppreader.service.message.PPReaderSelectNovelMessage;
 import org.andrei.ppreader.ui.fragment.helper.PPReaderSelectNovelRet;
 
 import java.util.concurrent.TimeUnit;
@@ -29,9 +31,8 @@ import io.reactivex.functions.Consumer;
 
 public class PPReaderListAdapter extends BaseAdapter {
 
-    public PPReaderListAdapter(@NonNull Fragment fragment, @NonNull  final IPPReaderDataManager dataManager, final IPPReaderTaskNotification notification){
+    public PPReaderListAdapter(@NonNull Fragment fragment, @NonNull  final IPPReaderDataManager dataManager){
         m_dataManager = dataManager;
-        m_notification = notification;
         m_fragment = fragment;
     }
 
@@ -131,13 +132,15 @@ public class PPReaderListAdapter extends BaseAdapter {
     }
 
     private void openNovel(final PPReaderNovel novel){
-        PPReaderSelectNovelRet ret = new PPReaderSelectNovelRet();
-        ret.novel = novel;
-        m_notification.onNotify(ret);
+//        PPReaderSelectNovelRet ret = new PPReaderSelectNovelRet();
+//        ret.novel = novel;
+//        m_notification.onNotify(ret);
+        PPReaderSelectNovelMessage msg = new PPReaderSelectNovelMessage(novel);
+        PPReaderMessageCenter.instance().sendMessage(msg);
     }
 
     private IPPReaderDataManager m_dataManager;
-    private IPPReaderTaskNotification m_notification;
+    //private IPPReaderTaskNotification m_notification;
     private Fragment m_fragment;
     private boolean m_isEditMode = false;
 

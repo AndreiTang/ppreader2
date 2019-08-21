@@ -127,7 +127,7 @@ public class MainActivity extends FragmentActivity implements IPPReaderTaskNotif
             return;
         }
         else{
-            main.switchFragment(0);
+            //main.switchFragment(0);
             getSupportFragmentManager().beginTransaction().show(main).hide(text).commit();
         }
     }
@@ -137,7 +137,7 @@ public class MainActivity extends FragmentActivity implements IPPReaderTaskNotif
         if(ret.type().compareTo(PPReaderCommonRet.TYPE_TO_LIST_PAGE) == 0){
             PPReaderCommonRet textRet = (PPReaderCommonRet)ret;
             PPReaderMainFragment main = (PPReaderMainFragment)getSupportFragmentManager().findFragmentByTag(PPReaderMainFragment.class.getName());
-            main.switchFragment(textRet.index);
+            //main.switchFragment(textRet.index);
             PPReaderTextFragment text = (PPReaderTextFragment)getSupportFragmentManager().findFragmentByTag(PPReaderTextFragment.class.getName());
             getSupportFragmentManager().beginTransaction().hide(text).show(main).commit();
         }

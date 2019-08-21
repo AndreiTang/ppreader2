@@ -1,4 +1,4 @@
-package org.andrei.ppreader.service;
+package org.andrei.ppreader.service.message;
 
 
 import java.lang.annotation.Retention;
@@ -9,7 +9,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Target(value=METHOD)
 @Retention(value=RUNTIME)
-public @interface PPReaderTaskType {
+public @interface PPReaderMessageType {
 
     public String type();
 

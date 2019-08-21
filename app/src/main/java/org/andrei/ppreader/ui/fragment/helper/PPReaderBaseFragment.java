@@ -4,17 +4,17 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 import org.andrei.ppreader.service.IPPReaderNotification;
-import org.andrei.ppreader.service.IPPReaderTaskNotification;
 import org.andrei.ppreader.service.IPPReaderTaskRet;
-import org.andrei.ppreader.service.PPReaderNotifyManager;
-import org.andrei.ppreader.service.PPReaderTaskType;
+import org.andrei.ppreader.service.message.IPPReaderMessage;
+import org.andrei.ppreader.service.message.IPPReaderMessageHandler;
+import org.andrei.ppreader.service.message.PPReaderMessageCenter;
+import org.andrei.ppreader.service.message.PPReaderMessageType;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashSet;
 
-public class PPReaderBaseFragment extends Fragment implements IPPReaderNotification {
-
+public class PPReaderBaseFragment extends Fragment implements IPPReaderMessageHandler {
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -23,13 +23,36 @@ public class PPReaderBaseFragment extends Fragment implements IPPReaderNotificat
     }
 
     @Override
-    public void onNotify(IPPReaderTaskRet ret) {
+    public void onResume(){
+        super.onResume();
+        PPReaderMessageCenter.instance().register(this);
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        PPReaderMessageCenter.instance().Unregister(this);
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if(hidden){
+            PPReaderMessageCenter.instance().Unregister(this);
+        }
+        else{
+            PPReaderMessageCenter.instance().register(this);
+        }
+    }
+
+    @Override
+    public void onMessageHandler(IPPReaderMessage msg) {
         Class<?> cl = this.getClass();
         for(Method m : cl.getDeclaredMethods()){
-            PPReaderTaskType ct = m.getAnnotation(PPReaderTaskType.class);
-            if(ct != null && ct.type().compareTo(ret.type()) == 0){
+            PPReaderMessageType ct = m.getAnnotation(PPReaderMessageType.class);
+            if(ct != null && ct.type().compareTo(msg.type()) == 0){
                 try {
-                    m.invoke(this,ret);
+                    m.invoke(this,msg);
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 } catch (InvocationTargetException e) {
@@ -44,16 +67,14 @@ public class PPReaderBaseFragment extends Fragment implements IPPReaderNotificat
         return m_methods.contains(type);
     }
 
-
-
-    protected void sendNotification(IPPReaderTaskRet ret){
-        PPReaderNotifyManager.instance().sendNotification(ret);
+    protected void sendMessage(IPPReaderMessage msg){
+        PPReaderMessageCenter.instance().sendMessage(msg);
     }
 
     private void collectInteresting(){
         Class<?> cl = this.getClass();
         for(Method m : cl.getDeclaredMethods()){
-            PPReaderTaskType ct = m.getAnnotation(PPReaderTaskType.class);
+            PPReaderMessageType ct = m.getAnnotation(PPReaderMessageType.class);
             if(ct != null){
                 m_methods.add(ct.type());
             }

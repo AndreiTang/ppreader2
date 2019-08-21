@@ -19,7 +19,10 @@ import org.andrei.ppreader.service.IPPReaderTaskNotification;
 import org.andrei.ppreader.service.IPPReaderTaskRet;
 import org.andrei.ppreader.service.PPReaderUpdateNovelRet;
 import org.andrei.ppreader.service.PPReaderUpdateNovelTask;
+import org.andrei.ppreader.service.message.PPReaderCommonMessage;
+import org.andrei.ppreader.service.message.PPReaderMessageTypeDefine;
 import org.andrei.ppreader.ui.adapter.PPReaderListAdapter;
+import org.andrei.ppreader.ui.fragment.helper.PPReaderBaseFragment;
 import org.andrei.ppreader.ui.fragment.helper.PPReaderCommonRet;
 
 import java.util.concurrent.TimeUnit;
@@ -29,11 +32,10 @@ import io.reactivex.functions.Consumer;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PPReaderListFragment extends Fragment {
+public class PPReaderListFragment extends PPReaderBaseFragment {
 
-    public void init(final IPPReaderDataManager dataManager, final IPPReaderTaskNotification notification, final IPPReaderService service){
+    public void init(final IPPReaderDataManager dataManager,final IPPReaderService service){
         m_dataManager = dataManager;
-        m_notification = notification;
         m_service = service;
     }
 
@@ -91,11 +93,13 @@ public class PPReaderListFragment extends Fragment {
         RxView.clicks(tv).throttleFirst(1, TimeUnit.SECONDS).subscribe(new Consumer<Object>() {
             @Override
             public void accept(Object o) throws Exception{
-                PPReaderCommonRet ret = new PPReaderCommonRet(PPReaderCommonRet.TYPE_TO_LIST_PAGE);
-                ret.index = 1;
-                if(m_notification != null){
-                    m_notification.onNotify(ret);
-                }
+//                PPReaderCommonRet ret = new PPReaderCommonRet(PPReaderCommonRet.TYPE_TO_LIST_PAGE);
+//                ret.index = 1;
+//                if(m_notification != null){
+//                    m_notification.onNotify(ret);
+//                }
+                PPReaderCommonMessage msg = new PPReaderCommonMessage(PPReaderMessageTypeDefine.TYPE_TO_LIST_PAGE,1);
+                sendMessage(msg);
             }
         });
 
@@ -103,14 +107,7 @@ public class PPReaderListFragment extends Fragment {
 
     private void initAdapter(){
         GridView gv = getView().findViewById(R.id.novel_list);
-        PPReaderListAdapter adapter = new PPReaderListAdapter(this,m_dataManager, new IPPReaderTaskNotification() {
-            @Override
-            public void onNotify(IPPReaderTaskRet ret) {
-                if(m_notification != null){
-                    m_notification.onNotify(ret);
-                }
-            }
-        });
+        PPReaderListAdapter adapter = new PPReaderListAdapter(this,m_dataManager);
         gv.setAdapter(adapter);
     }
 
@@ -138,6 +135,5 @@ public class PPReaderListFragment extends Fragment {
     }
 
     private IPPReaderDataManager m_dataManager;
-    private IPPReaderTaskNotification m_notification;
     private IPPReaderService m_service;
 }
