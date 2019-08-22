@@ -5,9 +5,9 @@ import org.andrei.ppreader.service.IPPReaderTaskRet;
 
 import java.util.HashSet;
 
-public class PPReaderMessageCenter {
+public class PPReaderMessageCenter implements IPPReaderMessageCenter {
 
-    public static PPReaderMessageCenter instance(){
+    public static IPPReaderMessageCenter instance(){
         return m_mgr;
     }
 

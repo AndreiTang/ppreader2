@@ -25,29 +25,13 @@ public class MockActivity1 extends FragmentActivity {
             PPReaderSearchFragment fragment = (PPReaderSearchFragment)getSupportFragmentManager().findFragmentById(R.id.mock_root);
             if(fragment != null){
                 Log.i("andrei","ac frag");
-                fragment.init(new IPPReaderTaskNotification() {
-                    @Override
-                    public void onNotify(IPPReaderTaskRet ret) {
-                        if(ret.type().compareTo(PPReaderSelectNovelRet.class.getName()) == 0){
-                            PPReaderSelectNovelRet r = (PPReaderSelectNovelRet)ret;
-                            Log.i("Andrei",r.novel.name);
-                        }
-                    }
-                },factory.createServiceInstance());
+                fragment.init(factory.createServiceInstance());
                 return;
             }
         }
 
         PPReaderSearchFragment fragment = new PPReaderSearchFragment();
-        fragment.init(new IPPReaderTaskNotification() {
-            @Override
-            public void onNotify(IPPReaderTaskRet ret) {
-                if(ret.type().compareTo(PPReaderSelectNovelRet.class.getName()) == 0){
-                    PPReaderSelectNovelRet r = (PPReaderSelectNovelRet)ret;
-                    Log.i("Andrei",r.novel.name);
-                }
-            }
-        },factory.createServiceInstance());
+        fragment.init(factory.createServiceInstance());
         getSupportFragmentManager().beginTransaction().add(R.id.mock_root,fragment).commit();
         Log.i("andrei","end");
     }

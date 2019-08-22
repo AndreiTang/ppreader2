@@ -1,7 +1,6 @@
 package org.andrei.ppreader.ui.fragment;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,21 +10,14 @@ import com.jakewharton.rxbinding2.view.RxView;
 
 import org.andrei.ppreader.R;
 import org.andrei.ppreader.data.IPPReaderDataManager;
-import org.andrei.ppreader.service.IPPReaderTaskNotification;
 import org.andrei.ppreader.service.message.PPReaderCommonMessage;
 import org.andrei.ppreader.service.message.PPReaderMessageTypeDefine;
-import org.andrei.ppreader.ui.fragment.helper.PPReaderBaseFragment;
-import org.andrei.ppreader.ui.fragment.helper.PPReaderCommonRet;
 
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.functions.Consumer;
 
 public class PPReaderSettingFragment extends PPReaderBaseFragment {
-
-    public void init(final IPPReaderDataManager dataManager){
-        m_dataManager = dataManager;
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -76,8 +68,6 @@ public class PPReaderSettingFragment extends PPReaderBaseFragment {
         }
     }
 
-
-    private IPPReaderDataManager m_dataManager;
 }
 
 

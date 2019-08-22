@@ -21,8 +21,8 @@ import java.util.ArrayList;
 
 public class MockService implements IPPReaderService{
     @Override
-    public void start(@NonNull IPPReaderTaskNotification notify) {
-        m_notify = notify;
+    public void start() {
+
     }
 
     @Override

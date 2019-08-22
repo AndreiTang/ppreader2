@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 
 import io.reactivex.functions.Consumer;
 
-public class PPReaderCatalogAdapter extends BaseAdapter {
+public class PPReaderCatalogAdapter extends PPReaderBaseAdapter {
 
     public PPReaderCatalogAdapter(PPReaderNovel novel, Fragment parent) {
         m_novel = novel;
@@ -55,7 +55,7 @@ public class PPReaderCatalogAdapter extends BaseAdapter {
                 public void accept(Object obj) throws Exception {
                     int index = (Integer) v.getTag();
                     PPReaderCommonMessage msg = new PPReaderCommonMessage(PPReaderMessageTypeDefine.TYPE_SET_CURR,index);
-                    PPReaderMessageCenter.instance().sendMessage(msg);
+                    sendMessage(msg);
                 }
             });
         }

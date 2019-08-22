@@ -25,13 +25,7 @@ public class MockActivity extends FragmentActivity {
         PPReaderListFragment fragment = new PPReaderListFragment();
         IPPReaderDataManager dataManager = new MockDataManager();
         IPPReaderService service = PPReaderService.createInstance(null);
-        fragment.init(dataManager, new IPPReaderTaskNotification() {
-            @Override
-            public void onNotify(IPPReaderTaskRet ret) {
-                PPReaderSelectNovelRet r =  (PPReaderSelectNovelRet)ret;
-                Log.i("test",r.novel.name);
-            }
-        },service);
+        fragment.init(dataManager,service);
 
         getSupportFragmentManager().beginTransaction().add(R.id.mock_root,fragment).commit();
     }

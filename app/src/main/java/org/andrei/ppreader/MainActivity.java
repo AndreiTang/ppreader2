@@ -21,6 +21,13 @@ import org.andrei.ppreader.service.IPPReaderTaskNotification;
 import org.andrei.ppreader.service.IPPReaderTaskRet;
 import org.andrei.ppreader.service.PPReaderServiceFactory;
 import org.andrei.ppreader.service.PPReaderUpdateNovelRet;
+import org.andrei.ppreader.service.message.IPPReaderMessage;
+import org.andrei.ppreader.service.message.PPReaderAddNovelMessage;
+import org.andrei.ppreader.service.message.PPReaderMessageCenter;
+import org.andrei.ppreader.service.message.PPReaderMessageType;
+import org.andrei.ppreader.service.message.PPReaderMessageTypeDefine;
+import org.andrei.ppreader.ui.adapter.PPReaderBaseAdapter;
+import org.andrei.ppreader.ui.fragment.PPReaderBaseFragment;
 import org.andrei.ppreader.ui.fragment.PPReaderMainFragment;
 import org.andrei.ppreader.ui.fragment.PPReaderStartFragment;
 import org.andrei.ppreader.ui.fragment.PPReaderTextFragment;
@@ -37,7 +44,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
-public class MainActivity extends FragmentActivity implements IPPReaderTaskNotification {
+public class MainActivity extends FragmentActivity  {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +54,11 @@ public class MainActivity extends FragmentActivity implements IPPReaderTaskNotif
         Context appContext = getApplicationContext();
         String path = appContext.getExternalFilesDir(null).getPath();
         m_dataManager = new PPReaderDataManager(path);
+        PPReaderBaseAdapter.setDataManager(m_dataManager);
+        PPReaderBaseFragment.setDataManager(m_dataManager);
+        PPReaderBaseAdapter.setMessageCenter(PPReaderMessageCenter.instance());
+        PPReaderBaseFragment.setMessageCenter(PPReaderMessageCenter.instance());
+        PPReaderBaseFragment.setServiceFactory(new PPReaderServiceFactory(m_dataManager));
 
         if(savedInstanceState == null){
             firstRun();
@@ -69,10 +81,9 @@ public class MainActivity extends FragmentActivity implements IPPReaderTaskNotif
             IPPReaderServiceFactory factory = new PPReaderServiceFactory(m_dataManager);
 
             PPReaderMainFragment main = (PPReaderMainFragment)getSupportFragmentManager().findFragmentByTag(PPReaderMainFragment.class.getName());
-            main.init(m_dataManager,this,factory);
 
             PPReaderTextFragment text = (PPReaderTextFragment)getSupportFragmentManager().findFragmentByTag(PPReaderTextFragment.class.getName());
-            text.init(factory.createServiceInstance(),this);
+            text.init(factory.createServiceInstance());
 
             if(frag == 1){
                 getSupportFragmentManager().beginTransaction().hide(main).show(text).commit();
@@ -132,33 +143,27 @@ public class MainActivity extends FragmentActivity implements IPPReaderTaskNotif
         }
     }
 
-    @Override
-    public void onNotify(IPPReaderTaskRet ret) {
-        if(ret.type().compareTo(PPReaderCommonRet.TYPE_TO_LIST_PAGE) == 0){
-            PPReaderCommonRet textRet = (PPReaderCommonRet)ret;
-            PPReaderMainFragment main = (PPReaderMainFragment)getSupportFragmentManager().findFragmentByTag(PPReaderMainFragment.class.getName());
-            //main.switchFragment(textRet.index);
-            PPReaderTextFragment text = (PPReaderTextFragment)getSupportFragmentManager().findFragmentByTag(PPReaderTextFragment.class.getName());
-            getSupportFragmentManager().beginTransaction().hide(text).show(main).commit();
-        }
-        else if(ret.type().compareTo(PPReaderSelectNovelRet.class.getName()) == 0){
-            PPReaderSelectNovelRet selectNovelRet = (PPReaderSelectNovelRet)ret;
-            PPReaderMainFragment main = (PPReaderMainFragment)getSupportFragmentManager().findFragmentByTag(PPReaderMainFragment.class.getName());
-            PPReaderTextFragment text = (PPReaderTextFragment)getSupportFragmentManager().findFragmentByTag(PPReaderTextFragment.class.getName());
-            text.setNovel(selectNovelRet.novel);
-            getSupportFragmentManager().beginTransaction().hide(main).show(text).commit();
-        }
-        else if(ret.type().compareTo(PPReaderUpdateNovelRet .class.getName()) == 0){
-            PPReaderUpdateNovelRet updateNovelRet = (PPReaderUpdateNovelRet)ret;
-            PPReaderTextFragment text = (PPReaderTextFragment)getSupportFragmentManager().findFragmentByTag(PPReaderTextFragment.class.getName());
-            text.onAddChapters(updateNovelRet.id,updateNovelRet.delta);
-        }
-        else if(ret.type().compareTo(PPReaderAddNovelRet.class.getName()) == 0){
-            PPReaderAddNovelRet addNovelRet = (PPReaderAddNovelRet)ret;
-            PPReaderMainFragment main = (PPReaderMainFragment)getSupportFragmentManager().findFragmentByTag(PPReaderMainFragment.class.getName());
-            main.addNovel(addNovelRet.novel);
-        }
+    @PPReaderMessageType(type = PPReaderMessageTypeDefine.TYPE_TO_LIST_PAGE)
+    protected void switchToListFragment(IPPReaderMessage msg){
+        Fragment main = getSupportFragmentManager().findFragmentByTag(PPReaderMainFragment.class.getName());
+        Fragment text = getSupportFragmentManager().findFragmentByTag(PPReaderTextFragment.class.getName());
+        getSupportFragmentManager().beginTransaction().hide(text).show(main).commit();
     }
+
+    @PPReaderMessageType(type = PPReaderMessageTypeDefine.TYPE_SELECT_NOVEL)
+    protected  void switchToTextFragment(IPPReaderMessage msg){
+        Fragment main = getSupportFragmentManager().findFragmentByTag(PPReaderMainFragment.class.getName());
+        Fragment text = getSupportFragmentManager().findFragmentByTag(PPReaderTextFragment.class.getName());
+        getSupportFragmentManager().beginTransaction().hide(main).show(text).commit();
+    }
+
+    @PPReaderMessageType(type = PPReaderMessageTypeDefine.TYPE_ADD_NOVEL)
+    protected void addNovel(IPPReaderMessage msg){
+        PPReaderAddNovelMessage message = (PPReaderAddNovelMessage)msg;
+        m_dataManager.addNovel(message.getNovel());
+    }
+
+
 
     private void changeStatusBarColor(){
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
@@ -191,11 +196,7 @@ public class MainActivity extends FragmentActivity implements IPPReaderTaskNotif
                 IPPReaderServiceFactory serviceFactory = new PPReaderServiceFactory(m_dataManager);
 
                 PPReaderMainFragment main = new PPReaderMainFragment();
-                main.init(m_dataManager,MainActivity.this,serviceFactory);
-
                 PPReaderTextFragment text = new PPReaderTextFragment();
-                IPPReaderService service = serviceFactory.createServiceInstance();
-                text.init(service,MainActivity.this);
 
                 getSupportFragmentManager().beginTransaction().
                         replace(R.id.ppreader_root,main,PPReaderMainFragment.class.getName()).

@@ -12,18 +12,14 @@ import android.widget.TextView;
 import com.jakewharton.rxbinding2.view.RxView;
 
 import org.andrei.ppreader.R;
-import org.andrei.ppreader.data.IPPReaderDataManager;
 import org.andrei.ppreader.data.PPReaderNovel;
-import org.andrei.ppreader.service.IPPReaderService;
-import org.andrei.ppreader.service.IPPReaderTaskNotification;
-import org.andrei.ppreader.service.IPPReaderTaskRet;
-import org.andrei.ppreader.service.PPReaderUpdateNovelRet;
 import org.andrei.ppreader.service.PPReaderUpdateNovelTask;
+import org.andrei.ppreader.service.message.IPPReaderMessage;
 import org.andrei.ppreader.service.message.PPReaderCommonMessage;
+import org.andrei.ppreader.service.message.PPReaderMessageType;
 import org.andrei.ppreader.service.message.PPReaderMessageTypeDefine;
+import org.andrei.ppreader.service.message.PPReaderUpdateNovelMessage;
 import org.andrei.ppreader.ui.adapter.PPReaderListAdapter;
-import org.andrei.ppreader.ui.fragment.helper.PPReaderBaseFragment;
-import org.andrei.ppreader.ui.fragment.helper.PPReaderCommonRet;
 
 import java.util.concurrent.TimeUnit;
 
@@ -33,11 +29,6 @@ import io.reactivex.functions.Consumer;
  * A simple {@link Fragment} subclass.
  */
 public class PPReaderListFragment extends PPReaderBaseFragment {
-
-    public void init(final IPPReaderDataManager dataManager,final IPPReaderService service){
-        m_dataManager = dataManager;
-        m_service = service;
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -52,7 +43,7 @@ public class PPReaderListFragment extends PPReaderBaseFragment {
 
         initUI();
         initAdapter();
-        initService();
+        m_service.start();
 
         for( int i = 0; i < m_dataManager.getNovelCount(); i++ ){
             PPReaderUpdateNovelTask task = new PPReaderUpdateNovelTask(m_dataManager.getNovel(i));
@@ -60,10 +51,29 @@ public class PPReaderListFragment extends PPReaderBaseFragment {
         }
     }
 
-    public void addNovel(final PPReaderNovel novel){
-        m_dataManager.addNovel(novel);
-    }
+//    public void addNovel(final PPReaderNovel novel){
+//        m_dataManager.addNovel(novel);
+//    }
 
+
+    @PPReaderMessageType(type = PPReaderMessageTypeDefine.TYPE_UPDATE_NOVEL)
+    protected void updateNovel(IPPReaderMessage msg){
+        PPReaderUpdateNovelMessage message = (PPReaderUpdateNovelMessage) msg;
+        PPReaderNovel novel = m_dataManager.getNovel(message.getId());
+        if(novel == null){
+            return;
+        }
+        if(message.getDelta().size() > 0){
+            novel.isUpdated = true;
+            novel.type = message.getNovelType();
+            novel.chapters.addAll(message.getDelta());
+            GridView gv = getView().findViewById(R.id.novel_list);
+            PPReaderListAdapter adapter = (PPReaderListAdapter)gv.getAdapter();
+            if(adapter != null){
+                adapter.notifyDataSetChanged();
+            }
+        }
+    }
 
     private void initUI(){
         TextView tv = getView().findViewById(R.id.main_item_title);
@@ -93,11 +103,6 @@ public class PPReaderListFragment extends PPReaderBaseFragment {
         RxView.clicks(tv).throttleFirst(1, TimeUnit.SECONDS).subscribe(new Consumer<Object>() {
             @Override
             public void accept(Object o) throws Exception{
-//                PPReaderCommonRet ret = new PPReaderCommonRet(PPReaderCommonRet.TYPE_TO_LIST_PAGE);
-//                ret.index = 1;
-//                if(m_notification != null){
-//                    m_notification.onNotify(ret);
-//                }
                 PPReaderCommonMessage msg = new PPReaderCommonMessage(PPReaderMessageTypeDefine.TYPE_TO_LIST_PAGE,1);
                 sendMessage(msg);
             }
@@ -107,33 +112,8 @@ public class PPReaderListFragment extends PPReaderBaseFragment {
 
     private void initAdapter(){
         GridView gv = getView().findViewById(R.id.novel_list);
-        PPReaderListAdapter adapter = new PPReaderListAdapter(this,m_dataManager);
+        PPReaderListAdapter adapter = new PPReaderListAdapter(this);
         gv.setAdapter(adapter);
     }
 
-    private void initService(){
-        m_service.start(new IPPReaderTaskNotification() {
-            @Override
-            public void onNotify(IPPReaderTaskRet ret) {
-                PPReaderUpdateNovelRet r = (PPReaderUpdateNovelRet)ret;
-                PPReaderNovel novel = m_dataManager.getNovel(r.id);
-                if(novel == null){
-                    return;
-                }
-                if(r.delta.size() > 0){
-                    novel.isUpdated = true;
-                    novel.type = r.type;
-                    novel.chapters.addAll(r.delta);
-                    GridView gv = getView().findViewById(R.id.novel_list);
-                    PPReaderListAdapter adapter = (PPReaderListAdapter)gv.getAdapter();
-                    if(adapter != null){
-                        adapter.notifyDataSetChanged();
-                    }
-                }
-            }
-        });
-    }
-
-    private IPPReaderDataManager m_dataManager;
-    private IPPReaderService m_service;
 }

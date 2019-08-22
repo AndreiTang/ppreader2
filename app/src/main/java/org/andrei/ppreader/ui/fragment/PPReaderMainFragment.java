@@ -11,23 +11,13 @@ import org.andrei.ppreader.R;
 import org.andrei.ppreader.data.IPPReaderDataManager;
 import org.andrei.ppreader.data.PPReaderNovel;
 import org.andrei.ppreader.service.IPPReaderServiceFactory;
-import org.andrei.ppreader.service.IPPReaderTaskNotification;
-import org.andrei.ppreader.service.IPPReaderTaskRet;
 import org.andrei.ppreader.service.message.IPPReaderMessage;
 import org.andrei.ppreader.service.message.PPReaderCommonMessage;
 import org.andrei.ppreader.service.message.PPReaderMessageType;
 import org.andrei.ppreader.service.message.PPReaderMessageTypeDefine;
 import org.andrei.ppreader.ui.adapter.PPReaderMainAdapter;
-import org.andrei.ppreader.ui.fragment.helper.PPReaderBaseFragment;
-import org.andrei.ppreader.ui.fragment.helper.PPReaderSelectNovelRet;
-import org.andrei.ppreader.ui.fragment.helper.PPReaderCommonRet;
 
 public class PPReaderMainFragment extends PPReaderBaseFragment {
-
-    public void init(final IPPReaderDataManager dataManager,final IPPReaderServiceFactory serviceFactory){
-        m_dataManager = dataManager;
-        m_serviceFactory = serviceFactory;
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -82,23 +72,17 @@ public class PPReaderMainFragment extends PPReaderBaseFragment {
         vp.setCurrentItem(swMsg.getValue());
     }
 
-    public void addNovel(final PPReaderNovel novel){
-        m_listFragment.addNovel(novel);
-    }
+
 
     private void firstRun(Fragment[] fragments){
         PPReaderListFragment listFragment = new PPReaderListFragment();
         fragments[0] = listFragment;
-        listFragment.init(m_dataManager, m_serviceFactory.createServiceInstance());
-        m_listFragment = listFragment;
 
         PPReaderSearchFragment searchFragment = new PPReaderSearchFragment();
         fragments[1] = searchFragment;
-        searchFragment.init(m_serviceFactory.createServiceInstance());
 
         PPReaderSettingFragment settingFragment = new PPReaderSettingFragment();
         fragments[2] = settingFragment;
-        settingFragment.init(m_dataManager);
     }
 
     private void resume(Bundle savedInstanceState,final Fragment[] fragments){
@@ -108,16 +92,6 @@ public class PPReaderMainFragment extends PPReaderBaseFragment {
         vp.setCurrentItem(index);
 
         getChildFragmentManager().getFragments().toArray(fragments);
-
-        PPReaderListFragment listFragment = (PPReaderListFragment)fragments[0];
-        listFragment.init(m_dataManager, m_serviceFactory.createServiceInstance());
-        m_listFragment = listFragment;
-
-        PPReaderSearchFragment searchFragment = (PPReaderSearchFragment)fragments[1];
-        searchFragment.init(m_serviceFactory.createServiceInstance());
-
-        PPReaderSettingFragment settingFragment = (PPReaderSettingFragment)fragments[2];
-        settingFragment.init(m_dataManager);
     }
 
     private void init(final Fragment[] fragments){
@@ -131,10 +105,7 @@ public class PPReaderMainFragment extends PPReaderBaseFragment {
     }
 
 
-    private PPReaderListFragment m_listFragment;
-    private IPPReaderDataManager m_dataManager;
-   // private IPPReaderTaskNotification m_notification;
-    private IPPReaderServiceFactory m_serviceFactory;
+    //private PPReaderListFragment m_listFragment;
     private final static String KEY_INDEX = "key_index";
 
 

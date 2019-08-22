@@ -1,13 +1,15 @@
-package org.andrei.ppreader.ui.fragment.helper;
+package org.andrei.ppreader.ui.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
-import org.andrei.ppreader.service.IPPReaderNotification;
-import org.andrei.ppreader.service.IPPReaderTaskRet;
+
+import org.andrei.ppreader.data.IPPReaderDataManager;
+import org.andrei.ppreader.service.IPPReaderService;
+import org.andrei.ppreader.service.IPPReaderServiceFactory;
 import org.andrei.ppreader.service.message.IPPReaderMessage;
+import org.andrei.ppreader.service.message.IPPReaderMessageCenter;
 import org.andrei.ppreader.service.message.IPPReaderMessageHandler;
-import org.andrei.ppreader.service.message.PPReaderMessageCenter;
 import org.andrei.ppreader.service.message.PPReaderMessageType;
 
 import java.lang.reflect.InvocationTargetException;
@@ -20,28 +22,40 @@ public class PPReaderBaseFragment extends Fragment implements IPPReaderMessageHa
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         collectInteresting();
+        if(m_serviceFactory != null){
+            m_service = m_serviceFactory.createServiceInstance();
+        }
     }
 
     @Override
     public void onResume(){
         super.onResume();
-        PPReaderMessageCenter.instance().register(this);
+        if(m_msgCenter == null){
+            return;
+        }
+        m_msgCenter.register(this);
     }
 
     @Override
     public void onPause(){
         super.onPause();
-        PPReaderMessageCenter.instance().Unregister(this);
+        if(m_msgCenter == null){
+            return;
+        }
+        m_msgCenter.Unregister(this);
     }
 
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
+        if(m_msgCenter == null){
+            return;
+        }
         if(hidden){
-            PPReaderMessageCenter.instance().Unregister(this);
+            m_msgCenter.Unregister(this);
         }
         else{
-            PPReaderMessageCenter.instance().register(this);
+            m_msgCenter.register(this);
         }
     }
 
@@ -68,7 +82,9 @@ public class PPReaderBaseFragment extends Fragment implements IPPReaderMessageHa
     }
 
     protected void sendMessage(IPPReaderMessage msg){
-        PPReaderMessageCenter.instance().sendMessage(msg);
+        if(m_msgCenter != null){
+            m_msgCenter.sendMessage(msg);
+        }
     }
 
     private void collectInteresting(){
@@ -81,6 +97,22 @@ public class PPReaderBaseFragment extends Fragment implements IPPReaderMessageHa
         }
     }
 
+    public static void setMessageCenter(IPPReaderMessageCenter msgCenter){
+        m_msgCenter = msgCenter;
+    }
+
+    public static void setDataManager(IPPReaderDataManager dataManager){
+        m_dataManager = dataManager;
+    }
+
+    public static void setServiceFactory(IPPReaderServiceFactory factory){
+        m_serviceFactory = factory;
+    }
+
+    protected IPPReaderService m_service;
+    protected static IPPReaderDataManager m_dataManager = null;
     private HashSet<String> m_methods = new HashSet<>();
+    private static IPPReaderMessageCenter m_msgCenter;
+    private static IPPReaderServiceFactory m_serviceFactory;
 
 }

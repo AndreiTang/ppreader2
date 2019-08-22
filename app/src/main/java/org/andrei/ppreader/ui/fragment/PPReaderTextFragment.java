@@ -25,6 +25,8 @@ import org.andrei.ppreader.service.message.PPReaderCommonMessage;
 import org.andrei.ppreader.service.message.PPReaderDBClicksMessage;
 import org.andrei.ppreader.service.message.PPReaderMessageType;
 import org.andrei.ppreader.service.message.PPReaderMessageTypeDefine;
+import org.andrei.ppreader.service.message.PPReaderSelectNovelMessage;
+import org.andrei.ppreader.service.message.PPReaderUpdateNovelMessage;
 import org.andrei.ppreader.ui.adapter.PPReaderTextAdapter;
 import org.andrei.ppreader.ui.adapter.helper.IPPReaderPageManager;
 import org.andrei.ppreader.ui.adapter.helper.PPReaderPageManager;
@@ -105,18 +107,22 @@ public class PPReaderTextFragment extends Fragment {
         }
     }
 
-    public void setNovel(final PPReaderNovel novel){
-        m_novel = novel;
-        m_catalog.setNovel(novel);
+    @PPReaderMessageType(type = PPReaderMessageTypeDefine.TYPE_SELECT_NOVEL)
+    protected void selectNovel(IPPReaderMessage msg){
+        m_novel = ((PPReaderSelectNovelMessage)msg).getNovel();
+        m_catalog.setNovel(m_novel);
         if(m_isActive){
             loadNovel();
         }
     }
 
-    public void onAddChapters(final String novelId, final ArrayList<PPReaderChapter> chapters){
+    @PPReaderMessageType(type = PPReaderMessageTypeDefine.TYPE_UPDATE_NOVEL)
+    protected void onAddChapters(IPPReaderMessage msg){
+        String novelId = ((PPReaderUpdateNovelMessage)msg).getId();
         if(novelId.compareTo(m_novel.id) != 0){
             return;
         }
+        ArrayList<PPReaderChapter> chapters = ((PPReaderUpdateNovelMessage) msg).getDelta();
         for(int i = 0; i < chapters.size(); i++){
             m_pageMgr.addItem(chapters.get(i));
         }

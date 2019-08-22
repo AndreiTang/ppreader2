@@ -26,12 +26,7 @@ public class MockActivity5 extends FragmentActivity {
             getSupportFragmentManager().beginTransaction().add(R.id.mock_root,textFragment).commit();
         }
 
-        textFragment.init(new MockService(), new IPPReaderTaskNotification() {
-            @Override
-            public void onNotify(IPPReaderTaskRet ret) {
-
-            }
-        });
+        textFragment.init(new MockService());
 
         PPReaderNovel novel = new PPReaderNovel();
         novel.id = "1";

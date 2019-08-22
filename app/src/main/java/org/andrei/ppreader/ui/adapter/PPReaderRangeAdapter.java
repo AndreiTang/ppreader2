@@ -12,6 +12,8 @@ import org.andrei.ppreader.R;
 import org.andrei.ppreader.data.PPReaderChapter;
 import org.andrei.ppreader.data.PPReaderNovel;
 import org.andrei.ppreader.service.IPPReaderTaskNotification;
+import org.andrei.ppreader.service.message.PPReaderCommonMessage;
+import org.andrei.ppreader.service.message.PPReaderMessageTypeDefine;
 import org.andrei.ppreader.ui.fragment.helper.PPReaderCommonRet;
 
 import java.util.ArrayList;
@@ -19,10 +21,9 @@ import java.util.concurrent.TimeUnit;
 
 import io.reactivex.functions.Consumer;
 
-public class PPReaderRangeAdapter extends BaseAdapter {
+public class PPReaderRangeAdapter extends PPReaderBaseAdapter {
 
-    public PPReaderRangeAdapter(PPReaderNovel novel, IPPReaderTaskNotification notification, Fragment parent){
-        m_notification = notification;
+    public PPReaderRangeAdapter(PPReaderNovel novel,Fragment parent){
         m_parent = parent;
 
         int ranges = novel.chapters.size()/50;
@@ -66,9 +67,8 @@ public class PPReaderRangeAdapter extends BaseAdapter {
                 @Override
                 public void accept(Object obj) throws Exception {
                     int index = (Integer) v.getTag();
-                    PPReaderCommonRet ret = new PPReaderCommonRet(PPReaderCommonRet.TYPE_SET_CURR);
-                    ret.index  = index*50;
-                    m_notification.onNotify(ret);
+                    PPReaderCommonMessage message = new PPReaderCommonMessage(PPReaderMessageTypeDefine.TYPE_SET_CURR,index*50);
+                    sendMessage(message);
                 }
             });
         }
@@ -79,6 +79,5 @@ public class PPReaderRangeAdapter extends BaseAdapter {
     }
 
     private ArrayList<String> m_ranges = new ArrayList<>();
-    private IPPReaderTaskNotification m_notification;
     private Fragment m_parent;
 }

@@ -1,7 +1,6 @@
 package org.andrei.ppreader.ui.fragment;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,13 +15,8 @@ import com.jakewharton.rxbinding2.view.RxView;
 import org.andrei.ppreader.R;
 import org.andrei.ppreader.data.PPReaderNovel;
 import org.andrei.ppreader.service.IPPReaderService;
-import org.andrei.ppreader.service.IPPReaderTaskNotification;
-import org.andrei.ppreader.service.IPPReaderTaskRet;
-import org.andrei.ppreader.service.PPReaderSearchNovelsRet;
 import org.andrei.ppreader.service.PPReaderSearchNovelsTask;
-import org.andrei.ppreader.service.PPReaderSearchUrlsRet;
 import org.andrei.ppreader.service.PPReaderSearchUrlsTask;
-import org.andrei.ppreader.service.PPReaderUpdateNovelRet;
 import org.andrei.ppreader.service.PPReaderUpdateNovelTask;
 import org.andrei.ppreader.service.ServiceError;
 import org.andrei.ppreader.service.message.IPPReaderMessage;
@@ -33,8 +27,6 @@ import org.andrei.ppreader.service.message.PPReaderSearchNovelsMessage;
 import org.andrei.ppreader.service.message.PPReaderSearchUrlsMessage;
 import org.andrei.ppreader.service.message.PPReaderUpdateNovelMessage;
 import org.andrei.ppreader.ui.adapter.PPReaderSearchAdapter;
-import org.andrei.ppreader.ui.fragment.helper.PPReaderBaseFragment;
-import org.andrei.ppreader.ui.fragment.helper.PPReaderCommonRet;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;

@@ -27,22 +27,12 @@ public class MockActivity3 extends FragmentActivity {
 
         if(savedInstanceState != null){
             fragment = (PPReaderMainFragment)getSupportFragmentManager().findFragmentById(R.id.mock_root);
-            fragment.init(dataManager, new IPPReaderTaskNotification() {
-                @Override
-                public void onNotify(IPPReaderTaskRet ret) {
-
-                }
-            },factory);
+            fragment.init(dataManager,factory);
             Log.i("Andrei","in MockActivity");
         }
         else{
             fragment = new PPReaderMainFragment();
-            fragment.init(dataManager, new IPPReaderTaskNotification() {
-                @Override
-                public void onNotify(IPPReaderTaskRet ret) {
-
-                }
-            },factory);
+            fragment.init(dataManager,factory);
             getSupportFragmentManager().beginTransaction().add(R.id.mock_root,fragment).commit();
         }
 

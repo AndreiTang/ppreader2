@@ -14,21 +14,17 @@ import com.jakewharton.rxbinding2.view.RxView;
 
 import org.andrei.ppreader.R;
 import org.andrei.ppreader.data.PPReaderNovel;
-import org.andrei.ppreader.service.IPPReaderTaskNotification;
-import org.andrei.ppreader.service.message.PPReaderMessageCenter;
 import org.andrei.ppreader.service.message.PPReaderSelectNovelMessage;
-import org.andrei.ppreader.ui.fragment.helper.PPReaderSelectNovelRet;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.functions.Consumer;
 
-public class PPReaderSearchAdapter extends BaseAdapter {
+public class PPReaderSearchAdapter extends PPReaderBaseAdapter {
 
     public PPReaderSearchAdapter(Fragment parent){
         m_parent = parent;
-        //m_notification = notification;
     }
 
     @Override
@@ -84,7 +80,7 @@ public class PPReaderSearchAdapter extends BaseAdapter {
 //                m_notification.onNotify(ret);
 
                 PPReaderSelectNovelMessage msg = new PPReaderSelectNovelMessage(novel);
-                PPReaderMessageCenter.instance().sendMessage(msg);
+                sendMessage(msg);
             }
         });
         return v;
@@ -118,6 +114,4 @@ public class PPReaderSearchAdapter extends BaseAdapter {
 
     private ArrayList<PPReaderNovel> m_novels = new ArrayList<>();
     private Fragment m_parent;
-   // private IPPReaderTaskNotification m_notification;
-
 }
