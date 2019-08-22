@@ -1,5 +1,7 @@
 package org.andrei.ppreader.service;
 
+import org.andrei.ppreader.service.message.IPPReaderMessage;
+
 public interface IPPReaderServiceCommand {
-    public IPPReaderTaskRet run(IPPReaderTask task);
+    public IPPReaderMessage run(IPPReaderTask task);
 }

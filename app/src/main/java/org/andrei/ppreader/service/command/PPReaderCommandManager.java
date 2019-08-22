@@ -6,6 +6,7 @@ import org.andrei.ppreader.service.IPPReaderTask;
 import org.andrei.ppreader.service.IPPReaderTaskRet;
 import org.andrei.ppreader.service.engine.PPReaderHttp;
 import org.andrei.ppreader.service.engine.PPReaderNovelEngineManager;
+import org.andrei.ppreader.service.message.IPPReaderMessage;
 import org.andrei.ppreader.util.TaskNames;
 
 import java.util.HashMap;
@@ -22,7 +23,7 @@ public class PPReaderCommandManager implements IPPReaderServiceCommand {
     }
 
     @Override
-    public IPPReaderTaskRet run(IPPReaderTask task) {
+    public IPPReaderMessage run(IPPReaderTask task) {
         IPPReaderServiceCommand cmd = m_cmds.get(task.type());
         return cmd.run(task);
     }

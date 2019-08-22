@@ -7,6 +7,8 @@ import org.andrei.ppreader.service.PPReaderFetchTextRet;
 import org.andrei.ppreader.service.PPReaderFetchTextTask;
 import org.andrei.ppreader.service.engine.IPPReaderHttp;
 import org.andrei.ppreader.service.engine.IPPReaderNovelEngineManager;
+import org.andrei.ppreader.service.message.IPPReaderMessage;
+import org.andrei.ppreader.service.message.PPReaderFetchTextMessage;
 
 public class PPReaderFetchTextCommand implements IPPReaderServiceCommand {
 
@@ -16,14 +18,11 @@ public class PPReaderFetchTextCommand implements IPPReaderServiceCommand {
     }
 
     @Override
-    public IPPReaderTaskRet run(IPPReaderTask task) {
+    public IPPReaderMessage run(IPPReaderTask task) {
         PPReaderFetchTextTask t = (PPReaderFetchTextTask)task;
-        PPReaderFetchTextRet ret = new PPReaderFetchTextRet();
         StringBuilder text = new StringBuilder();
-        ret.retCode = m_manager.get(t.engineName).fetchChapterText(t.url, m_http, text);
-        ret.chapterId = t.chapterId;
-        ret.novelId = t.novelId;
-        ret.text = text.toString();
+        int retCode = m_manager.get(t.engineName).fetchChapterText(t.url, m_http, text);
+        PPReaderFetchTextMessage ret = new PPReaderFetchTextMessage(retCode,t.novelId,t.chapterId,text.toString());
         return ret;
     }
 

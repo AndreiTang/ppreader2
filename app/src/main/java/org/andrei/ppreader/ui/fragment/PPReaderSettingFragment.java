@@ -12,17 +12,19 @@ import com.jakewharton.rxbinding2.view.RxView;
 import org.andrei.ppreader.R;
 import org.andrei.ppreader.data.IPPReaderDataManager;
 import org.andrei.ppreader.service.IPPReaderTaskNotification;
+import org.andrei.ppreader.service.message.PPReaderCommonMessage;
+import org.andrei.ppreader.service.message.PPReaderMessageTypeDefine;
+import org.andrei.ppreader.ui.fragment.helper.PPReaderBaseFragment;
 import org.andrei.ppreader.ui.fragment.helper.PPReaderCommonRet;
 
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.functions.Consumer;
 
-public class PPReaderSettingFragment extends Fragment {
+public class PPReaderSettingFragment extends PPReaderBaseFragment {
 
-    public void init(final IPPReaderDataManager dataManager,final IPPReaderTaskNotification notification){
+    public void init(final IPPReaderDataManager dataManager){
         m_dataManager = dataManager;
-        m_notification = notification;
     }
 
     @Override
@@ -48,11 +50,8 @@ public class PPReaderSettingFragment extends Fragment {
         RxView.clicks(tv).throttleFirst(1, TimeUnit.SECONDS).subscribe(new Consumer<Object>() {
             @Override
             public void accept(Object o) throws Exception{
-                PPReaderCommonRet ret = new PPReaderCommonRet(PPReaderCommonRet.TYPE_TO_LIST_PAGE);
-                ret.index = 1;
-                if(m_notification != null){
-                    m_notification.onNotify(ret);
-                }
+                PPReaderCommonMessage msg = new PPReaderCommonMessage(PPReaderMessageTypeDefine.TYPE_TO_LIST_PAGE,1);
+                sendMessage(msg);
             }
         });
 
@@ -61,11 +60,8 @@ public class PPReaderSettingFragment extends Fragment {
         RxView.clicks(tv).throttleFirst(1, TimeUnit.SECONDS).subscribe(new Consumer<Object>() {
             @Override
             public void accept(Object o) throws Exception{
-                PPReaderCommonRet ret = new PPReaderCommonRet(PPReaderCommonRet.TYPE_TO_LIST_PAGE);
-                ret.index = 0;
-                if(m_notification != null){
-                    m_notification.onNotify(ret);
-                }
+                PPReaderCommonMessage msg = new PPReaderCommonMessage(PPReaderMessageTypeDefine.TYPE_TO_LIST_PAGE,0);
+                sendMessage(msg);
             }
         });
 
@@ -81,8 +77,6 @@ public class PPReaderSettingFragment extends Fragment {
     }
 
 
-
-    private IPPReaderTaskNotification m_notification;
     private IPPReaderDataManager m_dataManager;
 }
 

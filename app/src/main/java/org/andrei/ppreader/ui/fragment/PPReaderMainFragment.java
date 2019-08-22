@@ -94,11 +94,11 @@ public class PPReaderMainFragment extends PPReaderBaseFragment {
 
         PPReaderSearchFragment searchFragment = new PPReaderSearchFragment();
         fragments[1] = searchFragment;
-        searchFragment.init(this, m_serviceFactory.createServiceInstance());
+        searchFragment.init(m_serviceFactory.createServiceInstance());
 
         PPReaderSettingFragment settingFragment = new PPReaderSettingFragment();
         fragments[2] = settingFragment;
-        settingFragment.init(m_dataManager, this);
+        settingFragment.init(m_dataManager);
     }
 
     private void resume(Bundle savedInstanceState,final Fragment[] fragments){
@@ -114,10 +114,10 @@ public class PPReaderMainFragment extends PPReaderBaseFragment {
         m_listFragment = listFragment;
 
         PPReaderSearchFragment searchFragment = (PPReaderSearchFragment)fragments[1];
-        searchFragment.init(this, m_serviceFactory.createServiceInstance());
+        searchFragment.init(m_serviceFactory.createServiceInstance());
 
         PPReaderSettingFragment settingFragment = (PPReaderSettingFragment)fragments[2];
-        settingFragment.init(m_dataManager, this);
+        settingFragment.init(m_dataManager);
     }
 
     private void init(final Fragment[] fragments){

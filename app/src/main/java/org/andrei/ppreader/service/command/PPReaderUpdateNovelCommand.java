@@ -12,6 +12,8 @@ import org.andrei.ppreader.service.PPReaderUpdateNovelRet;
 import org.andrei.ppreader.service.PPReaderUpdateNovelTask;
 import org.andrei.ppreader.service.ServiceError;
 import org.andrei.ppreader.service.engine.PPReaderNovelType;
+import org.andrei.ppreader.service.message.IPPReaderMessage;
+import org.andrei.ppreader.service.message.PPReaderUpdateNovelMessage;
 
 import java.util.ArrayList;
 
@@ -24,22 +26,24 @@ public class PPReaderUpdateNovelCommand implements IPPReaderServiceCommand {
     }
 
     @Override
-    public IPPReaderTaskRet run(IPPReaderTask task) {
+    public IPPReaderMessage run(IPPReaderTask task) {
 
         String url = ((PPReaderUpdateNovelTask)task).url;
         String engineName = ((PPReaderUpdateNovelTask)task).engineName;
         String id = ((PPReaderUpdateNovelTask)task).id;
         IPPReaderNovelEngine engine = m_manager.get(engineName);
-        PPReaderUpdateNovelRet ret = new PPReaderUpdateNovelRet();
-        ret.id = id;
-        if(engine == null){
-            ret.retCode = ServiceError.ERR_NOT_ENGINE;
-        }
-        ArrayList<PPReaderChapter> delta = new ArrayList<>();
+
+        int retCode = ServiceError.ERR_OK;
+        ArrayList<PPReaderChapter> delta = null;
         PPReaderNovelType type = new PPReaderNovelType();
-        ret.retCode = engine.updateNovel(url,m_http,delta,type);
-        ret.delta = delta;
-        ret.type = type.val;
+        if(engine == null){
+            retCode = ServiceError.ERR_NOT_ENGINE;
+        }
+        else{
+            delta = new ArrayList<>();
+            retCode = engine.updateNovel(url,m_http,delta,type);
+        }
+        PPReaderUpdateNovelMessage ret = new PPReaderUpdateNovelMessage(retCode,id,delta,type.val);
         return ret;
     }
 

@@ -4,6 +4,9 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 
+import org.andrei.ppreader.service.message.IPPReaderMessage;
+import org.andrei.ppreader.service.message.PPReaderMessageCenter;
+
 import java.util.ArrayList;
 
 
@@ -13,8 +16,7 @@ public class PPReaderService implements IPPReaderService {
     }
 
     @Override
-    public void start(@NonNull IPPReaderTaskNotification notify) {
-        m_notification = notify;
+    public void start() {
         init();
     }
 
@@ -22,7 +24,6 @@ public class PPReaderService implements IPPReaderService {
     public void stop() {
         m_isRunning = false;
         synchronized(this){
-            m_notification = null;
             m_tasks.clear();
         }
     }
@@ -81,23 +82,21 @@ public class PPReaderService implements IPPReaderService {
                 }
             }
 
-            IPPReaderTaskRet ret =  run(task);
+            IPPReaderMessage ret =  run(task);
             postRet(ret);
         }while (m_isRunning);
     }
 
-    private IPPReaderTaskRet run(IPPReaderTask task){
+    private IPPReaderMessage run(IPPReaderTask task){
         return m_cmd.run(task);
     }
 
-    private void postRet(final IPPReaderTaskRet ret){
+    private void postRet(final IPPReaderMessage ret){
         m_handler.post(new Runnable() {
             @Override
             public void run() {
                 synchronized (this){
-                    if(m_notification != null){
-                        m_notification.onNotify(ret);
-                    }
+                    PPReaderMessageCenter.instance().sendMessage(ret);
                 }
             }
         });
@@ -109,7 +108,7 @@ public class PPReaderService implements IPPReaderService {
 
     private Thread m_thread;
     private Handler m_handler;
-    private volatile IPPReaderTaskNotification m_notification;
+    //private volatile IPPReaderTaskNotification m_notification;
     private volatile ArrayList<IPPReaderTask> m_tasks = new ArrayList<IPPReaderTask>();
     private volatile boolean m_isRunning = true;
     private IPPReaderServiceCommand m_cmd;

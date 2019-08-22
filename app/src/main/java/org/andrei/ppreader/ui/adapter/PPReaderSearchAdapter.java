@@ -15,6 +15,8 @@ import com.jakewharton.rxbinding2.view.RxView;
 import org.andrei.ppreader.R;
 import org.andrei.ppreader.data.PPReaderNovel;
 import org.andrei.ppreader.service.IPPReaderTaskNotification;
+import org.andrei.ppreader.service.message.PPReaderMessageCenter;
+import org.andrei.ppreader.service.message.PPReaderSelectNovelMessage;
 import org.andrei.ppreader.ui.fragment.helper.PPReaderSelectNovelRet;
 
 import java.util.ArrayList;
@@ -24,9 +26,9 @@ import io.reactivex.functions.Consumer;
 
 public class PPReaderSearchAdapter extends BaseAdapter {
 
-    public PPReaderSearchAdapter(Fragment parent, IPPReaderTaskNotification notification){
+    public PPReaderSearchAdapter(Fragment parent){
         m_parent = parent;
-        m_notification = notification;
+        //m_notification = notification;
     }
 
     @Override
@@ -76,9 +78,13 @@ public class PPReaderSearchAdapter extends BaseAdapter {
             public void accept(Object o) throws Exception {
                int index= (Integer) v.getTag();
                PPReaderNovel novel = m_novels.get(index);
-                PPReaderSelectNovelRet ret = new PPReaderSelectNovelRet();
-                ret.novel = novel;
-                m_notification.onNotify(ret);
+
+//                PPReaderSelectNovelRet ret = new PPReaderSelectNovelRet();
+//                ret.novel = novel;
+//                m_notification.onNotify(ret);
+
+                PPReaderSelectNovelMessage msg = new PPReaderSelectNovelMessage(novel);
+                PPReaderMessageCenter.instance().sendMessage(msg);
             }
         });
         return v;
@@ -112,6 +118,6 @@ public class PPReaderSearchAdapter extends BaseAdapter {
 
     private ArrayList<PPReaderNovel> m_novels = new ArrayList<>();
     private Fragment m_parent;
-    private IPPReaderTaskNotification m_notification;
+   // private IPPReaderTaskNotification m_notification;
 
 }

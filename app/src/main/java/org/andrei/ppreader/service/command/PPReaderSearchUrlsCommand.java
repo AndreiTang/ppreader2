@@ -11,6 +11,10 @@ import org.andrei.ppreader.service.IPPReaderTaskRet;
 import org.andrei.ppreader.service.PPReaderSearchUrlsRet;
 import org.andrei.ppreader.service.PPReaderSearchUrlsTask;
 import org.andrei.ppreader.service.ServiceError;
+import org.andrei.ppreader.service.message.IPPReaderMessage;
+import org.andrei.ppreader.service.message.PPReaderSearchUrlsMessage;
+
+import java.util.ArrayList;
 
 public class PPReaderSearchUrlsCommand implements IPPReaderServiceCommand {
 
@@ -22,12 +26,12 @@ public class PPReaderSearchUrlsCommand implements IPPReaderServiceCommand {
     }
 
     @Override
-    public IPPReaderTaskRet run(IPPReaderTask task) {
-        PPReaderSearchUrlsRet ret = new PPReaderSearchUrlsRet();
-        ret.retCode = ServiceError.ERR_NOT_ENGINE;
+    public IPPReaderMessage run(IPPReaderTask task) {
+        int retCode = ServiceError.ERR_NOT_ENGINE;
 
         PPReaderSearchUrlsTask t = (PPReaderSearchUrlsTask)task;
-
+        String engineName = "";
+        ArrayList<String> urls = new ArrayList<>();
         for(int i = 0 ; i < m_dataManager.getEngineInfoCount(); i++){
             PPReaderEngineInfo item = m_dataManager.getEngineInfo(i);
             if(item == null || item.isUsed == false){
@@ -37,13 +41,14 @@ public class PPReaderSearchUrlsCommand implements IPPReaderServiceCommand {
             if(engine == null){
                 continue;
             }
-            ret.retCode = engine.searchUrls(t.name,m_http,ret.urls);
-            if(ret.retCode == ServiceError.ERR_OK){
-                ret.engineName = item.name;
+            retCode = engine.searchUrls(t.name,m_http,urls);
+            if(retCode == ServiceError.ERR_OK){
+                engineName = item.name;
                 break;
             }
 
         }
+        PPReaderSearchUrlsMessage ret = new PPReaderSearchUrlsMessage(retCode,engineName,urls);
         return ret;
     }
 
