@@ -17,8 +17,8 @@ import org.andrei.ppreader.ui.adapter.helper.PPReaderTextFragmentViews;
 
 public class PPReaderTextAdapter extends PagerAdapter {
 
-    public PPReaderTextAdapter(final Fragment parent,  final IPPReaderPageManager pageMgr, IPPReaderTaskNotification notification){
-        m_viewMgr = new PPReaderTextFragmentViewManager(notification);
+    public PPReaderTextAdapter(final Fragment parent,  final IPPReaderPageManager pageMgr){
+        m_viewMgr = new PPReaderTextFragmentViewManager();
         m_pageMgr = pageMgr;
         m_parent = parent;
     }

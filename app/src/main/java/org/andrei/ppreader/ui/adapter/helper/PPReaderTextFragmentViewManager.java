@@ -10,6 +10,10 @@ import com.jakewharton.rxbinding2.view.RxView;
 import org.andrei.ppreader.R;
 import org.andrei.ppreader.data.PPReaderTextPage;
 import org.andrei.ppreader.service.IPPReaderTaskNotification;
+import org.andrei.ppreader.service.message.PPReaderAllocateTextMessage;
+import org.andrei.ppreader.service.message.PPReaderCommonMessage;
+import org.andrei.ppreader.service.message.PPReaderMessageCenter;
+import org.andrei.ppreader.service.message.PPReaderMessageTypeDefine;
 import org.andrei.ppreader.ui.fragment.helper.PPReaderAllocateTextRet;
 import org.andrei.ppreader.ui.fragment.helper.PPReaderCommonRet;
 
@@ -20,9 +24,6 @@ import io.reactivex.functions.Consumer;
 
 public class PPReaderTextFragmentViewManager {
 
-    public PPReaderTextFragmentViewManager(IPPReaderTaskNotification notification) {
-        m_notify = notification;
-    }
 
     public void addView(final View view, final PPReaderTextPage page, final int pos) {
 
@@ -37,11 +38,8 @@ public class PPReaderTextFragmentViewManager {
         RxView.clicks(vs.errView).throttleFirst(1, TimeUnit.SECONDS).subscribe(
                 new Consumer<Object>() {
                     public void accept(Object t) throws Exception {
-                        PPReaderCommonRet ret = new PPReaderCommonRet(PPReaderCommonRet.TYPE_FETCH_TEXT);
-                        ret.index = pos;
-                        //Or it will be rejected by fetchText(int pos)
-                        vs.page.status = PPReaderTextPage.STATUS_INIT;
-                        m_notify.onNotify(ret);
+                        PPReaderCommonMessage msg = new PPReaderCommonMessage(PPReaderMessageTypeDefine.TYPE_FETCH_TEXT,pos);
+                        PPReaderMessageCenter.instance().sendMessage(msg);
                     }
                 }
         );
@@ -118,10 +116,9 @@ public class PPReaderTextFragmentViewManager {
                     if (page.status != PPReaderTextPage.STATUS_TEXT_NO_SLICE) {
                         return;
                     }
-                    PPReaderAllocateTextRet ret = new PPReaderAllocateTextRet();
-                    ret.page = page;
-                    ret.tv = textView;
-                    m_notify.onNotify(ret);
+
+                    PPReaderAllocateTextMessage msg = new PPReaderAllocateTextMessage(textView,page);
+                    PPReaderMessageCenter.instance().sendMessage(msg);
                 }
             });
 
@@ -141,7 +138,6 @@ public class PPReaderTextFragmentViewManager {
         }
     }
 
-    private IPPReaderTaskNotification m_notify;
     private ArrayList<PPReaderTextFragmentViews> m_views = new ArrayList<>();
 
 }

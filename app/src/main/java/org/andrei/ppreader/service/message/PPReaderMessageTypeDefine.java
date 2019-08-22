@@ -7,5 +7,11 @@ public final class PPReaderMessageTypeDefine {
     public static final String TYPE_SEARCH_NOVELS = "TYPE_SEARCH_NOVELS";
     public static final String TYPE_UPDATE_NOVEL = "TYPE_UPDATE_NOVEL";
     public static final String TYPE_FETCH_TEXT = "TYPE_FETCH_TEXT";
+    public static final String TYPE_TEXT = "TYPE_TEXT";
+    public static final String TYPE_CURR = "curr";
+    public static final String TYPE_DB_CLICKS = "TYPE_DB_CLICKS";
+    public static final String TYPE_ALLOCATE_TEXT = "TYPE_ALLOCATE_TEXT";
+    public static final String TYPE_SHOW_CATALOG = "sc";
+    public static final String TYPE_SET_CURR = "set_curr";
 
 }

@@ -23,10 +23,9 @@ import io.reactivex.functions.Consumer;
 
 public class PPReaderTextCatalog {
 
-    public PPReaderTextCatalog(View catalogView, Fragment fragment,IPPReaderTaskNotification notification){
+    public PPReaderTextCatalog(View catalogView, Fragment fragment){
         m_catalogView = catalogView;
        // m_novel = novel;
-        m_notification = notification;
         m_fragment = fragment;
         init();
     }
@@ -34,7 +33,7 @@ public class PPReaderTextCatalog {
     public void show(int curr, long duration){
         m_catalogView.setVisibility(View.VISIBLE);
         ListView l = m_catalogView.findViewById(R.id.novel_catalog_chapter_list);
-        PPReaderCatalogAdapter adapter = new PPReaderCatalogAdapter(m_novel,m_notification,m_fragment);
+        PPReaderCatalogAdapter adapter = new PPReaderCatalogAdapter(m_novel,m_fragment);
         l.setAdapter(adapter);
         l.setSelection(curr);
 
@@ -145,7 +144,7 @@ public class PPReaderTextCatalog {
 
     private View m_catalogView;
     private PPReaderNovel m_novel;
-    private IPPReaderTaskNotification m_notification;
+    //private IPPReaderTaskNotification m_notification;
     private Fragment m_fragment;
 
 }

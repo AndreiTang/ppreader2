@@ -13,6 +13,10 @@ import android.view.View;
 
 import org.andrei.ppreader.R;
 import org.andrei.ppreader.service.IPPReaderTaskNotification;
+import org.andrei.ppreader.service.message.PPReaderCommonMessage;
+import org.andrei.ppreader.service.message.PPReaderMessageCenter;
+import org.andrei.ppreader.service.message.PPReaderMessageType;
+import org.andrei.ppreader.service.message.PPReaderMessageTypeDefine;
 import org.andrei.ppreader.ui.fragment.helper.PPReaderCommonRet;
 
 
@@ -32,9 +36,6 @@ public class PPReaderControlPanel extends View {
     }
 
 
-    public void  addListener(IPPReaderTaskNotification notification){
-        m_notification = notification;
-    }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -42,27 +43,21 @@ public class PPReaderControlPanel extends View {
         if(eve == MotionEvent.ACTION_DOWN ){
             int x = (int)event.getX();
             int y = (int)event.getY();
-            if(m_notification != null){
-                PPReaderCommonRet ret = null;
-                if(checkDict(x,y)==true){
-                    ret = new PPReaderCommonRet(PPReaderCommonRet.TYPE_SHOW_CATALOG);
-                }
-                else if(checkCache(x,y) == true){
-                    ret = new PPReaderCommonRet(PPReaderCommonRet.TYPE_SHOW_CATALOG);
-                }
-                else if(checkList(x,y) == true){
-                    ret = new PPReaderCommonRet(PPReaderCommonRet.TYPE_TO_LIST_PAGE);
-                    ret.index = 0;
-
-                }
-                else if(checkSearch(x,y) == true){
-                    ret = new PPReaderCommonRet(PPReaderCommonRet.TYPE_TO_LIST_PAGE);
-                    ret.index = 1;
-                }
-                if(ret != null){
-                    m_notification.onNotify(ret);
-                }
+            PPReaderCommonMessage msg = null;
+            if(checkDict(x,y)==true){
+                msg = new PPReaderCommonMessage(PPReaderMessageTypeDefine.TYPE_SHOW_CATALOG,0);
             }
+            else if(checkCache(x,y) == true){
+                msg = new PPReaderCommonMessage(PPReaderMessageTypeDefine.TYPE_SHOW_CATALOG,0);
+            }
+            else if(checkList(x,y) == true){
+                msg = new PPReaderCommonMessage(PPReaderMessageTypeDefine.TYPE_TO_LIST_PAGE,0);
+            }
+            else if(checkSearch(x,y) == true){
+                msg = new PPReaderCommonMessage(PPReaderMessageTypeDefine.TYPE_TO_LIST_PAGE,1);
+
+            }
+            PPReaderMessageCenter.instance().sendMessage(msg);
             setVisibility(View.GONE);
         }
         return true;
@@ -200,6 +195,5 @@ public class PPReaderControlPanel extends View {
     private int m_orgX = 200;
     private int m_orgY = 200;
 
-    private IPPReaderTaskNotification m_notification;
 
 }

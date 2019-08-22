@@ -8,7 +8,7 @@ public class PPReaderFetchTextMessage implements IPPReaderMessage {
 
     @Override
     public String type() {
-        return PPReaderMessageTypeDefine.TYPE_FETCH_TEXT;
+        return PPReaderMessageTypeDefine.TYPE_TEXT;
     }
 
     public int getRetCode(){
