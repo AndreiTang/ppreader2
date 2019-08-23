@@ -1,6 +1,8 @@
-package org.andrei.ppreader.service;
+package org.andrei.ppreader.service.task;
 
-public class PPReaderTextTask implements IPPReaderTask{
+import org.andrei.ppreader.service.task.IPPReaderTask;
+
+public class PPReaderTextTask implements IPPReaderTask {
     @Override
     public String type() {
         return this.getClass().getName();

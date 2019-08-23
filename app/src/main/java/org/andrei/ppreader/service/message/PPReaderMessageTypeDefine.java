@@ -14,5 +14,6 @@ public final class PPReaderMessageTypeDefine {
     public static final String TYPE_SHOW_CATALOG = "sc";
     public static final String TYPE_SET_CURR = "set_curr";
     public static final String TYPE_ADD_NOVEL = "TYPE_ADD_NOVEL";
+    public static final String TYPE_SET_RANGE = "TYPE_SET_RANGE";
 
 }

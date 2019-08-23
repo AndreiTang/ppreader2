@@ -1,6 +1,6 @@
-package org.andrei.ppreader.service;
+package org.andrei.ppreader.service.task;
 
-import org.andrei.ppreader.util.TaskNames;
+import org.andrei.ppreader.service.command.CommandNames;
 
 public class PPReaderSearchUrlsTask implements IPPReaderTask {
 
@@ -10,7 +10,7 @@ public class PPReaderSearchUrlsTask implements IPPReaderTask {
 
     @Override
     public String type() {
-        return TaskNames.SEARCH_URLS;
+        return CommandNames.SEARCH_URLS;
     }
 
     public String name;

@@ -1,8 +1,8 @@
-package org.andrei.ppreader.service;
+package org.andrei.ppreader.service.task;
 
 import org.andrei.ppreader.data.PPReaderChapter;
 import org.andrei.ppreader.data.PPReaderNovel;
-import org.andrei.ppreader.util.TaskNames;
+import org.andrei.ppreader.service.command.CommandNames;
 
 public class PPReaderFetchTextTask implements IPPReaderTask {
 
@@ -15,7 +15,7 @@ public class PPReaderFetchTextTask implements IPPReaderTask {
 
     @Override
     public String type() {
-        return TaskNames.FETCH_TEXT;
+        return CommandNames.FETCH_TEXT;
     }
 
     public String url;

@@ -1,6 +1,5 @@
 package org.andrei.ppreader;
 
-import android.app.Instrumentation;
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
@@ -12,30 +11,15 @@ import org.andrei.ppreader.data.PPReaderDataManager;
 import org.andrei.ppreader.data.PPReaderEngineInfo;
 import org.andrei.ppreader.data.PPReaderNovel;
 import org.andrei.ppreader.service.IPPReaderService;
-import org.andrei.ppreader.service.IPPReaderTask;
-import org.andrei.ppreader.service.IPPReaderTaskNotification;
-import org.andrei.ppreader.service.IPPReaderTaskRet;
-import org.andrei.ppreader.service.PPReaderFetchTextRet;
-import org.andrei.ppreader.service.PPReaderFetchTextTask;
-import org.andrei.ppreader.service.PPReaderSearchNovelsRet;
-import org.andrei.ppreader.service.PPReaderSearchNovelsTask;
-import org.andrei.ppreader.service.PPReaderSearchUrlsRet;
-import org.andrei.ppreader.service.PPReaderSearchUrlsTask;
-import org.andrei.ppreader.service.PPReaderService;
+import org.andrei.ppreader.service.task.PPReaderSearchUrlsTask;
 import org.andrei.ppreader.service.PPReaderServiceFactory;
-import org.andrei.ppreader.service.PPReaderUpdateNovelRet;
-import org.andrei.ppreader.service.PPReaderUpdateNovelTask;
-import org.andrei.ppreader.service.ServiceError;
 import org.andrei.ppreader.service.engine.EngineNames;
-import org.andrei.ppreader.util.TaskNames;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.junit.Assert.assertEquals;
 

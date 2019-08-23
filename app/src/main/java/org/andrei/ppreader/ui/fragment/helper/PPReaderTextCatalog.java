@@ -12,8 +12,6 @@ import com.jakewharton.rxbinding2.view.RxView;
 
 import org.andrei.ppreader.R;
 import org.andrei.ppreader.data.PPReaderNovel;
-import org.andrei.ppreader.service.IPPReaderTaskNotification;
-import org.andrei.ppreader.service.IPPReaderTaskRet;
 import org.andrei.ppreader.ui.adapter.PPReaderCatalogAdapter;
 import org.andrei.ppreader.ui.adapter.PPReaderRangeAdapter;
 
@@ -38,17 +36,7 @@ public class PPReaderTextCatalog {
         l.setSelection(curr);
 
         l = m_catalogView.findViewById(R.id.novel_catalog_range_list);
-        PPReaderRangeAdapter ra = new PPReaderRangeAdapter(m_novel, new IPPReaderTaskNotification() {
-            @Override
-            public void onNotify(IPPReaderTaskRet ret) {
-                m_catalogView.findViewById(R.id.novel_catalog_chapter_list).setVisibility(View.VISIBLE);
-                m_catalogView.findViewById(R.id.novel_catalog_range_list).setVisibility(View.GONE);
-
-                PPReaderCommonRet r = (PPReaderCommonRet)ret;
-                ListView l = m_catalogView.findViewById(R.id.novel_catalog_chapter_list);
-                l.setSelection(r.index);
-            }
-        }, m_fragment);
+        PPReaderRangeAdapter ra = new PPReaderRangeAdapter(m_novel,m_fragment);
         l.setAdapter(ra);
 
         long h = duration/3600;
@@ -57,6 +45,13 @@ public class PPReaderTextCatalog {
         ds = String.format(ds,h,m);
         TextView tv = m_fragment.getView().findViewById(R.id.novel_catalog_duration);
         tv.setText(ds);
+    }
+
+    public void setRange(int index){
+        m_catalogView.findViewById(R.id.novel_catalog_chapter_list).setVisibility(View.VISIBLE);
+        m_catalogView.findViewById(R.id.novel_catalog_range_list).setVisibility(View.GONE);
+        ListView l = m_catalogView.findViewById(R.id.novel_catalog_chapter_list);
+        l.setSelection(index);
     }
 
     public void setNovel(final PPReaderNovel novel){

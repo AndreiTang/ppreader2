@@ -1,7 +1,7 @@
-package org.andrei.ppreader.service;
+package org.andrei.ppreader.service.task;
 
 import org.andrei.ppreader.data.PPReaderNovel;
-import org.andrei.ppreader.util.TaskNames;
+import org.andrei.ppreader.service.command.CommandNames;
 
 public class PPReaderUpdateNovelTask implements IPPReaderTask {
 
@@ -13,7 +13,7 @@ public class PPReaderUpdateNovelTask implements IPPReaderTask {
 
     @Override
     public String type() {
-        return TaskNames.UPDATE_NOVEL;
+        return CommandNames.UPDATE_NOVEL;
     }
 
     public String url;

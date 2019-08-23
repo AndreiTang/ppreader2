@@ -1,7 +1,5 @@
 package org.andrei.ppreader.data;
 
-import org.andrei.ppreader.ui.fragment.helper.PPReaderCommonRet;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 

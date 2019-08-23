@@ -1,8 +1,5 @@
 package org.andrei.ppreader.service.message;
 
-import org.andrei.ppreader.service.IPPReaderNotification;
-import org.andrei.ppreader.service.IPPReaderTaskRet;
-
 import java.util.HashSet;
 
 public class PPReaderMessageCenter implements IPPReaderMessageCenter {

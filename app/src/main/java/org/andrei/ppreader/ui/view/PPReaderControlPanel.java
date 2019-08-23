@@ -12,12 +12,9 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import org.andrei.ppreader.R;
-import org.andrei.ppreader.service.IPPReaderTaskNotification;
 import org.andrei.ppreader.service.message.PPReaderCommonMessage;
 import org.andrei.ppreader.service.message.PPReaderMessageCenter;
-import org.andrei.ppreader.service.message.PPReaderMessageType;
 import org.andrei.ppreader.service.message.PPReaderMessageTypeDefine;
-import org.andrei.ppreader.ui.fragment.helper.PPReaderCommonRet;
 
 
 public class PPReaderControlPanel extends View {

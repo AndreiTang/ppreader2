@@ -4,8 +4,10 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 
+import org.andrei.ppreader.service.command.IPPReaderServiceCommand;
 import org.andrei.ppreader.service.message.IPPReaderMessage;
 import org.andrei.ppreader.service.message.PPReaderMessageCenter;
+import org.andrei.ppreader.service.task.IPPReaderTask;
 
 import java.util.ArrayList;
 

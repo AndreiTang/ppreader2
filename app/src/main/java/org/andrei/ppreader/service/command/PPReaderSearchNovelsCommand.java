@@ -4,11 +4,8 @@ import org.andrei.ppreader.data.PPReaderNovel;
 import org.andrei.ppreader.service.engine.IPPReaderHttp;
 import org.andrei.ppreader.service.engine.IPPReaderNovelEngine;
 import org.andrei.ppreader.service.engine.IPPReaderNovelEngineManager;
-import org.andrei.ppreader.service.IPPReaderServiceCommand;
-import org.andrei.ppreader.service.IPPReaderTask;
-import org.andrei.ppreader.service.IPPReaderTaskRet;
-import org.andrei.ppreader.service.PPReaderSearchNovelsRet;
-import org.andrei.ppreader.service.PPReaderSearchNovelsTask;
+import org.andrei.ppreader.service.task.IPPReaderTask;
+import org.andrei.ppreader.service.task.PPReaderSearchNovelsTask;
 import org.andrei.ppreader.service.message.IPPReaderMessage;
 import org.andrei.ppreader.service.message.PPReaderSearchNovelsMessage;
 

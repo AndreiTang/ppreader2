@@ -1,10 +1,8 @@
 package org.andrei.ppreader.ui.adapter;
 
 import android.support.v4.app.Fragment;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.jakewharton.rxbinding2.view.RxView;
@@ -12,12 +10,8 @@ import com.jakewharton.rxbinding2.view.RxView;
 import org.andrei.ppreader.R;
 import org.andrei.ppreader.data.PPReaderChapter;
 import org.andrei.ppreader.data.PPReaderNovel;
-import org.andrei.ppreader.service.IPPReaderTask;
-import org.andrei.ppreader.service.IPPReaderTaskNotification;
 import org.andrei.ppreader.service.message.PPReaderCommonMessage;
-import org.andrei.ppreader.service.message.PPReaderMessageCenter;
 import org.andrei.ppreader.service.message.PPReaderMessageTypeDefine;
-import org.andrei.ppreader.ui.fragment.helper.PPReaderCommonRet;
 
 import java.util.concurrent.TimeUnit;
 

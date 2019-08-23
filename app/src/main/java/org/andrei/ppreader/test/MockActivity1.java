@@ -6,11 +6,8 @@ import android.util.Log;
 
 import org.andrei.ppreader.R;
 
-import org.andrei.ppreader.service.IPPReaderTaskNotification;
-import org.andrei.ppreader.service.IPPReaderTaskRet;
 import org.andrei.ppreader.service.PPReaderServiceFactory;
 import org.andrei.ppreader.ui.fragment.PPReaderSearchFragment;
-import org.andrei.ppreader.ui.fragment.helper.PPReaderSelectNovelRet;
 
 public class MockActivity1 extends FragmentActivity {
     @Override

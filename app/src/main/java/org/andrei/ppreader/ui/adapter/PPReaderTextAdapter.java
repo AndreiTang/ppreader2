@@ -1,7 +1,6 @@
 package org.andrei.ppreader.ui.adapter;
 
 
-import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
@@ -10,10 +9,8 @@ import android.view.ViewGroup;
 
 import org.andrei.ppreader.R;
 import org.andrei.ppreader.data.PPReaderTextPage;
-import org.andrei.ppreader.service.IPPReaderTaskNotification;
 import org.andrei.ppreader.ui.adapter.helper.IPPReaderPageManager;
 import org.andrei.ppreader.ui.adapter.helper.PPReaderTextFragmentViewManager;
-import org.andrei.ppreader.ui.adapter.helper.PPReaderTextFragmentViews;
 
 public class PPReaderTextAdapter extends PagerAdapter {
 

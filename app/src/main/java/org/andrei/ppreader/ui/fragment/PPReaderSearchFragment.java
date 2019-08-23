@@ -15,9 +15,9 @@ import com.jakewharton.rxbinding2.view.RxView;
 import org.andrei.ppreader.R;
 import org.andrei.ppreader.data.PPReaderNovel;
 import org.andrei.ppreader.service.IPPReaderService;
-import org.andrei.ppreader.service.PPReaderSearchNovelsTask;
-import org.andrei.ppreader.service.PPReaderSearchUrlsTask;
-import org.andrei.ppreader.service.PPReaderUpdateNovelTask;
+import org.andrei.ppreader.service.task.PPReaderSearchNovelsTask;
+import org.andrei.ppreader.service.task.PPReaderSearchUrlsTask;
+import org.andrei.ppreader.service.task.PPReaderUpdateNovelTask;
 import org.andrei.ppreader.service.ServiceError;
 import org.andrei.ppreader.service.message.IPPReaderMessage;
 import org.andrei.ppreader.service.message.PPReaderCommonMessage;
@@ -277,7 +277,7 @@ public class PPReaderSearchFragment extends PPReaderBaseFragment {
     private final static String KEY_NOVELS = "novels";
 
     //private IPPReaderTaskNotification m_notification;
-    private IPPReaderService m_service;
+    //private IPPReaderService m_service;
     private ArrayList<String> m_urls;
     private String m_engineName;
     private View m_footView;

@@ -1,24 +1,17 @@
 package org.andrei.ppreader.ui.fragment.helper;
 
 import android.database.DataSetObserver;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.MotionEvent;
-import android.view.ViewTreeObserver;
 
 import org.andrei.ppreader.data.PPReaderChapter;
 import org.andrei.ppreader.data.PPReaderNovel;
 import org.andrei.ppreader.data.PPReaderTextPage;
 import org.andrei.ppreader.service.IPPReaderService;
-import org.andrei.ppreader.service.IPPReaderTaskNotification;
-import org.andrei.ppreader.service.IPPReaderTaskRet;
-import org.andrei.ppreader.service.PPReaderFetchTextRet;
-import org.andrei.ppreader.service.PPReaderFetchTextTask;
-import org.andrei.ppreader.service.PPReaderTextRet;
-import org.andrei.ppreader.service.PPReaderTextTask;
+import org.andrei.ppreader.service.message.IPPReaderMessageHandler;
+import org.andrei.ppreader.service.message.PPReaderMessageTool;
+import org.andrei.ppreader.service.task.PPReaderFetchTextTask;
 import org.andrei.ppreader.service.ServiceError;
 import org.andrei.ppreader.service.message.IPPReaderMessage;
 import org.andrei.ppreader.service.message.PPReaderAllocateTextMessage;
@@ -32,6 +25,8 @@ import org.andrei.ppreader.ui.adapter.PPReaderTextAdapter;
 import org.andrei.ppreader.ui.adapter.helper.IPPReaderPageManager;
 import org.andrei.ppreader.ui.view.helper.PPReaderRxBinding;
 
+import java.util.HashSet;
+
 import io.reactivex.functions.Consumer;
 
 public class PPReaderText  {
@@ -39,6 +34,7 @@ public class PPReaderText  {
     public PPReaderText(final IPPReaderPageManager pageManager, IPPReaderService service) {
         m_pageManager = pageManager;
         m_service = service;
+        PPReaderMessageTool.collectInteresting(this,m_methods);
     }
 
     public void init(final ViewPager vp, final Fragment parent) {
@@ -138,52 +134,8 @@ public class PPReaderText  {
         return m_vp.getCurrentItem();
     }
 
-    @PPReaderMessageType(type = PPReaderMessageTypeDefine.TYPE_FETCH_TEXT)
-    protected void fetchText(IPPReaderMessage msg) {
-        PPReaderCommonMessage message = (PPReaderCommonMessage) msg;
-        fetchText(message.getValue());
-    }
 
-    @PPReaderMessageType(type = PPReaderMessageTypeDefine.TYPE_ALLOCATE_TEXT)
-    protected void allocateText(IPPReaderMessage msg){
-        PPReaderAllocateTextMessage message = (PPReaderAllocateTextMessage) msg;
-        int index = m_pageManager.getIndex(message.getPage());
-        m_pageManager.injectText(index,message.getTv());
-        m_adapter.notifyDataSetChanged();
-    }
-
-    @PPReaderMessageType(type = PPReaderMessageTypeDefine.TYPE_TEXT)
-    protected void updateText(IPPReaderMessage msg){
-        PPReaderFetchTextMessage message = (PPReaderFetchTextMessage) msg;
-
-        if (message.getRetCode() != 0) {
-            return;
-        }
-
-        if (message.getNovelId().compareTo(m_novel.id) != 0) {
-            return;
-        }
-
-        if (message.getRetCode() == ServiceError.ERR_OK) {
-            m_pageManager.updateText(message.getChapterId(), message.getText());
-            int index = m_pageManager.getChapterFirstPageIndex(message.getChapterId());
-            PPReaderTextPage page = m_pageManager.getItem(index);
-            if(page.chapterIndex == m_novel.currIndex){
-                page.status = PPReaderTextPage.STATUS_TEXT_NO_SLICE;
-            }
-            else{
-                page.status = PPReaderTextPage.STATUS_LOADED;
-            }
-
-        } else {
-            int index = m_pageManager.getChapterFirstPageIndex(message.getChapterId());
-            PPReaderTextPage page = m_pageManager.getItem(index);
-            page.status = PPReaderTextPage.STATUS_FAIL;
-        }
-        m_adapter.notifyDataSetChanged();
-    }
-
-    private void fetchText(int index){
+    public void fetchText(int index){
         PPReaderTextPage page = m_pageManager.getItem(index);
         if (page.status == PPReaderTextPage.STATUS_INIT) {
             page.status = PPReaderTextPage.STATUS_LOADING;
@@ -195,10 +147,14 @@ public class PPReaderText  {
     }
 
 
+
+
     private IPPReaderPageManager m_pageManager;
     private IPPReaderService m_service;
     private PPReaderNovel m_novel;
     private PPReaderTextAdapter m_adapter;
     private ViewPager m_vp;
+    private HashSet<String> m_methods = new HashSet<>();
+
 
 }

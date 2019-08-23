@@ -1,6 +1,5 @@
 package org.andrei.ppreader.test;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -8,8 +7,6 @@ import android.util.Log;
 import org.andrei.ppreader.R;
 import org.andrei.ppreader.data.IPPReaderDataManager;
 import org.andrei.ppreader.service.IPPReaderServiceFactory;
-import org.andrei.ppreader.service.IPPReaderTaskNotification;
-import org.andrei.ppreader.service.IPPReaderTaskRet;
 import org.andrei.ppreader.ui.fragment.PPReaderMainFragment;
 
 public class MockActivity3 extends FragmentActivity {
@@ -27,12 +24,11 @@ public class MockActivity3 extends FragmentActivity {
 
         if(savedInstanceState != null){
             fragment = (PPReaderMainFragment)getSupportFragmentManager().findFragmentById(R.id.mock_root);
-            fragment.init(dataManager,factory);
+
             Log.i("Andrei","in MockActivity");
         }
         else{
             fragment = new PPReaderMainFragment();
-            fragment.init(dataManager,factory);
             getSupportFragmentManager().beginTransaction().add(R.id.mock_root,fragment).commit();
         }
 

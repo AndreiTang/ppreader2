@@ -1,6 +1,5 @@
 package org.andrei.ppreader;
 
-import android.app.Application;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
@@ -15,15 +14,13 @@ import org.andrei.ppreader.data.IPPReaderDataManager;
 import org.andrei.ppreader.data.PPReaderDataManager;
 import org.andrei.ppreader.data.PPReaderEngineInfo;
 import org.andrei.ppreader.data.PPReaderNovel;
-import org.andrei.ppreader.service.IPPReaderService;
 import org.andrei.ppreader.service.IPPReaderServiceFactory;
-import org.andrei.ppreader.service.IPPReaderTaskNotification;
-import org.andrei.ppreader.service.IPPReaderTaskRet;
 import org.andrei.ppreader.service.PPReaderServiceFactory;
-import org.andrei.ppreader.service.PPReaderUpdateNovelRet;
 import org.andrei.ppreader.service.message.IPPReaderMessage;
+import org.andrei.ppreader.service.message.IPPReaderMessageHandler;
 import org.andrei.ppreader.service.message.PPReaderAddNovelMessage;
 import org.andrei.ppreader.service.message.PPReaderMessageCenter;
+import org.andrei.ppreader.service.message.PPReaderMessageTool;
 import org.andrei.ppreader.service.message.PPReaderMessageType;
 import org.andrei.ppreader.service.message.PPReaderMessageTypeDefine;
 import org.andrei.ppreader.ui.adapter.PPReaderBaseAdapter;
@@ -31,11 +28,9 @@ import org.andrei.ppreader.ui.fragment.PPReaderBaseFragment;
 import org.andrei.ppreader.ui.fragment.PPReaderMainFragment;
 import org.andrei.ppreader.ui.fragment.PPReaderStartFragment;
 import org.andrei.ppreader.ui.fragment.PPReaderTextFragment;
-import org.andrei.ppreader.ui.fragment.helper.PPReaderAddNovelRet;
-import org.andrei.ppreader.ui.fragment.helper.PPReaderSelectNovelRet;
-import org.andrei.ppreader.ui.fragment.helper.PPReaderCommonRet;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -44,12 +39,11 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
-public class MainActivity extends FragmentActivity  {
+public class MainActivity extends FragmentActivity implements IPPReaderMessageHandler {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
         Context appContext = getApplicationContext();
         String path = appContext.getExternalFilesDir(null).getPath();
@@ -59,6 +53,11 @@ public class MainActivity extends FragmentActivity  {
         PPReaderBaseAdapter.setMessageCenter(PPReaderMessageCenter.instance());
         PPReaderBaseFragment.setMessageCenter(PPReaderMessageCenter.instance());
         PPReaderBaseFragment.setServiceFactory(new PPReaderServiceFactory(m_dataManager));
+
+        PPReaderMessageTool.collectInteresting(this,m_methods);
+        PPReaderMessageCenter.instance().register(this);
+
+        setContentView(R.layout.activity_main);
 
         if(savedInstanceState == null){
             firstRun();
@@ -78,12 +77,8 @@ public class MainActivity extends FragmentActivity  {
             ArrayList<PPReaderEngineInfo> infos = (ArrayList<PPReaderEngineInfo>)savedInstanceState.getSerializable(KEY_INFOS);
             m_dataManager.setEngineInfos(infos);
 
-            IPPReaderServiceFactory factory = new PPReaderServiceFactory(m_dataManager);
-
             PPReaderMainFragment main = (PPReaderMainFragment)getSupportFragmentManager().findFragmentByTag(PPReaderMainFragment.class.getName());
-
             PPReaderTextFragment text = (PPReaderTextFragment)getSupportFragmentManager().findFragmentByTag(PPReaderTextFragment.class.getName());
-            text.init(factory.createServiceInstance());
 
             if(frag == 1){
                 getSupportFragmentManager().beginTransaction().hide(main).show(text).commit();
@@ -141,6 +136,16 @@ public class MainActivity extends FragmentActivity  {
             //main.switchFragment(0);
             getSupportFragmentManager().beginTransaction().show(main).hide(text).commit();
         }
+    }
+
+    @Override
+    public void onMessageHandler(IPPReaderMessage msg) {
+        PPReaderMessageTool.onMessageHandler(msg,this);
+    }
+
+    @Override
+    public boolean isInteresting(String type) {
+        return m_methods.contains(type);
     }
 
     @PPReaderMessageType(type = PPReaderMessageTypeDefine.TYPE_TO_LIST_PAGE)
@@ -211,4 +216,9 @@ public class MainActivity extends FragmentActivity  {
     private final static String KEY_NOVELS = "key_novels";
     private final static String KEY_INFOS = "key_infos";
     private IPPReaderDataManager m_dataManager;
+    private HashSet<String> m_methods = new HashSet<>();
+
+
+
+
 }

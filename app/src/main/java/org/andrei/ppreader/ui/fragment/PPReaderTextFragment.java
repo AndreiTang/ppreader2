@@ -6,8 +6,6 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import org.andrei.ppreader.R;
@@ -15,24 +13,19 @@ import org.andrei.ppreader.data.PPReaderChapter;
 import org.andrei.ppreader.data.PPReaderNovel;
 import org.andrei.ppreader.data.PPReaderTextPage;
 import org.andrei.ppreader.service.IPPReaderService;
-import org.andrei.ppreader.service.IPPReaderTaskNotification;
-import org.andrei.ppreader.service.IPPReaderTaskRet;
-import org.andrei.ppreader.service.PPReaderTextRet;
-import org.andrei.ppreader.service.PPReaderTextTask;
 import org.andrei.ppreader.service.ServiceError;
 import org.andrei.ppreader.service.message.IPPReaderMessage;
+import org.andrei.ppreader.service.message.PPReaderAllocateTextMessage;
 import org.andrei.ppreader.service.message.PPReaderCommonMessage;
 import org.andrei.ppreader.service.message.PPReaderDBClicksMessage;
+import org.andrei.ppreader.service.message.PPReaderFetchTextMessage;
 import org.andrei.ppreader.service.message.PPReaderMessageType;
 import org.andrei.ppreader.service.message.PPReaderMessageTypeDefine;
 import org.andrei.ppreader.service.message.PPReaderSelectNovelMessage;
 import org.andrei.ppreader.service.message.PPReaderUpdateNovelMessage;
-import org.andrei.ppreader.ui.adapter.PPReaderTextAdapter;
+import org.andrei.ppreader.ui.adapter.PPReaderBaseAdapter;
 import org.andrei.ppreader.ui.adapter.helper.IPPReaderPageManager;
 import org.andrei.ppreader.ui.adapter.helper.PPReaderPageManager;
-import org.andrei.ppreader.ui.fragment.helper.PPReaderAllocateTextRet;
-import org.andrei.ppreader.ui.fragment.helper.PPReaderCommonRet;
-import org.andrei.ppreader.ui.fragment.helper.PPReaderDBClicksRet;
 import org.andrei.ppreader.ui.fragment.helper.PPReaderText;
 import org.andrei.ppreader.ui.fragment.helper.PPReaderTextBars;
 import org.andrei.ppreader.ui.fragment.helper.PPReaderTextCatalog;
@@ -40,12 +33,11 @@ import org.andrei.ppreader.ui.view.PPReaderControlPanel;
 
 import java.util.ArrayList;
 
-public class PPReaderTextFragment extends Fragment {
+public class PPReaderTextFragment extends PPReaderBaseFragment {
 
-    public void init(IPPReaderService service){
+    public PPReaderTextFragment(){
         //m_notify = notification;
         m_pageMgr = new PPReaderPageManager();
-        m_text = new PPReaderText(m_pageMgr,service);
     }
 
     @Override
@@ -57,6 +49,7 @@ public class PPReaderTextFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        m_text = new PPReaderText(m_pageMgr,m_service);
         if(savedInstanceState != null){
             m_novel = (PPReaderNovel) savedInstanceState.getSerializable(NOVEL);
         }
@@ -105,6 +98,21 @@ public class PPReaderTextFragment extends Fragment {
         if(m_novel != null){
             savedInstanceState.putSerializable(NOVEL,m_novel);
         }
+    }
+
+
+    @PPReaderMessageType(type = PPReaderMessageTypeDefine.TYPE_FETCH_TEXT)
+    protected void fetchText(IPPReaderMessage msg) {
+        PPReaderCommonMessage message = (PPReaderCommonMessage) msg;
+        m_text.fetchText(message.getValue());
+    }
+
+    @PPReaderMessageType(type = PPReaderMessageTypeDefine.TYPE_ALLOCATE_TEXT)
+    protected void allocateText(IPPReaderMessage msg){
+        PPReaderAllocateTextMessage message = (PPReaderAllocateTextMessage) msg;
+        int index = m_pageMgr.getIndex(message.getPage());
+        m_pageMgr.injectText(index,message.getTv());
+        m_text.notifyDataSetChanged();
     }
 
     @PPReaderMessageType(type = PPReaderMessageTypeDefine.TYPE_SELECT_NOVEL)
@@ -159,6 +167,43 @@ public class PPReaderTextFragment extends Fragment {
         int index = m_novel.getChapterIndex(page.chapterId);
         long duration = (m_novel.duration + System.currentTimeMillis() - m_beginTime)/1000;
         m_catalog.show(index,duration);
+    }
+
+    @PPReaderMessageType(type = PPReaderMessageTypeDefine.TYPE_SET_RANGE)
+    protected void setCatalogRange(IPPReaderMessage msg){
+        int index = ((PPReaderCommonMessage)msg).getValue();
+        m_catalog.setRange(index);
+    }
+
+    @PPReaderMessageType(type = PPReaderMessageTypeDefine.TYPE_TEXT)
+    protected void updateText(IPPReaderMessage msg){
+        PPReaderFetchTextMessage message = (PPReaderFetchTextMessage) msg;
+
+        if (message.getRetCode() != 0) {
+            return;
+        }
+
+        if (message.getNovelId().compareTo(m_novel.id) != 0) {
+            return;
+        }
+
+        if (message.getRetCode() == ServiceError.ERR_OK) {
+            m_pageMgr.updateText(message.getChapterId(), message.getText());
+            int index = m_pageMgr.getChapterFirstPageIndex(message.getChapterId());
+            PPReaderTextPage page = m_pageMgr.getItem(index);
+            if(page.chapterIndex == m_novel.currIndex){
+                page.status = PPReaderTextPage.STATUS_TEXT_NO_SLICE;
+            }
+            else{
+                page.status = PPReaderTextPage.STATUS_LOADED;
+            }
+
+        } else {
+            int index = m_pageMgr.getChapterFirstPageIndex(message.getChapterId());
+            PPReaderTextPage page = m_pageMgr.getItem(index);
+            page.status = PPReaderTextPage.STATUS_FAIL;
+        }
+        m_text.notifyDataSetChanged();
     }
 
     private void loadNovel(){

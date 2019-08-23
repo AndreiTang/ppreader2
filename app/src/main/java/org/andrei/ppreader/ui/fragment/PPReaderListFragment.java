@@ -13,7 +13,7 @@ import com.jakewharton.rxbinding2.view.RxView;
 
 import org.andrei.ppreader.R;
 import org.andrei.ppreader.data.PPReaderNovel;
-import org.andrei.ppreader.service.PPReaderUpdateNovelTask;
+import org.andrei.ppreader.service.task.PPReaderUpdateNovelTask;
 import org.andrei.ppreader.service.message.IPPReaderMessage;
 import org.andrei.ppreader.service.message.PPReaderCommonMessage;
 import org.andrei.ppreader.service.message.PPReaderMessageType;

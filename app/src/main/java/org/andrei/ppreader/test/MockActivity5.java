@@ -6,9 +6,6 @@ import android.support.v4.app.FragmentActivity;
 import org.andrei.ppreader.R;
 import org.andrei.ppreader.data.PPReaderChapter;
 import org.andrei.ppreader.data.PPReaderNovel;
-import org.andrei.ppreader.service.IPPReaderTaskNotification;
-import org.andrei.ppreader.service.IPPReaderTaskRet;
-import org.andrei.ppreader.ui.fragment.PPReaderMainFragment;
 import org.andrei.ppreader.ui.fragment.PPReaderTextFragment;
 
 public class MockActivity5 extends FragmentActivity {
@@ -26,7 +23,6 @@ public class MockActivity5 extends FragmentActivity {
             getSupportFragmentManager().beginTransaction().add(R.id.mock_root,textFragment).commit();
         }
 
-        textFragment.init(new MockService());
 
         PPReaderNovel novel = new PPReaderNovel();
         novel.id = "1";
@@ -216,6 +212,5 @@ public class MockActivity5 extends FragmentActivity {
                 "　　沈默又点点头，见老头端起砂锅，转过身去，背对着自己坐下，似乎在吃饭，似乎在抽泣。";
 
         novel.chapters.add(chapter);
-        textFragment.setNovel(novel);
     }
 }
