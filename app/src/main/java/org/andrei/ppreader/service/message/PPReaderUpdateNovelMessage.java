@@ -6,11 +6,10 @@ import java.util.ArrayList;
 
 public class PPReaderUpdateNovelMessage implements IPPReaderMessage {
 
-    public PPReaderUpdateNovelMessage(int retCode,String id, ArrayList<PPReaderChapter> delta,int novelType){
+    public PPReaderUpdateNovelMessage(int retCode,String id, ArrayList<PPReaderChapter> delta){
         m_retCode = retCode;
         m_id = id;
         m_delta = delta;
-        m_novelType = novelType;
     }
 
     @Override

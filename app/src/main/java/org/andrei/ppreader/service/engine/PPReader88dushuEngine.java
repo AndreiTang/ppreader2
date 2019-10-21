@@ -10,28 +10,29 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.UUID;
 
 public class PPReader88dushuEngine implements IPPReaderNovelEngine {
     @Override
-    public int searchUrls(String name, IPPReaderHttp http, ArrayList<String> novels) {
-        String url = SEARCH_URL + "/search/so.php?search_field=0&q=" + name;
-        Document doc = http.get(url);
-        if(doc == null){
-            return ServiceError.ERR_NOT_NETWORK;
-        }
+    public int searchUrls(Document doc, ArrayList<String> novels) {
 
-        Elements elements = doc.getElementsByClass("ops_page");
+        Elements elements = doc.getElementsByClass("pagelink");
         if(elements.size() == 1){
             Element pages = elements.first();
             Elements hrefs = pages.getElementsByTag("a");
             if(hrefs.size() >0){
                 for(Element item : hrefs){
-                    if(item.className().compareTo("btn_page") == 0){
+                    if(item.className().compareTo("first") == 0){
                         continue;
                     }
-                    String href = SEARCH_URL + item.attr("href");
+                    else if(item.className().compareTo("next") == 0){
+                        break;
+                    }
+                    String href = "https://www.88dush.com" + item.attr("href");
                     novels.add(href);
                 }
             }
@@ -40,45 +41,30 @@ public class PPReader88dushuEngine implements IPPReaderNovelEngine {
         if(novels.size() == 0){
             return ServiceError.ERR_NOT_FOUND;
         }
-        novels.add(0,url);
         return ServiceError.ERR_OK;
     }
 
     @Override
-    public int searchNovels(String url, String engineName,IPPReaderHttp http, ArrayList<PPReaderNovel> novels) {
+    public int searchNovels(Document doc, ArrayList<PPReaderNovel> novels) {
 
-        Document doc = http.get(url);
-        if(doc == null){
-            return ServiceError.ERR_NOT_NETWORK;
-        }
-
-        Elements els = doc.getElementsByClass("ops_cover");
+        Elements els = doc.getElementsByClass("booklist");
         if (els.size() == 0) {
             return ServiceError.ERR_NOT_FOUND;
         }
 
-        Elements elements = els.get(0).getElementsByClass("block");
+        Elements elements = els.get(0).getElementsByTag("li");
         if (elements.size() == 0) {
             return  ServiceError.ERR_NOT_FOUND;
         }
 
         for(Element element : elements){
+            if(element.className().compareTo("t") == 0){
+                continue;
+            }
             PPReaderNovel novel = new PPReaderNovel();
             Element item = element.getElementsByTag("a").get(0);
             novel.chapterUrl = item.attr("href");
-            item = element.getElementsByTag("img").get(0);
-            novel.img = item.attr("src");
-            novel.name = item.attr("alt");
-            Elements pps = element.getElementsByTag("p");
-            item = pps.get(2);
-            novel.author = item.text();
-            novel.author = novel.author.substring(3);
-            item = pps.get(4);
-            novel.desc = item.text();
-            novel.desc = novel.desc.trim();
-            novel.desc = novel.desc.replaceAll("\n", "");
-            novel.engineName = engineName;
-            novel.id = UUID.randomUUID().toString();
+            novel.detailUrl = novel.chapterUrl;
             novels.add(novel);
         }
 
@@ -86,9 +72,8 @@ public class PPReader88dushuEngine implements IPPReaderNovelEngine {
     }
 
     @Override
-    public int updateNovel(String url, IPPReaderHttp http, ArrayList<PPReaderChapter> delta, PPReaderNovelType type) {
+    public int updateNovel(Document doc, ArrayList<PPReaderChapter> delta) {
 
-        Document doc = http.get(url);
 
         Elements mulus = doc.getElementsByClass("mulu");
         if(mulus == null || mulus.size() == 0){
@@ -98,21 +83,34 @@ public class PPReader88dushuEngine implements IPPReaderNovelEngine {
         Elements cs = root.getElementsByTag("a");
         for(Element c :cs){
             PPReaderChapter chapter = new PPReaderChapter();
-            chapter.url = url + c.attr("href");
+            chapter.url = c.attr("href");
             chapter.title = c.text();
             chapter.id = UUID.randomUUID().toString();
             delta.add(chapter);
         }
+        return ServiceError.ERR_OK;
+    }
 
-        Element item = doc.getElementsByTag("em").get(1);
-        if(item.text().indexOf("连载") != -1){
-            type.val = PPReaderNovel.TYPE_ING;
+    @Override
+    public int fetchNovelDetail(Document doc, PPReaderNovel novel) {
+        Elements items = doc.getElementsByClass("lf");
+        if(items == null || items.size() == 0){
+            return ServiceError.ERR_NOT_FOUND;
+        }
+        novel.img = items.get(0).getElementsByTag("img").get(0).attr("src");
+        if(novel.img.indexOf(getImageUrl()) ==1){
+            novel.img = "";
         }
         else{
-            type.val = PPReaderNovel.TYPE_OVER;
+            novel.img = novel.img.substring(getImageUrl().length());
         }
+        items = doc.getElementsByAttribute("rt");
+        if(items == null || items.size() == 0){
+            return ServiceError.ERR_NOT_FOUND;
+        }
+        novel.name = items.get(0).getElementsByTag("h1").get(0).text();
 
-        return ServiceError.ERR_OK;
+        return 0;
     }
 
     @Override
@@ -138,7 +136,24 @@ public class PPReader88dushuEngine implements IPPReaderNovelEngine {
         return EngineNames.ENGINE_88dushu;
     }
 
-    static final String SEARCH_URL = "https://so.88dush.com";
+    @Override
+    public String getContentUrl() {
+        return "https://www.88dush.com";
+    }
 
+    @Override
+    public String getImageUrl() {
+        return "https://fm.88dush.com";
+    }
+
+    @Override
+    public String getSearchUrl() {
+        return "https://www.88dush.com/modules/article/search.php?searchtype=articlename&searchkey=";
+    }
+
+    @Override
+    public EncodeType getEncodeType() {
+        return EncodeType.GB2312;
+    }
 
 }

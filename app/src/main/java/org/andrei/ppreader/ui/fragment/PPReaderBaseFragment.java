@@ -31,7 +31,16 @@ public class PPReaderBaseFragment extends Fragment implements IPPReaderMessageHa
 
     @Override
     public void onMessageHandler(IPPReaderMessage msg) {
-        PPReaderMessageTool.onMessageHandler(msg,this);
+        Method method = PPReaderMessageTool.getMessageMethod(msg,this);
+        if(method != null){
+            try {
+                method.invoke(this,msg);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        }
 //        Class<?> cl = this.getClass();
 //        for(Method m : cl.getDeclaredMethods()){
 //            PPReaderMessageType ct = m.getAnnotation(PPReaderMessageType.class);

@@ -15,23 +15,19 @@ import java.util.ArrayList;
 
 public class PPReaderDataManager implements IPPReaderDataManager {
 
-    public PPReaderDataManager(String folder) {
-        m_folder = folder;
-    }
-
     @Override
-    public int load() {
-        loadNovels();
-        loadEngines();
+    public int load(final String folder) {
+        loadNovels(folder);
+        loadEngines(folder);
         return 0;
     }
 
     @Override
-    public void save() {
+    public void save(final String folder) {
         for (PPReaderNovel novel : m_novels) {
-            saveNovel(novel);
+            saveNovel(folder,novel);
         }
-        saveEngines();
+        saveEngines(folder);
     }
 
     @Override
@@ -63,11 +59,11 @@ public class PPReaderDataManager implements IPPReaderDataManager {
     }
 
     @Override
-    public void removeNovel(String id) {
+    public void removeNovel(final String folder,final String id) {
         for (PPReaderNovel novel : m_novels) {
             if (id.compareTo(novel.id) == 0) {
                 m_novels.remove(novel);
-                String path = m_folder + "/" + novel.name + "-" + novel.id + ".json";
+                String path = folder + "/" + novel.name + "-" + novel.id + ".json";
                 File file = new File(path);
                 if (file.exists()) {
                     file.delete();
@@ -85,7 +81,7 @@ public class PPReaderDataManager implements IPPReaderDataManager {
     @Override
     public int getEngineInfoCount() {
         if (m_infos == null) {
-            return -1;
+            return  0;
         }
         return m_infos.size();
     }
@@ -95,10 +91,10 @@ public class PPReaderDataManager implements IPPReaderDataManager {
         m_infos = infos;
     }
 
-    private void saveEngines() {
+    private void saveEngines(final String folder) {
         Gson gson = new Gson();
         String infos = gson.toJson(m_infos);
-        String path = m_folder + "/infos.json";
+        String path = folder + "/infos.json";
 
         File file = new File(path);
         if (file.exists()) {
@@ -117,8 +113,8 @@ public class PPReaderDataManager implements IPPReaderDataManager {
     }
 
 
-    private void saveNovel(final PPReaderNovel novel) {
-        String path = m_folder + "/" + novel.name + "-" + novel.id + ".json";
+    private void saveNovel(final String folder, final PPReaderNovel novel) {
+        String path = folder + "/" + novel.name + "-" + novel.id + ".json";
         Gson gson = new Gson();
         String txt = gson.toJson(novel);
 
@@ -138,8 +134,8 @@ public class PPReaderDataManager implements IPPReaderDataManager {
         }
     }
 
-    private void loadEngines(){
-        String path = m_folder + "/infos.json";
+    private void loadEngines(final String folder){
+        String path = folder + "/infos.json";
         File file = new File(path);
 
         String txt = "";
@@ -156,27 +152,13 @@ public class PPReaderDataManager implements IPPReaderDataManager {
             e.printStackTrace();
         }
 
-        if(txt.length() == 0){
-
-            ArrayList<PPReaderEngineInfo> infos = new ArrayList<>();
-            PPReaderEngineInfo info = new PPReaderEngineInfo();
-            info.name = "88读书";
-            infos.add(info);
-
-            info = new PPReaderEngineInfo();
-            info.name = "飘天读书";
-            infos.add(info);
-            m_infos = infos;
-            return;
-        }
-
         Gson gson = new Gson();
         ArrayList<PPReaderEngineInfo> infos = gson.fromJson(txt,new TypeToken<ArrayList<PPReaderEngineInfo>>(){}.getType());
         setEngineInfos(infos);
     }
 
-    private void loadNovels() {
-        File folder = new File(m_folder);
+    private void loadNovels(final String path) {
+        File folder = new File(path);
         File fs[] = folder.listFiles();
         if (fs == null || fs.length == 0) {
             return;
@@ -209,5 +191,4 @@ public class PPReaderDataManager implements IPPReaderDataManager {
 
     protected ArrayList<PPReaderNovel> m_novels = new ArrayList<>();
     protected ArrayList<PPReaderEngineInfo> m_infos;
-    protected String m_folder;
 }

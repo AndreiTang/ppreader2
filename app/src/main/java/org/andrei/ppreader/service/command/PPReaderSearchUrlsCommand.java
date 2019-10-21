@@ -10,8 +10,12 @@ import org.andrei.ppreader.service.task.PPReaderSearchUrlsTask;
 import org.andrei.ppreader.service.ServiceError;
 import org.andrei.ppreader.service.message.IPPReaderMessage;
 import org.andrei.ppreader.service.message.PPReaderSearchUrlsMessage;
+import org.jsoup.nodes.Document;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Base64;
 
 public class PPReaderSearchUrlsCommand implements IPPReaderServiceCommand {
 
@@ -38,7 +42,33 @@ public class PPReaderSearchUrlsCommand implements IPPReaderServiceCommand {
             if(engine == null){
                 continue;
             }
-            retCode = engine.searchUrls(t.name,m_http,urls);
+
+            String name = ((PPReaderSearchUrlsTask) task).name;
+            if(engine.getEncodeType() == IPPReaderNovelEngine.EncodeType.UTF8){
+                try {
+                    name = URLEncoder.encode(name, "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                    continue;
+                }
+            }
+            else {
+                try {
+                    name = URLEncoder.encode(name, "GB2312");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                    continue;
+                }
+            }
+
+            String url = engine.getSearchUrl() + name;
+            Document doc = m_http.get(url);
+            if(doc == null){
+                retCode =  ServiceError.ERR_NOT_NETWORK;
+                break;
+            }
+
+            retCode = engine.searchUrls(doc,urls);
             if(retCode == ServiceError.ERR_OK){
                 engineName = item.name;
                 break;

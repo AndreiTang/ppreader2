@@ -5,13 +5,16 @@ import org.andrei.ppreader.data.PPReaderNovel;
 import org.andrei.ppreader.service.engine.IPPReaderHttp;
 import org.andrei.ppreader.service.engine.IPPReaderNovelEngine;
 import org.andrei.ppreader.service.engine.PPReaderNovelType;
+import org.jsoup.nodes.Document;
 
 import java.util.ArrayList;
 
 public class MockEngine implements IPPReaderNovelEngine {
 
+
+
     @Override
-    public int searchUrls(String name, IPPReaderHttp http, ArrayList<String> novels) {
+    public int searchUrls(Document doc, ArrayList<String> novels) {
         return 0;
     }
 
@@ -39,6 +42,26 @@ public class MockEngine implements IPPReaderNovelEngine {
 
     @Override
     public String getName() {
+        return null;
+    }
+
+    @Override
+    public String getContentUrl() {
+        return null;
+    }
+
+    @Override
+    public String getImageUrl() {
+        return null;
+    }
+
+    @Override
+    public String getSearchUrl() {
+        return null;
+    }
+
+    @Override
+    public EncodeType getEncodeType() {
         return null;
     }
 }

@@ -16,6 +16,8 @@ import org.andrei.ppreader.data.PPReaderEngineInfo;
 import org.andrei.ppreader.data.PPReaderNovel;
 import org.andrei.ppreader.service.IPPReaderServiceFactory;
 import org.andrei.ppreader.service.PPReaderServiceFactory;
+import org.andrei.ppreader.service.engine.IPPReaderNovelEngineManager;
+import org.andrei.ppreader.service.engine.PPReaderNovelEngineManager;
 import org.andrei.ppreader.service.message.IPPReaderMessage;
 import org.andrei.ppreader.service.message.IPPReaderMessageHandler;
 import org.andrei.ppreader.service.message.PPReaderAddNovelMessage;
@@ -23,12 +25,15 @@ import org.andrei.ppreader.service.message.PPReaderMessageCenter;
 import org.andrei.ppreader.service.message.PPReaderMessageTool;
 import org.andrei.ppreader.service.message.PPReaderMessageType;
 import org.andrei.ppreader.service.message.PPReaderMessageTypeDefine;
+import org.andrei.ppreader.test.MockDataManager;
 import org.andrei.ppreader.ui.adapter.PPReaderBaseAdapter;
 import org.andrei.ppreader.ui.fragment.PPReaderBaseFragment;
 import org.andrei.ppreader.ui.fragment.PPReaderMainFragment;
 import org.andrei.ppreader.ui.fragment.PPReaderStartFragment;
 import org.andrei.ppreader.ui.fragment.PPReaderTextFragment;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -45,14 +50,13 @@ public class MainActivity extends FragmentActivity implements IPPReaderMessageHa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Context appContext = getApplicationContext();
-        String path = appContext.getExternalFilesDir(null).getPath();
-        m_dataManager = new PPReaderDataManager(path);
+        m_dataManager = new MockDataManager();
+        m_engineManager = new PPReaderNovelEngineManager();
         PPReaderBaseAdapter.setDataManager(m_dataManager);
         PPReaderBaseFragment.setDataManager(m_dataManager);
         PPReaderBaseAdapter.setMessageCenter(PPReaderMessageCenter.instance());
         PPReaderBaseFragment.setMessageCenter(PPReaderMessageCenter.instance());
-        PPReaderBaseFragment.setServiceFactory(new PPReaderServiceFactory(m_dataManager));
+        PPReaderBaseFragment.setServiceFactory(new PPReaderServiceFactory(m_engineManager,m_dataManager));
 
         PPReaderMessageTool.collectInteresting(this,m_methods);
         PPReaderMessageCenter.instance().register(this);
@@ -95,7 +99,9 @@ public class MainActivity extends FragmentActivity implements IPPReaderMessageHa
     @Override
     public void onDestroy(){
         super.onDestroy();
-        m_dataManager.save();
+        Context appContext = getApplicationContext();
+        String path = appContext.getExternalFilesDir(null).getPath();
+        m_dataManager.save(path);
     }
 
     @Override
@@ -140,7 +146,16 @@ public class MainActivity extends FragmentActivity implements IPPReaderMessageHa
 
     @Override
     public void onMessageHandler(IPPReaderMessage msg) {
-        PPReaderMessageTool.onMessageHandler(msg,this);
+        Method method = PPReaderMessageTool.getMessageMethod(msg,this);
+        if(method != null){
+            try {
+                method.invoke(this,msg);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
@@ -156,14 +171,14 @@ public class MainActivity extends FragmentActivity implements IPPReaderMessageHa
     }
 
     @PPReaderMessageType(type = PPReaderMessageTypeDefine.TYPE_SELECT_NOVEL)
-    protected  void switchToTextFragment(IPPReaderMessage msg){
+    protected   void switchToTextFragment(IPPReaderMessage msg){
         Fragment main = getSupportFragmentManager().findFragmentByTag(PPReaderMainFragment.class.getName());
         Fragment text = getSupportFragmentManager().findFragmentByTag(PPReaderTextFragment.class.getName());
         getSupportFragmentManager().beginTransaction().hide(main).show(text).commit();
     }
 
     @PPReaderMessageType(type = PPReaderMessageTypeDefine.TYPE_ADD_NOVEL)
-    protected void addNovel(IPPReaderMessage msg){
+    public void addNovel(IPPReaderMessage msg){
         PPReaderAddNovelMessage message = (PPReaderAddNovelMessage)msg;
         m_dataManager.addNovel(message.getNovel());
     }
@@ -189,7 +204,20 @@ public class MainActivity extends FragmentActivity implements IPPReaderMessageHa
         Observable.create(new ObservableOnSubscribe<Integer>() {
             @Override
             public void subscribe(ObservableEmitter<Integer> e) throws Exception {
-                int ret = m_dataManager.load();
+                Context appContext = getApplicationContext();
+                String path = appContext.getExternalFilesDir(null).getPath();
+                int ret = m_dataManager.load(path);
+                if(m_dataManager.getEngineInfoCount() == 0 && m_engineManager.count() > 0 ){
+                    ArrayList<PPReaderEngineInfo> infos = new ArrayList<>();
+                    for(int i = 0; i < m_engineManager.count(); i++){
+                        PPReaderEngineInfo info = new PPReaderEngineInfo();
+                        info.name = m_engineManager.get(i).getName();
+                        info.contentUrl = m_engineManager.get(i).getContentUrl();
+                        info.imageUrl = m_engineManager.get(i).getImageUrl();
+                        infos.add(info);
+                    }
+                    m_dataManager.setEngineInfos(infos);
+                }
                 e.onNext(ret);
                 Thread.sleep(3000);
                 e.onNext(1);
@@ -198,11 +226,8 @@ public class MainActivity extends FragmentActivity implements IPPReaderMessageHa
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Integer>() {
             @Override
             public void accept(Integer integer) throws Exception {
-                IPPReaderServiceFactory serviceFactory = new PPReaderServiceFactory(m_dataManager);
-
                 PPReaderMainFragment main = new PPReaderMainFragment();
                 PPReaderTextFragment text = new PPReaderTextFragment();
-
                 getSupportFragmentManager().beginTransaction().
                         replace(R.id.ppreader_root,main,PPReaderMainFragment.class.getName()).
                         add(R.id.ppreader_root,text,PPReaderTextFragment.class.getName()).
@@ -216,6 +241,7 @@ public class MainActivity extends FragmentActivity implements IPPReaderMessageHa
     private final static String KEY_NOVELS = "key_novels";
     private final static String KEY_INFOS = "key_infos";
     private IPPReaderDataManager m_dataManager;
+    private IPPReaderNovelEngineManager m_engineManager;
     private HashSet<String> m_methods = new HashSet<>();
 
 

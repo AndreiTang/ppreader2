@@ -15,7 +15,7 @@ public class MockActivity1 extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mock);
 
-        PPReaderServiceFactory factory = new PPReaderServiceFactory(new MockDataManager());
+        PPReaderServiceFactory factory = new PPReaderServiceFactory(null,new MockDataManager());
 
         if(savedInstanceState != null){
             Log.i("andrei","in activity");

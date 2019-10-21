@@ -7,20 +7,15 @@ import java.util.HashSet;
 
 public class PPReaderMessageTool {
 
-    public static void onMessageHandler(IPPReaderMessage msg,Object that){
+    public static Method getMessageMethod(IPPReaderMessage msg,Object that){
         Class<?> cl = that.getClass();
         for(Method m : cl.getDeclaredMethods()){
             PPReaderMessageType ct = m.getAnnotation(PPReaderMessageType.class);
             if(ct != null && ct.type().compareTo(msg.type()) == 0){
-                try {
-                    m.invoke(that,msg);
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
-                    e.printStackTrace();
-                }
+               return m;
             }
         }
+        return null;
     }
 
     public static void collectInteresting(Object that, HashSet<String> methods){

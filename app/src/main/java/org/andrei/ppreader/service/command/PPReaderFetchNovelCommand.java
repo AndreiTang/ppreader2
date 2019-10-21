@@ -5,42 +5,44 @@ import org.andrei.ppreader.service.ServiceError;
 import org.andrei.ppreader.service.engine.IPPReaderHttp;
 import org.andrei.ppreader.service.engine.IPPReaderNovelEngine;
 import org.andrei.ppreader.service.engine.IPPReaderNovelEngineManager;
-import org.andrei.ppreader.service.message.PPReaderUpdateNovelMessage;
-import org.andrei.ppreader.service.task.IPPReaderTask;
-import org.andrei.ppreader.service.task.PPReaderSearchNovelsTask;
 import org.andrei.ppreader.service.message.IPPReaderMessage;
+import org.andrei.ppreader.service.message.PPReaderFetchNovelMessage;
 import org.andrei.ppreader.service.message.PPReaderSearchNovelsMessage;
+import org.andrei.ppreader.service.task.IPPReaderTask;
+import org.andrei.ppreader.service.task.PPReaderFetchNovelTask;
+import org.andrei.ppreader.service.task.PPReaderSearchNovelsTask;
 import org.jsoup.nodes.Document;
 
 import java.util.ArrayList;
 
-public class PPReaderSearchNovelsCommand implements IPPReaderServiceCommand {
+public class PPReaderFetchNovelCommand implements IPPReaderServiceCommand {
 
-    public PPReaderSearchNovelsCommand(IPPReaderNovelEngineManager manager, IPPReaderHttp http){
+    public PPReaderFetchNovelCommand(IPPReaderNovelEngineManager manager, IPPReaderHttp http){
         m_engineManager = manager;
         m_http = http;
     }
 
     @Override
     public IPPReaderMessage run(IPPReaderTask task) {
-        PPReaderSearchNovelsTask t = (PPReaderSearchNovelsTask)task;
+
+        PPReaderFetchNovelTask t = (PPReaderFetchNovelTask)task;
         IPPReaderNovelEngine engine = m_engineManager.get(t.engineName);
         if(engine == null)
         {
-            return new PPReaderSearchNovelsMessage(ServiceError.ERR_NOT_ENGINE,null);
+            return new PPReaderFetchNovelMessage(ServiceError.ERR_NOT_ENGINE,null);
         }
 
-        ArrayList<PPReaderNovel> novels = new ArrayList<>();
+        PPReaderNovel novel = new PPReaderNovel();
         int retCode = ServiceError.ERR_NOT_NETWORK;
         Document doc = m_http.get(t.url);
         if(doc != null){
-            retCode= engine.searchNovels(doc,novels);
-            for(PPReaderNovel n: novels){
-                n.engineName = t.engineName;
-            }
+            retCode= engine.fetchNovelDetail(doc,novel);
         }
-        PPReaderSearchNovelsMessage ret = new PPReaderSearchNovelsMessage(retCode,novels);
-        return ret;
+        novel.detailUrl = t.url;
+        PPReaderFetchNovelMessage ret = new PPReaderFetchNovelMessage(retCode,novel);
+
+
+        return null;
     }
 
     private IPPReaderNovelEngineManager m_engineManager;

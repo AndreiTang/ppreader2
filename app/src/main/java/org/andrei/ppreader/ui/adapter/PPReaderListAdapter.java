@@ -117,7 +117,7 @@ public class PPReaderListAdapter extends PPReaderBaseAdapter {
         dlg.setPositiveButton(R.string.btn_ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                m_dataManager.removeNovel(novel.id);
+                //m_dataManager.removeNovel(novel.id);
                 notifyDataSetChanged();
             }
         });

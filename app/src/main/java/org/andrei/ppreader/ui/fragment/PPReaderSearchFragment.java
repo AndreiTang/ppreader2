@@ -15,6 +15,7 @@ import com.jakewharton.rxbinding2.view.RxView;
 import org.andrei.ppreader.R;
 import org.andrei.ppreader.data.PPReaderNovel;
 import org.andrei.ppreader.service.IPPReaderService;
+import org.andrei.ppreader.service.message.PPReaderFetchNovelMessage;
 import org.andrei.ppreader.service.task.PPReaderSearchNovelsTask;
 import org.andrei.ppreader.service.task.PPReaderSearchUrlsTask;
 import org.andrei.ppreader.service.task.PPReaderUpdateNovelTask;
@@ -199,17 +200,14 @@ public class PPReaderSearchFragment extends PPReaderBaseFragment {
         }
     }
 
-    @PPReaderMessageType(type = PPReaderMessageTypeDefine.TYPE_UPDATE_NOVEL)
-    protected void updateNovel(IPPReaderMessage msg){
-        PPReaderUpdateNovelMessage message = (PPReaderUpdateNovelMessage)msg;
+    @PPReaderMessageType(type = PPReaderMessageTypeDefine.TYPE_FETCH_NOVEL)
+    protected void fetchNovel(IPPReaderMessage msg){
+        PPReaderFetchNovelMessage message = (PPReaderFetchNovelMessage)msg;
         if(message.getRetCode() == ServiceError.ERR_OK){
-            String id = message.getId();
-            PPReaderNovel novel = getNovel(id);
+            PPReaderNovel novel = message.getNovel();
             if(novel == null){
                 return;
             }
-            novel.type = message.getNovelType();
-            novel.chapters.addAll(message.getDelta());
             PPReaderSearchAdapter adapter = getAdapter();
             adapter.addNovel(novel);
             getView().findViewById(R.id.novel_search_ret_list).setVisibility(View.VISIBLE);
@@ -261,16 +259,6 @@ public class PPReaderSearchFragment extends PPReaderBaseFragment {
             adapter = (PPReaderSearchAdapter)ha.getWrappedAdapter();
         }
         return  adapter;
-    }
-
-    private PPReaderNovel getNovel(String id){
-        for(PPReaderNovel novel: m_novels){
-            if(novel.id.compareTo(id)==0){
-                m_novels.remove(novel);
-                return novel;
-            }
-        }
-        return null;
     }
 
     private final static String KEY_URLS = "urls";
