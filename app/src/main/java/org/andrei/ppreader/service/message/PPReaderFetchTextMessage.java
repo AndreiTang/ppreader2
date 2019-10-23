@@ -3,7 +3,10 @@ package org.andrei.ppreader.service.message;
 public class PPReaderFetchTextMessage implements IPPReaderMessage {
 
     public PPReaderFetchTextMessage(int retCode,String novelId,String chapterId,String text){
-
+        this.m_chapterId = chapterId;
+        this.m_retCode= retCode;
+        this.m_novelId = novelId;
+        this.m_text = text;
     }
 
     @Override

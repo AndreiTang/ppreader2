@@ -79,6 +79,16 @@ public class PPReaderDataManager implements IPPReaderDataManager {
     }
 
     @Override
+    public PPReaderEngineInfo getEngineInfo(String engineName) {
+        for(PPReaderEngineInfo info : m_infos){
+            if(info.name.compareTo(engineName) == 0){
+                return info;
+            }
+        }
+        return null;
+    }
+
+    @Override
     public int getEngineInfoCount() {
         if (m_infos == null) {
             return  0;

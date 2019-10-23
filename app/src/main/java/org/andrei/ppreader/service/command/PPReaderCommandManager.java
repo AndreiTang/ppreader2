@@ -18,6 +18,7 @@ public class PPReaderCommandManager implements IPPReaderServiceCommand {
         m_cmds.put(CommandNames.UPDATE_NOVEL,new PPReaderUpdateNovelCommand(engineManager,http));
         m_cmds.put(CommandNames.SEARCH_NOVELS,new PPReaderSearchNovelsCommand(engineManager,http));
         m_cmds.put(CommandNames.FETCH_TEXT,new PPReaderFetchTextCommand(engineManager,http));
+        m_cmds.put(CommandNames.FETCH_NOVEL,new PPReaderFetchNovelCommand(engineManager,http));
     }
 
     @Override

@@ -85,7 +85,7 @@ public class PPReader88dushuEngine implements IPPReaderNovelEngine {
             PPReaderChapter chapter = new PPReaderChapter();
             chapter.url = c.attr("href");
             chapter.title = c.text();
-            chapter.id = UUID.randomUUID().toString();
+            chapter.id = c.attr("href");;
             delta.add(chapter);
         }
         return ServiceError.ERR_OK;
@@ -93,33 +93,38 @@ public class PPReader88dushuEngine implements IPPReaderNovelEngine {
 
     @Override
     public int fetchNovelDetail(Document doc, PPReaderNovel novel) {
-        Elements items = doc.getElementsByClass("lf");
-        if(items == null || items.size() == 0){
-            return ServiceError.ERR_NOT_FOUND;
-        }
-        novel.img = items.get(0).getElementsByTag("img").get(0).attr("src");
-        if(novel.img.indexOf(getImageUrl()) ==1){
-            novel.img = "";
-        }
-        else{
-            novel.img = novel.img.substring(getImageUrl().length());
-        }
-        items = doc.getElementsByAttribute("rt");
-        if(items == null || items.size() == 0){
-            return ServiceError.ERR_NOT_FOUND;
-        }
-        novel.name = items.get(0).getElementsByTag("h1").get(0).text();
 
-        return 0;
+        try{
+            Element root = doc.getElementsByClass("jieshao").get(0);
+            Elements items = root.getElementsByClass("lf");
+            novel.img = items.get(0).getElementsByTag("img").get(0).attr("src");
+            if(novel.img.indexOf(getImageUrl()) ==1){
+                novel.img = "";
+            }
+            else{
+                novel.img = novel.img.substring(getImageUrl().length());
+            }
+
+            items = root.getElementsByClass("rt");
+            novel.name = items.get(0).getElementsByTag("h1").get(0).text();
+
+            items = root.getElementsByClass("msg");
+            novel.author = items.get(0).getElementsByTag("em").get(0).text().trim();
+            novel.author = novel.author.substring(3);
+
+            items = root.getElementsByClass("intro");
+            novel.desc = items.get(0).text().trim();
+
+        }
+        catch (Exception ex){
+            return ServiceError.ERR_NOT_FOUND;
+        }
+
+        return ServiceError.ERR_OK;
     }
 
     @Override
-    public int fetchChapterText(final String url, final IPPReaderHttp http, StringBuilder ret){
-        Document doc = http.get(url);
-        if(doc == null){
-            return ServiceError.ERR_NOT_NETWORK;
-        }
-
+    public int fetchChapterText(Document doc, StringBuilder ret){
         Element item = doc.getElementsByClass("yd_text2").get(0);
         String text = item.html();
         if(text.isEmpty()){

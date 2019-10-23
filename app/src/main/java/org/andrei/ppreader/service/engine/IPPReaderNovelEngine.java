@@ -18,7 +18,7 @@ public interface IPPReaderNovelEngine {
     int searchNovels(Document doc, ArrayList<PPReaderNovel> novels);
     int updateNovel(Document doc, ArrayList<PPReaderChapter> delta);
     int fetchNovelDetail(Document doc,PPReaderNovel novel);
-    int fetchChapterText(final String url, final IPPReaderHttp http, StringBuilder ret);
+    int fetchChapterText(Document doc, StringBuilder ret);
     String getName();
     String getContentUrl();
     String getImageUrl();

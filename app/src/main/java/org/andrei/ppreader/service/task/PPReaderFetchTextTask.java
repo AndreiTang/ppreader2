@@ -10,7 +10,7 @@ public class PPReaderFetchTextTask implements IPPReaderTask {
         this.chapterId = chapter.id;
         this.engineName = novel.engineName;
         this.novelId = novel.id;
-        this.url = chapter.url;
+        this.url =  novel.detailUrl + chapter.url;
     }
 
     @Override

@@ -16,6 +16,7 @@ import org.andrei.ppreader.R;
 import org.andrei.ppreader.data.PPReaderNovel;
 import org.andrei.ppreader.service.IPPReaderService;
 import org.andrei.ppreader.service.message.PPReaderFetchNovelMessage;
+import org.andrei.ppreader.service.task.PPReaderFetchNovelTask;
 import org.andrei.ppreader.service.task.PPReaderSearchNovelsTask;
 import org.andrei.ppreader.service.task.PPReaderSearchUrlsTask;
 import org.andrei.ppreader.service.task.PPReaderUpdateNovelTask;
@@ -194,7 +195,7 @@ public class PPReaderSearchFragment extends PPReaderBaseFragment {
             ArrayList<PPReaderNovel> novels = message.getNovels();
             for(PPReaderNovel novel : novels){
                 m_novels.add(novel);
-                PPReaderUpdateNovelTask task = new PPReaderUpdateNovelTask(novel);
+                PPReaderFetchNovelTask task = new PPReaderFetchNovelTask(novel);
                 m_service.addTask(task);
             }
         }
@@ -205,7 +206,7 @@ public class PPReaderSearchFragment extends PPReaderBaseFragment {
         PPReaderFetchNovelMessage message = (PPReaderFetchNovelMessage)msg;
         if(message.getRetCode() == ServiceError.ERR_OK){
             PPReaderNovel novel = message.getNovel();
-            if(novel == null){
+            if(!rmNovelTask(novel)){
                 return;
             }
             PPReaderSearchAdapter adapter = getAdapter();
@@ -221,10 +222,6 @@ public class PPReaderSearchFragment extends PPReaderBaseFragment {
         }
     }
 
-
-//    private void initService(){
-//
-//    }
 
     private void insertFootView() {
         ListView lv = (ListView) getView().findViewById(R.id.novel_search_ret_list);
@@ -259,6 +256,16 @@ public class PPReaderSearchFragment extends PPReaderBaseFragment {
             adapter = (PPReaderSearchAdapter)ha.getWrappedAdapter();
         }
         return  adapter;
+    }
+
+    private boolean rmNovelTask(PPReaderNovel novel){
+        for(PPReaderNovel item: m_novels){
+            if(item.detailUrl.compareTo(novel.detailUrl) == 0){
+                m_novels.remove(item);
+                return true;
+            }
+        }
+        return false;
     }
 
     private final static String KEY_URLS = "urls";

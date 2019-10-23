@@ -19,23 +19,24 @@ public class MockEngine implements IPPReaderNovelEngine {
     }
 
     @Override
-    public int searchNovels(String url,String nsmr, IPPReaderHttp http, ArrayList<PPReaderNovel> novels) {
+    public int searchNovels(Document doc, ArrayList<PPReaderNovel> novels) {
         return 0;
     }
 
     @Override
-    public int updateNovel(String novelUrl, IPPReaderHttp http, ArrayList<PPReaderChapter> delta, PPReaderNovelType type) {
-        delta.add(new PPReaderChapter());
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    public int updateNovel(Document doc, ArrayList<PPReaderChapter> delta) {
         return 0;
     }
 
     @Override
-    public int fetchChapterText(String url, IPPReaderHttp http, StringBuilder ret) {
+    public int fetchNovelDetail(Document doc, PPReaderNovel novel) {
+        return 0;
+    }
+
+
+
+    @Override
+    public int fetchChapterText(Document doc, StringBuilder ret) {
         return 0;
     }
 
