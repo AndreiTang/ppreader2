@@ -124,7 +124,7 @@ public class PPReaderDataManager implements IPPReaderDataManager {
 
 
     private void saveNovel(final String folder, final PPReaderNovel novel) {
-        String path = folder + "/" + novel.name + "-" + novel.id + ".json";
+        String path = folder + "/" + novel.id + ".json";
         Gson gson = new Gson();
         String txt = gson.toJson(novel);
 

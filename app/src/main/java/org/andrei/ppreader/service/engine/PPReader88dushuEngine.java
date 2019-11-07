@@ -32,7 +32,7 @@ public class PPReader88dushuEngine implements IPPReaderNovelEngine {
                     else if(item.className().compareTo("next") == 0){
                         break;
                     }
-                    String href = "https://www.88dush.com" + item.attr("href");
+                    String href = getContentUrl() + item.attr("href");
                     novels.add(href);
                 }
             }
@@ -143,17 +143,17 @@ public class PPReader88dushuEngine implements IPPReaderNovelEngine {
 
     @Override
     public String getContentUrl() {
-        return "https://www.88dush.com";
+        return "https://www.88dushu.com";
     }
 
     @Override
     public String getImageUrl() {
-        return "https://fm.88dush.com";
+        return "https://fm.88dushu.com";
     }
 
     @Override
     public String getSearchUrl() {
-        return "https://www.88dush.com/modules/article/search.php?searchtype=articlename&searchkey=";
+        return "https://www.88dushu.com/modules/article/search.php?searchtype=articlename&searchkey=";
     }
 
     @Override

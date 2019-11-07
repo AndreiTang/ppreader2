@@ -9,7 +9,9 @@ public class PPReaderNovel implements Serializable {
     public static final int TYPE_OVER = 1;
     private static final long serialVersionUID = -1307596945261426047L;
 
+
     public int currIndex;
+    public int currOffset;
     public String id;
     public String name;
     public String img;
@@ -23,6 +25,8 @@ public class PPReaderNovel implements Serializable {
     public long duration = 0;
     public String chapterUrl;
     public String detailUrl;
+    public ArrayList<PPReaderTextPage> textPages = new ArrayList<>();
+
 
     public int getChapterIndex(String chapterId){
         for(int i = 0 ; i <chapters.size(); i++){
