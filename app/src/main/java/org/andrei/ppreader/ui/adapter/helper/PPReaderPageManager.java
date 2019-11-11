@@ -67,6 +67,7 @@ public class PPReaderPageManager implements IPPReaderPageManager {
                     for (int t = 0; t < 5; t++) {
                         item.texts.remove(0);
                     }
+
                     item.gravity = Gravity.BOTTOM;
 
                 }
