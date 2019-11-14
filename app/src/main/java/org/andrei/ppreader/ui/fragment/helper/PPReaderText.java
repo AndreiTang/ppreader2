@@ -34,7 +34,7 @@ public class PPReaderText  {
     public PPReaderText(final IPPReaderPageManager pageManager, IPPReaderService service) {
         m_pageManager = pageManager;
         m_service = service;
-        PPReaderMessageTool.collectInteresting(this,m_methods);
+        //PPReaderMessageTool.collectInteresting(this,m_methods);
     }
 
     public void init(final ViewPager vp, final Fragment parent) {
@@ -60,6 +60,10 @@ public class PPReaderText  {
                     page.status = PPReaderTextPage.STATUS_TEXT_NO_SLICE;
                     notifyDataSetChanged();
                 }
+                else{
+                    fetchText(position);
+                }
+
 
 
                 PPReaderCommonMessage msg = new PPReaderCommonMessage(PPReaderMessageTypeDefine.TYPE_CURR,position);
@@ -154,7 +158,7 @@ public class PPReaderText  {
     private PPReaderNovel m_novel;
     private PPReaderTextAdapter m_adapter;
     private ViewPager m_vp;
-    private HashSet<String> m_methods = new HashSet<>();
+    //private HashSet<String> m_methods = new HashSet<>();
 
 
 }

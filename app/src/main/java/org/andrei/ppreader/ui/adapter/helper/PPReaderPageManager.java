@@ -61,18 +61,16 @@ public class PPReaderPageManager implements IPPReaderPageManager {
             if (pageTextHeight < tv.getHeight()) {
                 item.texts.add(lineText);
             } else {
-                i--;
+
                 //the the font size of title is bigger than lines in body. So the line size in body decrease 1
                 if (offset == 0) {
-                    for (int t = 0; t < 5; t++) {
+                    for (int t = 0; t < 4; t++) {
                         item.texts.remove(0);
                     }
-
                     item.gravity = Gravity.BOTTOM;
-
                 }
 
-                if (i != lineCount - 1) {
+                if (i != lineCount) {
                     offset++;
                     item = new PPReaderTextPage();
                     item.offset = offset;
@@ -80,14 +78,15 @@ public class PPReaderPageManager implements IPPReaderPageManager {
                     item.title = page.title;
                     item.chapterId = page.chapterId;
                     item.status = PPReaderTextPage.STATUS_OK;
+                    item.texts.add(lineText);
                     m_pages.add(index + offset, item);
-                    pageTextHeight = 0;
+                    pageTextHeight = lineHeight;
                     item.gravity = Gravity.CENTER_VERTICAL;
                 }
             }
         }
 
-        //the last part will be top , if parts is more than 1.
+        //the last part will be top , if parts is just 1.
         if (item.offset != 0) {
             item.gravity = Gravity.TOP;
         }

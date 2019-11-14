@@ -23,5 +23,4 @@ public class PPReaderFetchTextTask implements IPPReaderTask {
     public String novelId;
     public String chapterId;
 
-
 }

@@ -56,6 +56,7 @@ public class PPReaderTextFragment extends PPReaderBaseFragment {
 
         init();
         loadNovel();
+        m_catalog.setNovel(m_novel);
 
         //final View root = this.getActivity().findViewById(android.R.id.content);
         //root.findViewById(android.R.id.content).setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
@@ -100,6 +101,11 @@ public class PPReaderTextFragment extends PPReaderBaseFragment {
         }
     }
 
+    public void setNovel(final PPReaderNovel novel){
+        m_novel = novel;
+        loadNovel();
+    }
+
 
     @PPReaderMessageType(type = PPReaderMessageTypeDefine.TYPE_FETCH_TEXT)
     protected void fetchText(IPPReaderMessage msg) {
@@ -118,10 +124,7 @@ public class PPReaderTextFragment extends PPReaderBaseFragment {
     @PPReaderMessageType(type = PPReaderMessageTypeDefine.TYPE_SELECT_NOVEL)
     protected void selectNovel(IPPReaderMessage msg){
         m_novel = ((PPReaderSelectNovelMessage)msg).getNovel();
-        m_catalog.setNovel(m_novel);
-        if(m_isActive){
-            loadNovel();
-        }
+        loadNovel();
     }
 
     @PPReaderMessageType(type = PPReaderMessageTypeDefine.TYPE_UPDATE_NOVEL)
@@ -207,11 +210,12 @@ public class PPReaderTextFragment extends PPReaderBaseFragment {
     }
 
     private void loadNovel(){
-        if(m_novel == null){
+        if(m_novel == null || !m_isActive){
             return;
         }
         m_text.loadNovel(m_novel);
         setBarInfo(m_novel.currIndex);
+        m_catalog.setNovel(m_novel);
     }
 
     protected void setBarInfo(int index){
@@ -248,7 +252,6 @@ public class PPReaderTextFragment extends PPReaderBaseFragment {
     private PPReaderTextBars m_bars;
     private PPReaderNovel m_novel;
     private PPReaderTextCatalog m_catalog;
-    //private IPPReaderTaskNotification m_notify;
     private boolean m_isActive = false;
     private long m_beginTime;
 

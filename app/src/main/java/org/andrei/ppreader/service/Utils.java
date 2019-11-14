@@ -17,6 +17,8 @@ public class Utils {
             if(str.length() == 0 || str.matches(regex)){
                 continue;
             }
+
+            builder.append("        ");
             builder.append(str);
             builder.append("\n");
         }
