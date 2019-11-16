@@ -32,8 +32,6 @@ public class PPReaderControlPanel extends View {
         setVisibility(View.VISIBLE);
     }
 
-
-
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         int eve = event.getActionMasked();

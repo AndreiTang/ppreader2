@@ -95,10 +95,6 @@ public class PPReaderTextAdapter extends PagerAdapter {
         }
     }
 
-    private PPReaderTextFragmentViews getItem(int index) {
-        return m_views.get(index);
-    }
-
 
     private void updateView(Object object, IPPReaderPageManager pageMgr) {
         for (PPReaderTextFragmentViews vs : m_views) {

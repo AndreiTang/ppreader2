@@ -1,7 +1,6 @@
 package org.andrei.ppreader.ui.fragment;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +11,6 @@ import org.andrei.ppreader.R;
 import org.andrei.ppreader.data.PPReaderChapter;
 import org.andrei.ppreader.data.PPReaderNovel;
 import org.andrei.ppreader.data.PPReaderTextPage;
-import org.andrei.ppreader.service.IPPReaderService;
 import org.andrei.ppreader.service.ServiceError;
 import org.andrei.ppreader.service.message.IPPReaderMessage;
 import org.andrei.ppreader.service.message.PPReaderAllocateTextMessage;
@@ -23,13 +21,12 @@ import org.andrei.ppreader.service.message.PPReaderMessageType;
 import org.andrei.ppreader.service.message.PPReaderMessageTypeDefine;
 import org.andrei.ppreader.service.message.PPReaderSelectNovelMessage;
 import org.andrei.ppreader.service.message.PPReaderUpdateNovelMessage;
-import org.andrei.ppreader.ui.adapter.PPReaderBaseAdapter;
 import org.andrei.ppreader.ui.adapter.helper.IPPReaderPageManager;
 import org.andrei.ppreader.ui.adapter.helper.PPReaderPageManager;
 import org.andrei.ppreader.ui.fragment.helper.PPReaderText;
-import org.andrei.ppreader.ui.fragment.helper.PPReaderTextBars;
 import org.andrei.ppreader.ui.fragment.helper.PPReaderTextCatalog;
 import org.andrei.ppreader.ui.view.PPReaderControlPanel;
+import org.andrei.ppreader.ui.view.PPReaderTextTitleBar;
 
 import java.util.ArrayList;
 
@@ -106,8 +103,7 @@ public class PPReaderTextFragment extends PPReaderBaseFragment {
         loadNovel();
     }
 
-
-    @PPReaderMessageType(type = PPReaderMessageTypeDefine.TYPE_FETCH_TEXT)
+   @PPReaderMessageType(type = PPReaderMessageTypeDefine.TYPE_FETCH_TEXT)
     protected void fetchText(IPPReaderMessage msg) {
         PPReaderCommonMessage message = (PPReaderCommonMessage) msg;
         m_text.fetchText(message.getValue());
@@ -144,7 +140,7 @@ public class PPReaderTextFragment extends PPReaderBaseFragment {
     @PPReaderMessageType(type = PPReaderMessageTypeDefine.TYPE_CURR)
     protected void setBarInfo(IPPReaderMessage msg){
         PPReaderCommonMessage message = (PPReaderCommonMessage)msg;
-        setBarInfo(message.getValue());
+        setChapterText(message.getValue());
     }
 
     @PPReaderMessageType(type = PPReaderMessageTypeDefine.TYPE_DB_CLICKS)
@@ -214,32 +210,37 @@ public class PPReaderTextFragment extends PPReaderBaseFragment {
             return;
         }
         m_text.loadNovel(m_novel);
-        setBarInfo(m_novel.currIndex);
+        setChapterText(m_novel.currIndex);
         m_catalog.setNovel(m_novel);
     }
 
-    protected void setBarInfo(int index){
+    protected void setChapterText(int index){
         PPReaderTextPage page = m_pageMgr.getItem(index);
         if(page == null){
             return;
         }
+
+        PPReaderTextTitleBar bar = getView().findViewById(R.id.novel_action_bar);
+        bar.setTitle(page.title);
+
         String pageNo = Integer.toString(page.chapterIndex+1) + "/" + Integer.toString(m_novel.chapters.size());
-        m_bars.updateInfo(page.title,pageNo);
+        TextView pageNoView =  getView().findViewById(R.id.novel_bottom_bar);
+        pageNoView.setText(pageNo);
     }
 
     private void init(){
         PPReaderControlPanel panel = getView().findViewById(R.id.novel_text_panel);
 
-        View actionBar = getView().findViewById(R.id.novel_action_bar);
-        TextView bottomBar = getView().findViewById(R.id.novel_bottom_bar);
-        m_bars = new PPReaderTextBars(actionBar,bottomBar,getActivity());
+
+        PPReaderTextTitleBar bar = getView().findViewById(R.id.novel_action_bar);
+        bar.registerBatteryReceiver(getActivity());
+
 
         View catalogView = getView().findViewById(R.id.novel_text_catalog);
         m_catalog = new PPReaderTextCatalog(catalogView,this);
 
         ViewPager vp = getView().findViewById(R.id.novel_text_pager);
         m_text.init(vp,this);
-
 
         m_isActive = true;
     }
@@ -249,7 +250,6 @@ public class PPReaderTextFragment extends PPReaderBaseFragment {
     private final static String NOVEL = "novel";
     private IPPReaderPageManager m_pageMgr;
     private PPReaderText m_text;
-    private PPReaderTextBars m_bars;
     private PPReaderNovel m_novel;
     private PPReaderTextCatalog m_catalog;
     private boolean m_isActive = false;
