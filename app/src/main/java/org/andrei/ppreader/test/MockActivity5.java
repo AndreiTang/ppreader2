@@ -14,9 +14,7 @@ import org.andrei.ppreader.service.engine.PPReaderNovelEngineManager;
 import org.andrei.ppreader.service.message.PPReaderMessageCenter;
 import org.andrei.ppreader.ui.adapter.PPReaderBaseAdapter;
 import org.andrei.ppreader.ui.fragment.PPReaderBaseFragment;
-import org.andrei.ppreader.ui.fragment.PPReaderTextFragment;
-
-import java.util.HashSet;
+import org.andrei.ppreader.ui.fragment.PPReaderNovelTextFragment;
 
 public class MockActivity5 extends FragmentActivity {
     @Override
@@ -32,12 +30,12 @@ public class MockActivity5 extends FragmentActivity {
         PPReaderBaseFragment.setMessageCenter(PPReaderMessageCenter.instance());
         PPReaderBaseFragment.setServiceFactory(new PPReaderServiceFactory(m_engineManager,m_dataManager));
 
-        PPReaderTextFragment textFragment = null;
+        PPReaderNovelTextFragment textFragment = null;
         if(savedInstanceState != null) {
-            textFragment = (PPReaderTextFragment) getSupportFragmentManager().findFragmentById(R.id.mock_root);
+            textFragment = (PPReaderNovelTextFragment) getSupportFragmentManager().findFragmentById(R.id.mock_root);
         }
         else{
-            textFragment = new PPReaderTextFragment();
+            textFragment = new PPReaderNovelTextFragment();
             getSupportFragmentManager().beginTransaction().add(R.id.mock_root,textFragment).commit();
         }
 

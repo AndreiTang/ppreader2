@@ -12,10 +12,8 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import org.andrei.ppreader.data.IPPReaderDataManager;
-import org.andrei.ppreader.data.PPReaderDataManager;
 import org.andrei.ppreader.data.PPReaderEngineInfo;
 import org.andrei.ppreader.data.PPReaderNovel;
-import org.andrei.ppreader.service.IPPReaderServiceFactory;
 import org.andrei.ppreader.service.PPReaderServiceFactory;
 import org.andrei.ppreader.service.engine.IPPReaderNovelEngineManager;
 import org.andrei.ppreader.service.engine.PPReaderNovelEngineManager;
@@ -31,7 +29,7 @@ import org.andrei.ppreader.ui.adapter.PPReaderBaseAdapter;
 import org.andrei.ppreader.ui.fragment.PPReaderBaseFragment;
 import org.andrei.ppreader.ui.fragment.PPReaderMainFragment;
 import org.andrei.ppreader.ui.fragment.PPReaderStartFragment;
-import org.andrei.ppreader.ui.fragment.PPReaderTextFragment;
+import org.andrei.ppreader.ui.fragment.PPReaderNovelTextFragment;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -83,7 +81,7 @@ public class MainActivity extends FragmentActivity implements IPPReaderMessageHa
             m_dataManager.setEngineInfos(infos);
 
             PPReaderMainFragment main = (PPReaderMainFragment)getSupportFragmentManager().findFragmentByTag(PPReaderMainFragment.class.getName());
-            PPReaderTextFragment text = (PPReaderTextFragment)getSupportFragmentManager().findFragmentByTag(PPReaderTextFragment.class.getName());
+            PPReaderNovelTextFragment text = (PPReaderNovelTextFragment)getSupportFragmentManager().findFragmentByTag(PPReaderNovelTextFragment.class.getName());
 
             if(frag == 1){
                 getSupportFragmentManager().beginTransaction().hide(main).show(text).commit();
@@ -109,7 +107,7 @@ public class MainActivity extends FragmentActivity implements IPPReaderMessageHa
     public void onSaveInstanceState(Bundle savedInstanceState){
         super.onSaveInstanceState(savedInstanceState);
 
-        PPReaderTextFragment text = (PPReaderTextFragment)getSupportFragmentManager().findFragmentByTag(PPReaderTextFragment.class.getName());
+        PPReaderNovelTextFragment text = (PPReaderNovelTextFragment)getSupportFragmentManager().findFragmentByTag(PPReaderNovelTextFragment.class.getName());
 
         int frag = 0;
         if(text.isVisible()){
@@ -133,7 +131,7 @@ public class MainActivity extends FragmentActivity implements IPPReaderMessageHa
     @Override
     public void onBackPressed(){
         PPReaderMainFragment main = (PPReaderMainFragment)getSupportFragmentManager().findFragmentByTag(PPReaderMainFragment.class.getName());
-        PPReaderTextFragment text = (PPReaderTextFragment)getSupportFragmentManager().findFragmentByTag(PPReaderTextFragment.class.getName());
+        PPReaderNovelTextFragment text = (PPReaderNovelTextFragment)getSupportFragmentManager().findFragmentByTag(PPReaderNovelTextFragment.class.getName());
 
         if(main == null || main.isVisible()){
             super.onBackPressed();
@@ -167,14 +165,14 @@ public class MainActivity extends FragmentActivity implements IPPReaderMessageHa
     @PPReaderMessageType(type = PPReaderMessageTypeDefine.TYPE_TO_LIST_PAGE)
     protected void switchToListFragment(IPPReaderMessage msg){
         Fragment main = getSupportFragmentManager().findFragmentByTag(PPReaderMainFragment.class.getName());
-        Fragment text = getSupportFragmentManager().findFragmentByTag(PPReaderTextFragment.class.getName());
+        Fragment text = getSupportFragmentManager().findFragmentByTag(PPReaderNovelTextFragment.class.getName());
         getSupportFragmentManager().beginTransaction().hide(text).show(main).commit();
     }
 
     @PPReaderMessageType(type = PPReaderMessageTypeDefine.TYPE_SELECT_NOVEL)
     protected   void switchToTextFragment(IPPReaderMessage msg){
         Fragment main = getSupportFragmentManager().findFragmentByTag(PPReaderMainFragment.class.getName());
-        Fragment text = getSupportFragmentManager().findFragmentByTag(PPReaderTextFragment.class.getName());
+        Fragment text = getSupportFragmentManager().findFragmentByTag(PPReaderNovelTextFragment.class.getName());
         getSupportFragmentManager().beginTransaction().hide(main).show(text).commit();
     }
 
@@ -228,10 +226,10 @@ public class MainActivity extends FragmentActivity implements IPPReaderMessageHa
             @Override
             public void accept(Integer integer) throws Exception {
                 PPReaderMainFragment main = new PPReaderMainFragment();
-                PPReaderTextFragment text = new PPReaderTextFragment();
+                PPReaderNovelTextFragment text = new PPReaderNovelTextFragment();
                 getSupportFragmentManager().beginTransaction().
                         replace(R.id.ppreader_root,main,PPReaderMainFragment.class.getName()).
-                        add(R.id.ppreader_root,text,PPReaderTextFragment.class.getName()).
+                        add(R.id.ppreader_root,text, PPReaderNovelTextFragment.class.getName()).
                         hide(text).
                         commit();
             }

@@ -26,13 +26,13 @@ import org.andrei.ppreader.ui.adapter.helper.PPReaderPageManager;
 import org.andrei.ppreader.ui.fragment.helper.PPReaderText;
 import org.andrei.ppreader.ui.fragment.helper.PPReaderTextCatalog;
 import org.andrei.ppreader.ui.view.PPReaderControlPanel;
-import org.andrei.ppreader.ui.view.PPReaderTextTitleBar;
+import org.andrei.ppreader.ui.view.PPReaderNovelTextTitleBar;
 
 import java.util.ArrayList;
 
-public class PPReaderTextFragment extends PPReaderBaseFragment {
+public class PPReaderNovelTextFragment extends PPReaderBaseFragment {
 
-    public PPReaderTextFragment(){
+    public PPReaderNovelTextFragment(){
         //m_notify = notification;
         m_pageMgr = new PPReaderPageManager();
     }
@@ -220,7 +220,7 @@ public class PPReaderTextFragment extends PPReaderBaseFragment {
             return;
         }
 
-        PPReaderTextTitleBar bar = getView().findViewById(R.id.novel_action_bar);
+        PPReaderNovelTextTitleBar bar = getView().findViewById(R.id.novel_action_bar);
         bar.setTitle(page.title);
 
         String pageNo = Integer.toString(page.chapterIndex+1) + "/" + Integer.toString(m_novel.chapters.size());
@@ -232,7 +232,7 @@ public class PPReaderTextFragment extends PPReaderBaseFragment {
         PPReaderControlPanel panel = getView().findViewById(R.id.novel_text_panel);
 
 
-        PPReaderTextTitleBar bar = getView().findViewById(R.id.novel_action_bar);
+        PPReaderNovelTextTitleBar bar = getView().findViewById(R.id.novel_action_bar);
         bar.registerBatteryReceiver(getActivity());
 
 

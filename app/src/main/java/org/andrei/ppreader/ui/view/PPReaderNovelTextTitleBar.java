@@ -15,24 +15,24 @@ import android.widget.TextView;
 
 import org.andrei.ppreader.R;
 
-public class PPReaderTextTitleBar extends LinearLayout {
+public class PPReaderNovelTextTitleBar extends LinearLayout {
 
-    public PPReaderTextTitleBar(Context context) {
+    public PPReaderNovelTextTitleBar(Context context) {
         super(context);
         init(context);
     }
 
-    public PPReaderTextTitleBar(Context context, @Nullable AttributeSet attrs) {
+    public PPReaderNovelTextTitleBar(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
 
-    public PPReaderTextTitleBar(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public PPReaderNovelTextTitleBar(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
     }
 
-    public PPReaderTextTitleBar(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public PPReaderNovelTextTitleBar(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init(context);
     }

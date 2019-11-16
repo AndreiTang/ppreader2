@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#DBC49B"
-    tools:context=".ui.fragment.PPReaderTextFragment">
+    tools:context=".ui.fragment.PPReaderNovelTextFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -12,7 +12,7 @@
         android:orientation="vertical">
 
 
-        <org.andrei.ppreader.ui.view.PPReaderTextTitleBar
+        <org.andrei.ppreader.ui.view.PPReaderNovelTextTitleBar
             android:id="@+id/novel_action_bar"
             android:layout_weight="0"
             android:layout_width="match_parent"
