@@ -1,6 +1,8 @@
 package org.andrei.ppreader.ui.adapter;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -19,9 +21,9 @@ import io.reactivex.functions.Consumer;
 
 public class PPReaderCatalogAdapter extends PPReaderBaseAdapter {
 
-    public PPReaderCatalogAdapter(PPReaderNovel novel, Fragment parent) {
+    public PPReaderCatalogAdapter(PPReaderNovel novel, Context context) {
         m_novel = novel;
-        m_parent = parent;
+        m_context = context;
     }
 
     @Override
@@ -42,7 +44,7 @@ public class PPReaderCatalogAdapter extends PPReaderBaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = m_parent.getLayoutInflater().inflate(R.layout.view_ppreader_catalog_item, null);
+            convertView = LayoutInflater.from(m_context).inflate(R.layout.view_ppreader_catalog_item, null);
             final View v = convertView;
             RxView.clicks(convertView).throttleFirst(1, TimeUnit.SECONDS).subscribe(new Consumer<Object>() {
                 @Override
@@ -61,6 +63,6 @@ public class PPReaderCatalogAdapter extends PPReaderBaseAdapter {
     }
 
     private PPReaderNovel m_novel;
-    private Fragment m_parent;
+    private Context m_context;
 
 }

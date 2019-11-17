@@ -1,6 +1,8 @@
 package org.andrei.ppreader.ui.adapter;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -19,8 +21,13 @@ import io.reactivex.functions.Consumer;
 
 public class PPReaderRangeAdapter extends PPReaderBaseAdapter {
 
-    public PPReaderRangeAdapter(PPReaderNovel novel,Fragment parent){
-        m_parent = parent;
+    public interface IPPReaderRangeAdapterNotify{
+        void onNotify(int curIndex);
+    }
+
+    public PPReaderRangeAdapter(PPReaderNovel novel,Context context,IPPReaderRangeAdapterNotify notify){
+        m_context = context;
+        m_notify = notify;
 
         int ranges = novel.chapters.size()/50;
         if(novel.chapters.size()%50 > 0)
@@ -28,7 +35,7 @@ public class PPReaderRangeAdapter extends PPReaderBaseAdapter {
             ranges++;
         }
         for(int i = 0; i < ranges; i++){
-            String name = m_parent.getString(R.string.novel_catalog_chapter);
+            String name = m_context.getString(R.string.novel_catalog_chapter);
             int end = (i+1)*50;
             if(i == ranges -1 && end >= novel.chapters.size()){
                 end =  novel.chapters.size();
@@ -57,14 +64,15 @@ public class PPReaderRangeAdapter extends PPReaderBaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = m_parent.getLayoutInflater().inflate(R.layout.view_ppreader_catalog_item, null);
+            convertView = LayoutInflater.from(m_context).inflate(R.layout.view_ppreader_catalog_item, null);
             final View v = convertView;
             RxView.clicks(convertView).throttleFirst(1, TimeUnit.SECONDS).subscribe(new Consumer<Object>() {
                 @Override
                 public void accept(Object obj) throws Exception {
                     int index = (Integer) v.getTag();
-                    PPReaderCommonMessage message = new PPReaderCommonMessage(PPReaderMessageTypeDefine.TYPE_SET_RANGE,index*50);
-                    sendMessage(message);
+                    if(m_notify != null){
+                        m_notify.onNotify(index);
+                    }
                 }
             });
         }
@@ -75,5 +83,6 @@ public class PPReaderRangeAdapter extends PPReaderBaseAdapter {
     }
 
     private ArrayList<String> m_ranges = new ArrayList<>();
-    private Fragment m_parent;
+    private Context m_context;
+    private IPPReaderRangeAdapterNotify m_notify;
 }

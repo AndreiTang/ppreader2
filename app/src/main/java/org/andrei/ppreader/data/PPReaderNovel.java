@@ -41,4 +41,13 @@ public class PPReaderNovel implements Serializable {
     public PPReaderChapter getChapter(int index){
         return chapters.get(index);
     }
+
+    public PPReaderChapter getChapter(String chapterId){
+        for(PPReaderChapter chapter : chapters){
+            if(chapter.id.compareTo(chapterId) == 0){
+                return chapter;
+            }
+        }
+        return null;
+    }
 }

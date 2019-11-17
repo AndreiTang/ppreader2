@@ -48,9 +48,10 @@
         android:layout_height="match_parent"
         />
 
-    <include
+    <org.andrei.ppreader.ui.view.PPReaderNovelTextCatalog
         android:visibility="gone"
         android:id="@+id/novel_text_catalog"
-        layout="@layout/view_ppreader_catalog" />
+        android:layout_height="match_parent"
+        android:layout_width="match_parent" />
 
 </FrameLayout>

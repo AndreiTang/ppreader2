@@ -9,5 +9,6 @@ public class PPReaderChapter implements Serializable{
     public String text;
     public String title;
     public String url;
-    public int offset;
+    //public int offset;
+    //public ArrayList<PPReaderTextPage> pages = new ArrayList<>();
 }

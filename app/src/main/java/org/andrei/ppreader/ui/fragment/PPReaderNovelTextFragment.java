@@ -24,8 +24,8 @@ import org.andrei.ppreader.service.message.PPReaderUpdateNovelMessage;
 import org.andrei.ppreader.ui.adapter.helper.IPPReaderPageManager;
 import org.andrei.ppreader.ui.adapter.helper.PPReaderPageManager;
 import org.andrei.ppreader.ui.fragment.helper.PPReaderText;
-import org.andrei.ppreader.ui.fragment.helper.PPReaderTextCatalog;
 import org.andrei.ppreader.ui.view.PPReaderControlPanel;
+import org.andrei.ppreader.ui.view.PPReaderNovelTextCatalog;
 import org.andrei.ppreader.ui.view.PPReaderNovelTextTitleBar;
 
 import java.util.ArrayList;
@@ -53,7 +53,6 @@ public class PPReaderNovelTextFragment extends PPReaderBaseFragment {
 
         init();
         loadNovel();
-        m_catalog.setNovel(m_novel);
 
         //final View root = this.getActivity().findViewById(android.R.id.content);
         //root.findViewById(android.R.id.content).setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
@@ -165,14 +164,10 @@ public class PPReaderNovelTextFragment extends PPReaderBaseFragment {
         PPReaderTextPage page = m_pageMgr.getItem(pos);
         int index = m_novel.getChapterIndex(page.chapterId);
         long duration = (m_novel.duration + System.currentTimeMillis() - m_beginTime)/1000;
-        m_catalog.show(index,duration);
+        PPReaderNovelTextCatalog catalog = getView().findViewById(R.id.novel_text_catalog);
+        catalog.show(index,duration);
     }
 
-    @PPReaderMessageType(type = PPReaderMessageTypeDefine.TYPE_SET_RANGE)
-    protected void setCatalogRange(IPPReaderMessage msg){
-        int index = ((PPReaderCommonMessage)msg).getValue();
-        m_catalog.setRange(index);
-    }
 
     @PPReaderMessageType(type = PPReaderMessageTypeDefine.TYPE_TEXT)
     protected void updateText(IPPReaderMessage msg){
@@ -211,7 +206,8 @@ public class PPReaderNovelTextFragment extends PPReaderBaseFragment {
         }
         m_text.loadNovel(m_novel);
         setChapterText(m_novel.currIndex);
-        m_catalog.setNovel(m_novel);
+        PPReaderNovelTextCatalog catalog = getView().findViewById(R.id.novel_text_catalog);
+        catalog.loadNovel(m_novel);
     }
 
     protected void setChapterText(int index){
@@ -229,30 +225,20 @@ public class PPReaderNovelTextFragment extends PPReaderBaseFragment {
     }
 
     private void init(){
-        PPReaderControlPanel panel = getView().findViewById(R.id.novel_text_panel);
-
 
         PPReaderNovelTextTitleBar bar = getView().findViewById(R.id.novel_action_bar);
         bar.registerBatteryReceiver(getActivity());
 
-
-        View catalogView = getView().findViewById(R.id.novel_text_catalog);
-        m_catalog = new PPReaderTextCatalog(catalogView,this);
-
         ViewPager vp = getView().findViewById(R.id.novel_text_pager);
         m_text.init(vp,this);
-
         m_isActive = true;
     }
-
 
 
     private final static String NOVEL = "novel";
     private IPPReaderPageManager m_pageMgr;
     private PPReaderText m_text;
     private PPReaderNovel m_novel;
-    private PPReaderTextCatalog m_catalog;
     private boolean m_isActive = false;
     private long m_beginTime;
-
 }

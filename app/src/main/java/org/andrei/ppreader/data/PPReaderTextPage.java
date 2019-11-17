@@ -5,6 +5,11 @@ import java.util.ArrayList;
 
 public class PPReaderTextPage implements Serializable {
 
+    public static class TextPosition{
+        public int begin;
+        public int end;
+    }
+
     public final static int STATUS_INVALID = -1;
     public final static int STATUS_OK = 0;
     public final static int STATUS_TEXT_NO_SLICE = 1;
@@ -15,11 +20,10 @@ public class PPReaderTextPage implements Serializable {
     private static final long serialVersionUID = -187857478824751288L;
 
     public transient int status = STATUS_INIT;
-    public String chapterId;
-    public int chapterIndex;
+    public transient String chapterId;
+    public transient int chapterIndex;
     public int offset;
     public int gravity;
-    public transient String text = "";
-    public String title;
-    public ArrayList<String> texts = new ArrayList<>();
+    public transient ArrayList<String> texts = new ArrayList<>();
+    public ArrayList<TextPosition> posArr = new ArrayList<>();
 }

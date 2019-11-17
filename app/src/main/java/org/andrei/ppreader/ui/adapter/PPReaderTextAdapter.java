@@ -19,6 +19,7 @@ import org.andrei.ppreader.service.message.PPReaderMessageCenter;
 import org.andrei.ppreader.service.message.PPReaderMessageTypeDefine;
 import org.andrei.ppreader.ui.adapter.helper.IPPReaderPageManager;
 import org.andrei.ppreader.ui.adapter.helper.PPReaderTextFragmentViews;
+import org.andrei.ppreader.ui.fragment.helper.PPReaderText;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -27,9 +28,14 @@ import io.reactivex.functions.Consumer;
 
 public class PPReaderTextAdapter extends PagerAdapter {
 
-    public PPReaderTextAdapter(final Fragment parent,  final IPPReaderPageManager pageMgr){
+    interface IPPReaderTextAdapterNotify{
+        void sendFetchTextRequest(PPReaderTextPage page);
+    }
+
+    public PPReaderTextAdapter(final Fragment parent,  final IPPReaderPageManager pageMgr,final IPPReaderTextAdapterNotify notify){
         m_pageMgr = pageMgr;
         m_parent = parent;
+        m_notify = notify;
     }
 
     @Override
@@ -77,8 +83,9 @@ public class PPReaderTextAdapter extends PagerAdapter {
         RxView.clicks(vs.errView).throttleFirst(1, TimeUnit.SECONDS).subscribe(
                 new Consumer<Object>() {
                     public void accept(Object t) throws Exception {
-                        PPReaderCommonMessage msg = new PPReaderCommonMessage(PPReaderMessageTypeDefine.TYPE_FETCH_TEXT,pos);
-                        PPReaderMessageCenter.instance().sendMessage(msg);
+                       if(m_notify != null){
+                           m_notify.sendFetchTextRequest(vs.page);
+                       }
                     }
                 }
         );
@@ -126,12 +133,18 @@ public class PPReaderTextAdapter extends PagerAdapter {
 
     private void updateItem(final PPReaderTextFragmentViews vs) {
         final PPReaderTextPage page = vs.page;
-        setViewByState(vs,page.status);
         if (page.status == PPReaderTextPage.STATUS_TEXT_NO_SLICE) {
             setNoSliceText(vs,page);
         } else if (page.status == PPReaderTextPage.STATUS_OK) {
             vs.textView.setText(page);
         }
+        else if(page.status == PPReaderTextPage.STATUS_INIT){
+            if(m_notify != null){
+                m_notify.sendFetchTextRequest(vs.page);
+                page.status = PPReaderTextPage.STATUS_LOADING;
+            }
+        }
+        setViewByState(vs,page.status);
     }
 
     private void setNoSliceText(final PPReaderTextFragmentViews vs,final PPReaderTextPage page){
@@ -152,8 +165,11 @@ public class PPReaderTextAdapter extends PagerAdapter {
                 if (page.status != PPReaderTextPage.STATUS_TEXT_NO_SLICE) {
                     return;
                 }
-                PPReaderAllocateTextMessage msg = new PPReaderAllocateTextMessage(textView,page);
-                PPReaderMessageCenter.instance().sendMessage(msg);
+                //PPReaderAllocateTextMessage msg = new PPReaderAllocateTextMessage(textView,page);
+                //PPReaderMessageCenter.instance().sendMessage(msg);
+                int index = m_pageMgr.getIndex(page);
+                m_pageMgr.injectText(index,textView);
+                notifyDataSetChanged();
             }
         });
     }
@@ -178,4 +194,5 @@ public class PPReaderTextAdapter extends PagerAdapter {
     private IPPReaderPageManager m_pageMgr;
     private Fragment m_parent;
     private ArrayList<PPReaderTextFragmentViews> m_views = new ArrayList<>();
+    private IPPReaderTextAdapterNotify m_notify;
 }
