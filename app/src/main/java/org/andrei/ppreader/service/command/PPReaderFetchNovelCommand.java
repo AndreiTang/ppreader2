@@ -2,6 +2,7 @@ package org.andrei.ppreader.service.command;
 
 import org.andrei.ppreader.data.PPReaderChapter;
 import org.andrei.ppreader.data.PPReaderNovel;
+import org.andrei.ppreader.data.PPReaderTextPage;
 import org.andrei.ppreader.service.ServiceError;
 import org.andrei.ppreader.service.engine.IPPReaderHttp;
 import org.andrei.ppreader.service.engine.IPPReaderNovelEngine;
@@ -54,6 +55,13 @@ public class PPReaderFetchNovelCommand implements IPPReaderServiceCommand {
         novel.detailUrl = t.detailUrl;
         novel.chapterUrl = t.url;
         novel.engineName = t.engineName;
+        for(int i = 0 ; i <novel.chapters.size(); i++){
+            PPReaderChapter chapter = novel.chapters.get(i);
+            PPReaderTextPage page = new PPReaderTextPage();
+            page.chapterId = chapter.id;
+            page.chapterIndex = i;
+            novel.textPages.add(page);
+        }
 
         PPReaderFetchNovelMessage ret = new PPReaderFetchNovelMessage(retCode,novel);
 

@@ -1,6 +1,7 @@
 package org.andrei.ppreader.ui.adapter.helper;
 
 import android.view.Gravity;
+import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
 import org.andrei.ppreader.data.PPReaderChapter;
@@ -36,6 +37,22 @@ public class PPReaderPageManager implements IPPReaderPageManager {
             }
         }
         return -1;
+    }
+
+    public String getPageText(final PPReaderTextPage page){
+        PPReaderChapter chapter = m_novel.chapters.get(page.chapterIndex);
+        if(chapter == null){
+            return "";
+        }
+        return chapter.text;
+    }
+
+    public String getPageTitle(final PPReaderTextPage page){
+        PPReaderChapter chapter = m_novel.chapters.get(page.chapterIndex);
+        if(chapter == null){
+            return "";
+        }
+        return chapter.title;
     }
 
     public void injectText(int index, TextView tv) {
@@ -148,12 +165,14 @@ public class PPReaderPageManager implements IPPReaderPageManager {
     }
 
     private void allocateText(PPReaderTextPage page, String text){
-        if(page.texts.size() >0){
+        //has been allocated
+        if(page.texts.size() > 0){
             return;
         }
         for(PPReaderTextPage.TextPosition pos : page.posArr){
             String tx = text.substring(pos.begin,pos.end);
             page.texts.add(tx);
+            page.status = PPReaderTextPage.STATUS_LOADED;
         }
     }
     @Override

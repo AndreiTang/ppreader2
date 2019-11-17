@@ -24,4 +24,9 @@ public interface IPPReaderPageManager {
 
     public int getChapterFirstPageIndex(final String chapterId);
 
+    public String getPageText(final PPReaderTextPage page);
+
+    public String getPageTitle(final PPReaderTextPage page);
+
+
 }

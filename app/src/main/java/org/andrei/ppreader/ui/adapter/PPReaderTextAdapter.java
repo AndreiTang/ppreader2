@@ -12,6 +12,8 @@ import android.widget.TextView;
 import com.jakewharton.rxbinding2.view.RxView;
 
 import org.andrei.ppreader.R;
+import org.andrei.ppreader.data.PPReaderChapter;
+import org.andrei.ppreader.data.PPReaderNovel;
 import org.andrei.ppreader.data.PPReaderTextPage;
 import org.andrei.ppreader.service.message.PPReaderAllocateTextMessage;
 import org.andrei.ppreader.service.message.PPReaderCommonMessage;
@@ -28,11 +30,11 @@ import io.reactivex.functions.Consumer;
 
 public class PPReaderTextAdapter extends PagerAdapter {
 
-    interface IPPReaderTextAdapterNotify{
+    public interface IPPReaderTextAdapterNotify{
         void sendFetchTextRequest(PPReaderTextPage page);
     }
 
-    public PPReaderTextAdapter(final Fragment parent,  final IPPReaderPageManager pageMgr,final IPPReaderTextAdapterNotify notify){
+    public PPReaderTextAdapter(final Fragment parent, final IPPReaderPageManager pageMgr, final IPPReaderTextAdapterNotify notify){
         m_pageMgr = pageMgr;
         m_parent = parent;
         m_notify = notify;
@@ -136,7 +138,8 @@ public class PPReaderTextAdapter extends PagerAdapter {
         if (page.status == PPReaderTextPage.STATUS_TEXT_NO_SLICE) {
             setNoSliceText(vs,page);
         } else if (page.status == PPReaderTextPage.STATUS_OK) {
-            vs.textView.setText(page);
+            String title = m_pageMgr.getPageTitle(page);
+            vs.textView.setText(page,title);
         }
         else if(page.status == PPReaderTextPage.STATUS_INIT){
             if(m_notify != null){
@@ -155,7 +158,8 @@ public class PPReaderTextAdapter extends PagerAdapter {
         text.append("This is dummy\n");
         text.append("J\n");
         text.append("J\n");
-        text.append(page.text);
+        String tx = m_pageMgr.getPageText(page);
+        text.append(tx);
         final TextView textView = vs.textView;
         textView.setText(text);
         textView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -195,4 +199,5 @@ public class PPReaderTextAdapter extends PagerAdapter {
     private Fragment m_parent;
     private ArrayList<PPReaderTextFragmentViews> m_views = new ArrayList<>();
     private IPPReaderTextAdapterNotify m_notify;
+
 }

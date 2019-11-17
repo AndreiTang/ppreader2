@@ -20,8 +20,8 @@ public class PPReaderTextPage implements Serializable {
     private static final long serialVersionUID = -187857478824751288L;
 
     public transient int status = STATUS_INIT;
-    public transient String chapterId;
-    public transient int chapterIndex;
+    public String chapterId;
+    public int chapterIndex;
     public int offset;
     public int gravity;
     public transient ArrayList<String> texts = new ArrayList<>();

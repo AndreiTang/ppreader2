@@ -30,7 +30,7 @@ public class PPReaderTextView extends TextView {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
-    public void setText(PPReaderTextPage page){
+    public void setText(PPReaderTextPage page,String textTitle){
 
         SpannableStringBuilder sb = new SpannableStringBuilder();
 
@@ -38,8 +38,8 @@ public class PPReaderTextView extends TextView {
         float padding = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, getResources().getDisplayMetrics());
         if(page.offset == 0){
             sb.append('\n');
-            SpannableString title = new SpannableString(page.title);
-            title.setSpan(new PPReaderTitleCenterBoldSpan(fontSize, padding), 0, page.title.length(), 0);
+            SpannableString title = new SpannableString(textTitle);
+            title.setSpan(new PPReaderTitleCenterBoldSpan(fontSize, padding), 0, textTitle.length(), 0);
             sb.append(title);
             sb.append('\n');
             sb.append('\n');

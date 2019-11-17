@@ -7,6 +7,7 @@ import org.andrei.ppreader.R;
 import org.andrei.ppreader.data.IPPReaderDataManager;
 import org.andrei.ppreader.data.PPReaderChapter;
 import org.andrei.ppreader.data.PPReaderNovel;
+import org.andrei.ppreader.data.PPReaderTextPage;
 import org.andrei.ppreader.service.PPReaderServiceFactory;
 import org.andrei.ppreader.service.engine.EngineNames;
 import org.andrei.ppreader.service.engine.IPPReaderNovelEngineManager;
@@ -48,6 +49,11 @@ public class MockActivity5 extends FragmentActivity {
         novel.detailUrl = "/xiaoshuo/2/2271/";
         novel.url = novel.detailUrl;
 
+        PPReaderTextPage page = new PPReaderTextPage();
+        page.chapterIndex = 0;
+        page.chapterId = "1";
+        novel.textPages.add(page);
+
         PPReaderChapter chapter = new PPReaderChapter();
         chapter.id = "1";
         chapter.url = "13871363.html";
@@ -60,12 +66,21 @@ public class MockActivity5 extends FragmentActivity {
         chapter.url = "13871364.html";
         chapter.title = "一梦五百年(中)";
         novel.chapters.add(chapter);
+        page = new PPReaderTextPage();
+        page.chapterIndex = 1;
+        page.chapterId = "2";
+        novel.textPages.add(page);
+
 
         chapter = new PPReaderChapter();
         chapter.id = "3";
         chapter.url = "13871365.html";
         chapter.title = "一梦五百年(下)";
         novel.chapters.add(chapter);
+        page = new PPReaderTextPage();
+        page.chapterIndex = 2;
+        page.chapterId = "2";
+        novel.textPages.add(page);
 
         textFragment.setNovel(novel);
     }
