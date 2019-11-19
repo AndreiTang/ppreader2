@@ -21,9 +21,14 @@ import io.reactivex.functions.Consumer;
 
 public class PPReaderCatalogAdapter extends PPReaderBaseAdapter {
 
-    public PPReaderCatalogAdapter(PPReaderNovel novel, Context context) {
+    public interface IPPReaderCatalogAdapterNotify{
+        void onClickItem(int index);
+    }
+
+    public PPReaderCatalogAdapter(PPReaderNovel novel, Context context,IPPReaderCatalogAdapterNotify notify) {
         m_novel = novel;
         m_context = context;
+        m_notify = notify;
     }
 
     @Override
@@ -50,8 +55,11 @@ public class PPReaderCatalogAdapter extends PPReaderBaseAdapter {
                 @Override
                 public void accept(Object obj) throws Exception {
                     int index = (Integer) v.getTag();
-                    PPReaderCommonMessage msg = new PPReaderCommonMessage(PPReaderMessageTypeDefine.TYPE_SET_CURR,index);
-                    sendMessage(msg);
+//                    PPReaderCommonMessage msg = new PPReaderCommonMessage(PPReaderMessageTypeDefine.TYPE_SET_CURR,index);
+//                    sendMessage(msg);
+                    if(m_notify != null){
+                        m_notify.onClickItem(index);
+                    }
                 }
             });
         }
@@ -64,5 +72,6 @@ public class PPReaderCatalogAdapter extends PPReaderBaseAdapter {
 
     private PPReaderNovel m_novel;
     private Context m_context;
+    IPPReaderCatalogAdapterNotify m_notify;
 
 }

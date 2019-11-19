@@ -17,6 +17,9 @@ import java.util.ArrayList;
 public class PPReaderPageManager implements IPPReaderPageManager {
 
     public int getCount() {
+        if(m_pages == null){
+            return 0;
+        }
         return m_pages.size();
     }
 
@@ -157,9 +160,16 @@ public class PPReaderPageManager implements IPPReaderPageManager {
 
     private void allocateTexts(PPReaderChapter chapter) {
         int index = getChapterFirstPageIndex(chapter.id);
+        if(chapter.text.length() == 0){
+            return;
+        }
         String text = cleanText(chapter.text);
-        for (int i=  index ; ; i++){
+
+        for (int i=  index ; i< m_pages.size() ; i++){
             PPReaderTextPage page = m_pages.get(i);
+            if(page.chapterId.compareTo(chapter.id) != 0){
+                break;
+            }
             allocateText(page,text);
         }
     }

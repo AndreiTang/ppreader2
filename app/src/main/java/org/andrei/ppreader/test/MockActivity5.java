@@ -79,7 +79,7 @@ public class MockActivity5 extends FragmentActivity {
         novel.chapters.add(chapter);
         page = new PPReaderTextPage();
         page.chapterIndex = 2;
-        page.chapterId = "2";
+        page.chapterId = "3";
         novel.textPages.add(page);
 
         textFragment.setNovel(novel);

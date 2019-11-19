@@ -5,7 +5,8 @@ import java.util.ArrayList;
 
 public class PPReaderTextPage implements Serializable {
 
-    public static class TextPosition{
+    public static class TextPosition implements Serializable{
+        private static final long serialVersionUID = -3472132525119269388L;
         public int begin;
         public int end;
     }

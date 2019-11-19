@@ -24,6 +24,9 @@ public class PPReaderService implements IPPReaderService {
 
     @Override
     public void stop() {
+        if(!m_isRunning){
+            return;
+        }
         m_isRunning = false;
         synchronized(this){
             m_tasks.clear();
@@ -59,6 +62,9 @@ public class PPReaderService implements IPPReaderService {
     }
 
     private void  init(){
+        if(m_isRunning){
+            return;
+        }
         m_handler = new Handler(Looper.getMainLooper());
         m_thread = new Thread(new Runnable() {
             @Override
@@ -112,7 +118,7 @@ public class PPReaderService implements IPPReaderService {
     private Handler m_handler;
     //private volatile IPPReaderTaskNotification m_notification;
     private volatile ArrayList<IPPReaderTask> m_tasks = new ArrayList<IPPReaderTask>();
-    private volatile boolean m_isRunning = true;
+    private volatile boolean m_isRunning = false;
     private IPPReaderServiceCommand m_cmd;
 
 }

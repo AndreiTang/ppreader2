@@ -52,7 +52,9 @@ public class PPReaderControlPanel extends View {
                 msg = new PPReaderCommonMessage(PPReaderMessageTypeDefine.TYPE_TO_LIST_PAGE,1);
 
             }
-            PPReaderMessageCenter.instance().sendMessage(msg);
+            if(msg != null){
+                PPReaderMessageCenter.instance().sendMessage(msg);
+            }
             setVisibility(View.GONE);
         }
         return true;
