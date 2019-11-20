@@ -13,10 +13,10 @@ import com.jakewharton.rxbinding2.view.RxView;
 
 import org.andrei.ppreader.R;
 import org.andrei.ppreader.data.PPReaderNovel;
+import org.andrei.ppreader.service.IPPReaderServiceNotification;
 import org.andrei.ppreader.service.task.PPReaderUpdateNovelTask;
 import org.andrei.ppreader.service.message.IPPReaderMessage;
 import org.andrei.ppreader.service.message.PPReaderCommonMessage;
-import org.andrei.ppreader.service.message.PPReaderMessageType;
 import org.andrei.ppreader.service.message.PPReaderMessageTypeDefine;
 import org.andrei.ppreader.service.message.PPReaderUpdateNovelMessage;
 import org.andrei.ppreader.ui.adapter.PPReaderListAdapter;
@@ -37,13 +37,17 @@ public class PPReaderListFragment extends PPReaderBaseFragment {
         return inflater.inflate(R.layout.fragment_ppreader_list, container, false);
     }
 
+    public void addOnNotification(IPPReaderMainFragmentNotification notification){
+        m_notification = notification;
+    }
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
 
         initUI();
         initAdapter();
-        m_service.start(null);
+        initService();
 
         for( int i = 0; i < m_dataManager.getNovelCount(); i++ ){
             PPReaderUpdateNovelTask task = new PPReaderUpdateNovelTask(m_dataManager.getNovel(i));
@@ -51,13 +55,19 @@ public class PPReaderListFragment extends PPReaderBaseFragment {
         }
     }
 
-//    public void addNovel(final PPReaderNovel novel){
-//        m_dataManager.addNovel(novel);
-//    }
+    private void initService(){
+        m_service.start(new IPPReaderServiceNotification() {
+            @Override
+            public void onNotify(IPPReaderMessage msg) {
+                if(msg.type().compareTo(PPReaderMessageTypeDefine.TYPE_UPDATE_NOVEL) == 0){
+                    updateNovel(msg);
+                }
+            }
+        });
+    }
 
-
-    @PPReaderMessageType(type = PPReaderMessageTypeDefine.TYPE_UPDATE_NOVEL)
-    protected void updateNovel(IPPReaderMessage msg){
+    //@PPReaderMessageType(type = PPReaderMessageTypeDefine.TYPE_UPDATE_NOVEL)
+    private void updateNovel(IPPReaderMessage msg){
         PPReaderUpdateNovelMessage message = (PPReaderUpdateNovelMessage) msg;
         PPReaderNovel novel = m_dataManager.getNovel(message.getId());
         if(novel == null){
@@ -112,8 +122,17 @@ public class PPReaderListFragment extends PPReaderBaseFragment {
 
     private void initAdapter(){
         GridView gv = getView().findViewById(R.id.novel_list);
-        PPReaderListAdapter adapter = new PPReaderListAdapter(this);
+        PPReaderListAdapter adapter = new PPReaderListAdapter(this, new PPReaderListAdapter.IPPReaderListAdapterAction() {
+            @Override
+            public void openNovel(PPReaderNovel novel) {
+                if(m_notification != null){
+                    m_notification.onOpenNovel(novel);
+                }
+            }
+        });
         gv.setAdapter(adapter);
     }
+
+    private IPPReaderMainFragmentNotification m_notification;
 
 }

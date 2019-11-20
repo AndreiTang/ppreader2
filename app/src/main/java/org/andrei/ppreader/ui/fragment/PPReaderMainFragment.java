@@ -26,6 +26,10 @@ public class PPReaderMainFragment extends PPReaderBaseFragment {
         return inflater.inflate(R.layout.fragment_ppreader_main, container, false);
     }
 
+    public void addOnNotification(IPPReaderMainFragmentNotification notification){
+        m_notification = notification;
+    }
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -50,12 +54,6 @@ public class PPReaderMainFragment extends PPReaderBaseFragment {
         savedInstanceState.putInt(KEY_INDEX,index);
     }
 
-//    @Override
-//    public void onNotify(IPPReaderTaskRet ret) {
-//        if(ret.type().compareTo(PPReaderSelectNovelRet.class.getName()) == 0 && m_notification != null){
-//            m_notification.onNotify(ret);
-//        }
-//    }
 
     @Override
     public void onHiddenChanged(boolean hidden){
@@ -102,11 +100,27 @@ public class PPReaderMainFragment extends PPReaderBaseFragment {
 
         PPReaderMainAdapter adapter = new PPReaderMainAdapter(this.getChildFragmentManager(), fragments);
         vp.setAdapter(adapter);
+
+        PPReaderListFragment listFragment = (PPReaderListFragment)fragments[0];
+        initListFragment(listFragment);
+
+    }
+
+    private void initListFragment(PPReaderListFragment listFragment){
+        listFragment.addOnNotification(new IPPReaderMainFragmentNotification() {
+            @Override
+            public void onOpenNovel(PPReaderNovel novel) {
+                if(m_notification != null){
+                    m_notification.onOpenNovel(novel);
+                }
+            }
+        });
     }
 
 
     //private PPReaderListFragment m_listFragment;
     private final static String KEY_INDEX = "key_index";
+    private IPPReaderMainFragmentNotification m_notification;
 
 
 

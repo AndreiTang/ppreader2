@@ -39,6 +39,10 @@ public class PPReaderNovelTextFragment extends PPReaderBaseFragment implements I
         m_pageManager = new PPReaderPageManager();
     }
 
+    public void addOnNotification(IPPReaderNovelTextFragmentNotification notification){
+        m_notification = notification;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -149,10 +153,10 @@ public class PPReaderNovelTextFragment extends PPReaderBaseFragment implements I
         builder.setPositiveButton(R.string.btn_ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                m_dataManager.addNovel(m_novel);
                 m_novel.isUpdated = true;
-                String path = getActivity().getExternalFilesDir(null).getPath();
-                m_dataManager.save(path);
+                if(m_notification != null){
+                    m_notification.onAddNovel(m_novel);
+                }
                 getActivity().getSupportFragmentManager().beginTransaction().hide(PPReaderNovelTextFragment.this).commit();
             }
         });
@@ -188,7 +192,8 @@ public class PPReaderNovelTextFragment extends PPReaderBaseFragment implements I
         setChapterDetail(m_novel.currIndex);
 
         PPReaderNovelTextCatalog catalog = getView().findViewById(R.id.novel_text_catalog);
-        catalog.loadNovel(m_novel);
+        String imgRootUrl = m_dataManager.getEngineInfo(m_novel.engineName).imageUrl;
+        catalog.loadNovel(m_novel,imgRootUrl);
 
         switchToCurrentPage();
     }
@@ -312,6 +317,7 @@ public class PPReaderNovelTextFragment extends PPReaderBaseFragment implements I
     private long m_beginTime;
     private IPPReaderPageManager m_pageManager;
     private PPReaderTextAdapter m_adapter;
+    private IPPReaderNovelTextFragmentNotification m_notification;
 
 
 }

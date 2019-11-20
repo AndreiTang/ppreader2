@@ -12,16 +12,9 @@ import android.widget.TextView;
 import com.jakewharton.rxbinding2.view.RxView;
 
 import org.andrei.ppreader.R;
-import org.andrei.ppreader.data.PPReaderChapter;
-import org.andrei.ppreader.data.PPReaderNovel;
 import org.andrei.ppreader.data.PPReaderTextPage;
-import org.andrei.ppreader.service.message.PPReaderAllocateTextMessage;
-import org.andrei.ppreader.service.message.PPReaderCommonMessage;
-import org.andrei.ppreader.service.message.PPReaderMessageCenter;
-import org.andrei.ppreader.service.message.PPReaderMessageTypeDefine;
 import org.andrei.ppreader.ui.adapter.helper.IPPReaderPageManager;
 import org.andrei.ppreader.ui.adapter.helper.PPReaderTextFragmentViews;
-import org.andrei.ppreader.ui.fragment.helper.PPReaderText;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;

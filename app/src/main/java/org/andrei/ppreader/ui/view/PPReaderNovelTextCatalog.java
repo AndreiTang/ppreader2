@@ -45,8 +45,9 @@ public class PPReaderNovelTextCatalog extends LinearLayout {
         init(context);
     }
 
-    public void loadNovel(final PPReaderNovel novel){
+    public void loadNovel(final PPReaderNovel novel,final String imageRootUrl){
         m_novel = novel;
+        m_imageRootUrl = imageRootUrl;
         setNovelDetail();
         initAdaptersFromNovel();
     }
@@ -82,7 +83,7 @@ public class PPReaderNovelTextCatalog extends LinearLayout {
         tv.setText(m_novel.name);
         ImageView img = findViewById(R.id.novel_catalog_img);
         Glide.with(this).clear(img);
-        Glide.with(this).load(m_novel.img).apply(RequestOptions.fitCenterTransform()).into(img);
+        Glide.with(this).load(m_imageRootUrl + m_novel.img).apply(RequestOptions.fitCenterTransform()).into(img);
     }
 
     private void initAdaptersFromNovel(){
@@ -186,4 +187,5 @@ public class PPReaderNovelTextCatalog extends LinearLayout {
 
     private PPReaderNovel m_novel;
     private PPReaderCatalogAdapter.IPPReaderCatalogAdapterNotify m_notify;
+    private String m_imageRootUrl;
 }

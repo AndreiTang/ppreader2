@@ -126,6 +126,7 @@ public class PPReaderPageManager implements IPPReaderPageManager {
                 if (offset == 0) {
                     for (int t = 0; t < 4; t++) {
                         item.texts.remove(0);
+                        item.posArr.remove(0);
                     }
                     item.gravity = Gravity.BOTTOM;
                 }
@@ -213,14 +214,23 @@ public class PPReaderPageManager implements IPPReaderPageManager {
         if(chapter.text.length() == 0){
             return;
         }
-        String text = cleanText(chapter.text);
+
+        StringBuilder text = new StringBuilder();
+        text.append("J\n");
+        //using dummy title to occupy title place which is just one line.
+        // If the real title is length than the width of textview. it will occupy more than 1 line which will cause error.
+        text.append("This is dummy\n");
+        text.append("J\n");
+        text.append("J\n");
+        text.append(cleanText(chapter.text));
+
 
         for (int i=  index ; i< m_pages.size() ; i++){
             PPReaderTextPage page = m_pages.get(i);
             if(page.chapterId.compareTo(chapter.id) != 0){
                 break;
             }
-            allocateText(page,text);
+            allocateText(page,text.toString());
         }
     }
 

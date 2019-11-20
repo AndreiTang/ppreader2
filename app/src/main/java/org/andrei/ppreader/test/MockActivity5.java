@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentActivity;
 import org.andrei.ppreader.R;
 import org.andrei.ppreader.data.IPPReaderDataManager;
 import org.andrei.ppreader.data.PPReaderChapter;
+import org.andrei.ppreader.data.PPReaderEngineInfo;
 import org.andrei.ppreader.data.PPReaderNovel;
 import org.andrei.ppreader.data.PPReaderTextPage;
 import org.andrei.ppreader.service.PPReaderServiceFactory;
@@ -17,6 +18,8 @@ import org.andrei.ppreader.ui.adapter.PPReaderBaseAdapter;
 import org.andrei.ppreader.ui.fragment.PPReaderBaseFragment;
 import org.andrei.ppreader.ui.fragment.PPReaderMainFragment;
 import org.andrei.ppreader.ui.fragment.PPReaderNovelTextFragment;
+
+import java.util.ArrayList;
 
 public class MockActivity5 extends FragmentActivity {
 
@@ -36,7 +39,19 @@ public class MockActivity5 extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mock);
 
+        m_engineManager = new PPReaderNovelEngineManager();
         m_dataManager = new MockDataManager();
+
+        ArrayList<PPReaderEngineInfo> infos = new ArrayList<>();
+        for(int i = 0; i < m_engineManager.count(); i++){
+            PPReaderEngineInfo info = new PPReaderEngineInfo();
+            info.name = m_engineManager.get(i).getName();
+            info.contentUrl = m_engineManager.get(i).getContentUrl();
+            info.imageUrl = m_engineManager.get(i).getImageUrl();
+            infos.add(info);
+        }
+        m_dataManager.setEngineInfos(infos);
+
         m_engineManager = new PPReaderNovelEngineManager();
         PPReaderBaseAdapter.setDataManager(m_dataManager);
         PPReaderBaseFragment.setDataManager(m_dataManager);
@@ -61,6 +76,9 @@ public class MockActivity5 extends FragmentActivity {
         novel.engineName = EngineNames.ENGINE_88dushu;
         novel.detailUrl = "/xiaoshuo/2/2271/";
         novel.url = novel.detailUrl;
+        novel.author = "三戒大师";
+        novel.desc = "数风流，论成败，百年一梦多慷慨有心要励精图治挽天倾，哪怕身后骂名滚滚来。轻生死，重兴衰，海雨天风独往来。谁不想万里长城永不倒，也难料恨水东逝归大海。改编自《得民心者得天下》，代为序。......";
+        novel.img = "/2/2271/2271s.jpg";
 
         PPReaderTextPage page = new PPReaderTextPage();
         page.chapterIndex = 0;

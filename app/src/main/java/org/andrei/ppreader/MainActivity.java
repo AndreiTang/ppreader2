@@ -12,6 +12,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import org.andrei.ppreader.data.IPPReaderDataManager;
+import org.andrei.ppreader.data.PPReaderDataManager;
 import org.andrei.ppreader.data.PPReaderEngineInfo;
 import org.andrei.ppreader.data.PPReaderNovel;
 import org.andrei.ppreader.service.PPReaderServiceFactory;
@@ -26,6 +27,8 @@ import org.andrei.ppreader.service.message.PPReaderMessageType;
 import org.andrei.ppreader.service.message.PPReaderMessageTypeDefine;
 import org.andrei.ppreader.test.MockDataManager;
 import org.andrei.ppreader.ui.adapter.PPReaderBaseAdapter;
+import org.andrei.ppreader.ui.fragment.IPPReaderMainFragmentNotification;
+import org.andrei.ppreader.ui.fragment.IPPReaderNovelTextFragmentNotification;
 import org.andrei.ppreader.ui.fragment.PPReaderBaseFragment;
 import org.andrei.ppreader.ui.fragment.PPReaderMainFragment;
 import org.andrei.ppreader.ui.fragment.PPReaderStartFragment;
@@ -49,7 +52,7 @@ public class MainActivity extends FragmentActivity implements IPPReaderMessageHa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        m_dataManager = new MockDataManager();
+        m_dataManager = new PPReaderDataManager();
         m_engineManager = new PPReaderNovelEngineManager();
         PPReaderBaseAdapter.setDataManager(m_dataManager);
         PPReaderBaseFragment.setDataManager(m_dataManager);
@@ -66,31 +69,11 @@ public class MainActivity extends FragmentActivity implements IPPReaderMessageHa
             firstRun();
         }
         else{
-            Log.i("Andrei","restart");
-            int frag = savedInstanceState.getInt(KEY_FRAGMENTS,-1);
-            if(frag == -1){
-                firstRun();
-                return;
-            }
-            ArrayList<PPReaderNovel> novels = (ArrayList<PPReaderNovel>) savedInstanceState.getSerializable(KEY_NOVELS);
-            for(PPReaderNovel novel : novels){
-                m_dataManager.addNovel(novel);
-            }
-
-            ArrayList<PPReaderEngineInfo> infos = (ArrayList<PPReaderEngineInfo>)savedInstanceState.getSerializable(KEY_INFOS);
-            m_dataManager.setEngineInfos(infos);
-
-            PPReaderMainFragment main = (PPReaderMainFragment)getSupportFragmentManager().findFragmentByTag(PPReaderMainFragment.class.getName());
-            PPReaderNovelTextFragment text = (PPReaderNovelTextFragment)getSupportFragmentManager().findFragmentByTag(PPReaderNovelTextFragment.class.getName());
-
-            if(frag == 1){
-                getSupportFragmentManager().beginTransaction().hide(main).show(text).commit();
-            }
-            else{
-                getSupportFragmentManager().beginTransaction().hide(text).show(main).commit();
-            }
-
+            restoreFromSaveInstance(savedInstanceState);
         }
+
+
+
 
         changeStatusBarColor();
     }
@@ -183,7 +166,59 @@ public class MainActivity extends FragmentActivity implements IPPReaderMessageHa
         m_dataManager.addNovel(message.getNovel());
     }
 
+//    private void initTextFragment(){
+//        PPReaderNovelTextFragment text = (PPReaderNovelTextFragment)getSupportFragmentManager().findFragmentByTag(PPReaderNovelTextFragment.class.getName());
+//        text.addOnNotification(new IPPReaderNovelTextFragmentNotification() {
+//            @Override
+//            public void onSwitchFragment(int index) {
+//
+//            }
+//
+//            @Override
+//            public void onAddNovel(PPReaderNovel novel) {
+//
+//            }
+//        });
+//    }
 
+    private void initMainFragment(final PPReaderMainFragment main, final PPReaderNovelTextFragment text){
+        main.addOnNotification(new IPPReaderMainFragmentNotification() {
+            @Override
+            public void onOpenNovel(PPReaderNovel novel) {
+                text.setNovel(novel);
+            }
+        });
+
+    }
+
+    private void restoreFromSaveInstance(Bundle savedInstanceState){
+        Log.i("Andrei","restart");
+        int frag = savedInstanceState.getInt(KEY_FRAGMENTS,-1);
+        if(frag == -1){
+            firstRun();
+            return;
+        }
+        ArrayList<PPReaderNovel> novels = (ArrayList<PPReaderNovel>) savedInstanceState.getSerializable(KEY_NOVELS);
+        for(PPReaderNovel novel : novels){
+            m_dataManager.addNovel(novel);
+        }
+
+        ArrayList<PPReaderEngineInfo> infos = (ArrayList<PPReaderEngineInfo>)savedInstanceState.getSerializable(KEY_INFOS);
+        m_dataManager.setEngineInfos(infos);
+
+        PPReaderMainFragment main = (PPReaderMainFragment)getSupportFragmentManager().findFragmentByTag(PPReaderMainFragment.class.getName());
+        PPReaderNovelTextFragment text = (PPReaderNovelTextFragment)getSupportFragmentManager().findFragmentByTag(PPReaderNovelTextFragment.class.getName());
+
+        if(frag == 1){
+            getSupportFragmentManager().beginTransaction().hide(main).show(text).commit();
+        }
+        else{
+            getSupportFragmentManager().beginTransaction().hide(text).show(main).commit();
+        }
+
+        //initTextFragment();
+        initMainFragment(main,text);
+    }
 
     private void changeStatusBarColor(){
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
@@ -233,6 +268,8 @@ public class MainActivity extends FragmentActivity implements IPPReaderMessageHa
                         add(R.id.ppreader_root,text, PPReaderNovelTextFragment.class.getName()).
                         hide(text).
                         commit();
+                //initTextFragment();
+                initMainFragment(main,text);
             }
         });
     }

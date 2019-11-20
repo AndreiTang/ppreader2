@@ -26,8 +26,13 @@ import io.reactivex.functions.Consumer;
 
 public class PPReaderListAdapter extends PPReaderBaseAdapter {
 
-    public PPReaderListAdapter(@NonNull Fragment fragment){
+    public interface  IPPReaderListAdapterAction {
+        public void openNovel(PPReaderNovel novel);
+    }
+
+    public PPReaderListAdapter(@NonNull Fragment fragment,IPPReaderListAdapterAction action){
         m_fragment = fragment;
+        m_action = action;
     }
 
     @Override
@@ -76,7 +81,9 @@ public class PPReaderListAdapter extends PPReaderBaseAdapter {
                 else{
                     novel.isUpdated = false;
                     notifyDataSetChanged();
-                    openNovel(novel);
+                    if(m_action!=null){
+                        m_action.openNovel(novel);
+                    }
                 }
             }
         });
@@ -88,7 +95,8 @@ public class PPReaderListAdapter extends PPReaderBaseAdapter {
         PPReaderNovel novel = m_dataManager.getNovel(position);
         ImageView img = view.findViewById(R.id.novel_cover);
         Glide.with(view).clear(img);
-        Glide.with(view).load(novel.img).apply(RequestOptions.fitCenterTransform().error(R.drawable.nocover)).into(img);
+        String imgRootUrl = m_dataManager.getEngineInfo(novel.engineName).imageUrl;
+        Glide.with(view).load(imgRootUrl + novel.img).apply(RequestOptions.fitCenterTransform().error(R.drawable.nocover)).into(img);
         TextView tv = view.findViewById(R.id.novel_title);
         tv.setText(novel.name);
 
@@ -125,13 +133,14 @@ public class PPReaderListAdapter extends PPReaderBaseAdapter {
         dlg.show();
     }
 
-    private void openNovel(final PPReaderNovel novel){
-        PPReaderSelectNovelMessage msg = new PPReaderSelectNovelMessage(novel);
-        sendMessage(msg);
-    }
+//    private void openNovel(final PPReaderNovel novel){
+//        PPReaderSelectNovelMessage msg = new PPReaderSelectNovelMessage(novel);
+//        sendMessage(msg);
+//    }
 
     //private IPPReaderTaskNotification m_notification;
     private Fragment m_fragment;
     private boolean m_isEditMode = false;
+    private IPPReaderListAdapterAction m_action;
 
 }
