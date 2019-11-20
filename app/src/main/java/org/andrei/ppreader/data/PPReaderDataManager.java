@@ -25,6 +25,9 @@ public class PPReaderDataManager implements IPPReaderDataManager {
     @Override
     public void save(final String folder) {
         for (PPReaderNovel novel : m_novels) {
+            if(!novel.isUpdated){
+                continue;
+            }
             saveNovel(folder,novel);
         }
         saveEngines(folder);
@@ -61,7 +64,7 @@ public class PPReaderDataManager implements IPPReaderDataManager {
     @Override
     public void removeNovel(final String folder,final String id) {
         for (PPReaderNovel novel : m_novels) {
-            if (id.compareTo(novel.id) == 0) {
+            if (id.compareTo(novel.id) == 0 ) {
                 m_novels.remove(novel);
                 String path = folder + "/" + novel.name + "-" + novel.id + ".json";
                 File file = new File(path);

@@ -1,12 +1,16 @@
 package org.andrei.ppreader.ui.adapter.helper;
 
+import android.support.v4.view.ViewPager;
 import android.view.Gravity;
 import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
+import org.andrei.ppreader.R;
 import org.andrei.ppreader.data.PPReaderChapter;
 import org.andrei.ppreader.data.PPReaderNovel;
 import org.andrei.ppreader.data.PPReaderTextPage;
+import org.andrei.ppreader.service.IPPReaderService;
+import org.andrei.ppreader.service.task.PPReaderFetchTextTask;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -17,9 +21,6 @@ import java.util.ArrayList;
 public class PPReaderPageManager implements IPPReaderPageManager {
 
     public int getCount() {
-        if(m_pages == null){
-            return 0;
-        }
         return m_pages.size();
     }
 
@@ -57,6 +58,41 @@ public class PPReaderPageManager implements IPPReaderPageManager {
         }
         return chapter.title;
     }
+
+    @Override
+    public int getCurrentIndex() {
+        int index = -1;
+        if(m_novel.currIndex + m_novel.currOffset == 0){
+            //setCurrent is unavailable if the index is 0,so directly set detail
+            index = 0;
+        }
+        else{
+            PPReaderChapter chapter = m_novel.chapters.get(m_novel.currIndex);
+            index = getChapterFirstPageIndex(chapter.id);
+            if(index > -1){
+                index += m_novel.currOffset;
+            }
+        }
+        return index;
+    }
+
+    @Override
+    public void setCurrentIndex(int pos){
+        PPReaderTextPage page = m_pages.get(pos);
+        if(page == null){
+            return;
+        }
+        m_novel.currIndex = page.chapterIndex;
+        m_novel.currOffset = page.offset;
+        if(page.status == PPReaderTextPage.STATUS_LOADED){
+            page.status = PPReaderTextPage.STATUS_TEXT_NO_SLICE;
+        }
+        else if(page.status == PPReaderTextPage.STATUS_INIT){
+            page.status = PPReaderTextPage.STATUS_LOADING;
+        }
+    }
+
+
 
     public void injectText(int index, TextView tv) {
         if (index == -1 || index >= m_pages.size()) {
@@ -121,18 +157,32 @@ public class PPReaderPageManager implements IPPReaderPageManager {
     }
 
     @Override
-    public void updateText(String chapterId, String text) {
-        PPReaderChapter chapter = m_novel.getChapter(chapterId);
-        chapter.text = text;
+    public void updateText(String chapterId,boolean isSuccessful ,String text) {
+
         int index  = getChapterFirstPageIndex(chapterId);
+        PPReaderTextPage page = m_pages.get(index);
         if(index == -1){
             return;
         }
-        PPReaderTextPage page = m_pages.get(index);
-        page.status = PPReaderTextPage.STATUS_LOADED;
+        if(isSuccessful){
+            PPReaderChapter chapter = m_novel.getChapter(chapterId);
+            chapter.text = text;
+            updateTextSuccess(page);
+        }
+        else{
+            page.status = PPReaderTextPage.STATUS_FAIL;
+        }
+
     }
 
-
+    private void updateTextSuccess(PPReaderTextPage page){
+        if(page.chapterIndex == m_novel.currIndex){
+            page.status = PPReaderTextPage.STATUS_TEXT_NO_SLICE;
+        }
+        else{
+            page.status = PPReaderTextPage.STATUS_LOADED;
+        }
+    }
 
     @Override
     public void load(PPReaderNovel novel) {
@@ -215,6 +265,6 @@ public class PPReaderPageManager implements IPPReaderPageManager {
         return sb.toString();
     }
 
-    private ArrayList<PPReaderTextPage> m_pages;
+    private ArrayList<PPReaderTextPage> m_pages = new ArrayList<>();
     private PPReaderNovel m_novel;
 }

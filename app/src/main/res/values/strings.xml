@@ -36,6 +36,8 @@
     <string name="btn_ok">确定</string>
     <string name="btn_cancel">取消</string>
 
+    <string name="novel_text_save_dlg">是否保存这本小说?</string>
+
     <string name="novel_catalog_prev">上一页</string>
     <string name="novel_catalog_next">下一页</string>
     <string name="novel_catalog_range">目录列表</string>

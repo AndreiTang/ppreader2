@@ -139,7 +139,8 @@ public class MainActivity extends FragmentActivity implements IPPReaderMessageHa
         }
         else{
             //main.switchFragment(0);
-            getSupportFragmentManager().beginTransaction().show(main).hide(text).commit();
+            getSupportFragmentManager().beginTransaction().show(main).commit();
+            text.backPress();
         }
     }
 

@@ -16,7 +16,7 @@ public interface IPPReaderPageManager {
 
     public void injectText(int index, TextView tv);
 
-    public void updateText(final String chapterId, final String text);
+    public void updateText(final String chapterId, boolean isSuccessful ,final String text);
 
     public void load(final PPReaderNovel novel);
 
@@ -28,5 +28,8 @@ public interface IPPReaderPageManager {
 
     public String getPageTitle(final PPReaderTextPage page);
 
+    public int getCurrentIndex();
+
+    public void setCurrentIndex(int pos);
 
 }

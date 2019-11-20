@@ -28,6 +28,7 @@ public class PPReaderNovel implements Serializable {
     public ArrayList<PPReaderTextPage> textPages = new ArrayList<>();
 
 
+
     public int getChapterIndex(String chapterId){
         for(int i = 0 ; i <chapters.size(); i++){
             PPReaderChapter chapter = chapters.get(i);

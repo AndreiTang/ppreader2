@@ -1,7 +1,9 @@
 package org.andrei.ppreader.ui.fragment;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -12,15 +14,12 @@ import org.andrei.ppreader.R;
 import org.andrei.ppreader.data.PPReaderChapter;
 import org.andrei.ppreader.data.PPReaderNovel;
 import org.andrei.ppreader.data.PPReaderTextPage;
-import org.andrei.ppreader.service.IPPReaderService;
+import org.andrei.ppreader.service.IPPReaderServiceNotification;
 import org.andrei.ppreader.service.ServiceError;
 import org.andrei.ppreader.service.message.IPPReaderMessage;
-import org.andrei.ppreader.service.message.PPReaderCommonMessage;
 import org.andrei.ppreader.service.message.PPReaderFetchTextMessage;
 import org.andrei.ppreader.service.message.PPReaderMessageType;
 import org.andrei.ppreader.service.message.PPReaderMessageTypeDefine;
-import org.andrei.ppreader.service.message.PPReaderSelectNovelMessage;
-import org.andrei.ppreader.service.message.PPReaderUpdateNovelMessage;
 import org.andrei.ppreader.service.task.PPReaderFetchTextTask;
 import org.andrei.ppreader.ui.adapter.PPReaderCatalogAdapter;
 import org.andrei.ppreader.ui.adapter.PPReaderTextAdapter;
@@ -31,11 +30,9 @@ import org.andrei.ppreader.ui.view.PPReaderNovelTextCatalog;
 import org.andrei.ppreader.ui.view.PPReaderNovelTextTitleBar;
 import org.andrei.ppreader.ui.view.helper.PPReaderRxBinding;
 
-import java.util.ArrayList;
-
 import io.reactivex.functions.Consumer;
 
-public class PPReaderNovelTextFragment extends PPReaderBaseFragment {
+public class PPReaderNovelTextFragment extends PPReaderBaseFragment implements IPPReaderServiceNotification {
 
     public PPReaderNovelTextFragment(){
         //m_notify = notification;
@@ -55,7 +52,7 @@ public class PPReaderNovelTextFragment extends PPReaderBaseFragment {
             m_novel = (PPReaderNovel) savedInstanceState.getSerializable(NOVEL);
         }
 
-        m_service.start();
+        m_service.start(this);
         init();
         loadNovel();
 
@@ -75,7 +72,7 @@ public class PPReaderNovelTextFragment extends PPReaderBaseFragment {
             m_service.stop();
         }
         else{
-            m_service.start();
+            m_service.start(this);
             m_beginTime = System.currentTimeMillis();
             getActivity().findViewById(android.R.id.content).setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
         }
@@ -110,18 +107,28 @@ public class PPReaderNovelTextFragment extends PPReaderBaseFragment {
         }
     }
 
+    @Override
+    public void onNotify(IPPReaderMessage msg) {
+        if(msg.type().compareTo(PPReaderMessageTypeDefine.TYPE_TEXT) == 0){
+            updateText(msg);
+        }
+    }
+
     public void setNovel(final PPReaderNovel novel){
         m_novel = novel;
         m_pageManager.load(novel);
         loadNovel();
     }
 
-
-    @PPReaderMessageType(type = PPReaderMessageTypeDefine.TYPE_SELECT_NOVEL)
-    protected void selectNovel(IPPReaderMessage msg){
-        PPReaderNovel novel = ((PPReaderSelectNovelMessage)msg).getNovel();
-        setNovel(novel);
+    public void backPress(){
+        if(m_dataManager.getNovel(m_novel.id) == null){
+            popUpSaveDlg();
+        }
+        else{
+            getActivity().getSupportFragmentManager().beginTransaction().hide(this).commit();
+        }
     }
+
 
     @PPReaderMessageType(type = PPReaderMessageTypeDefine.TYPE_SHOW_CATALOG)
     protected void showCatalog(IPPReaderMessage message){
@@ -134,38 +141,43 @@ public class PPReaderNovelTextFragment extends PPReaderBaseFragment {
         catalog.show(index,duration);
     }
 
+    private void  popUpSaveDlg(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(R.string.app_name);
+        builder.setMessage(R.string.novel_text_save_dlg);
 
-    @PPReaderMessageType(type = PPReaderMessageTypeDefine.TYPE_TEXT)
-    protected void updateText(IPPReaderMessage msg){
+        builder.setPositiveButton(R.string.btn_ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                m_dataManager.addNovel(m_novel);
+                m_novel.isUpdated = true;
+                String path = getActivity().getExternalFilesDir(null).getPath();
+                m_dataManager.save(path);
+                getActivity().getSupportFragmentManager().beginTransaction().hide(PPReaderNovelTextFragment.this).commit();
+            }
+        });
+        builder.setNegativeButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                getActivity().getSupportFragmentManager().beginTransaction().hide(PPReaderNovelTextFragment.this).commit();
+            }
+        });
+        builder.show();
+    }
+
+    private void updateText(IPPReaderMessage msg){
         PPReaderFetchTextMessage message = (PPReaderFetchTextMessage) msg;
         if (message.getNovelId().compareTo(m_novel.id) != 0) {
             return;
         }
+        String text = "";
+        boolean bRet = false;
         if (message.getRetCode() == ServiceError.ERR_OK) {
-            m_pageManager.updateText(message.getChapterId(), message.getText());
-            updateTextSuccess(message.getChapterId());
-        } else {
-            updateTextFail(message.getChapterId());
+            bRet = true;
+            text = message.getText();
         }
+        m_pageManager.updateText(message.getChapterId(),bRet,text);
         m_adapter.notifyDataSetChanged();
-    }
-
-    private void updateTextSuccess(String chapterId){
-
-        int index = m_pageManager.getChapterFirstPageIndex(chapterId);
-        PPReaderTextPage page = m_pageManager.getItem(index);
-        if(page.chapterIndex == m_novel.currIndex){
-            page.status = PPReaderTextPage.STATUS_TEXT_NO_SLICE;
-        }
-        else{
-            page.status = PPReaderTextPage.STATUS_LOADED;
-        }
-    }
-
-    private void updateTextFail(String chapterId){
-        int index = m_pageManager.getChapterFirstPageIndex(chapterId);
-        PPReaderTextPage page = m_pageManager.getItem(index);
-        page.status = PPReaderTextPage.STATUS_FAIL;
     }
 
     private void loadNovel(){
@@ -179,22 +191,17 @@ public class PPReaderNovelTextFragment extends PPReaderBaseFragment {
         catalog.loadNovel(m_novel);
 
         switchToCurrentPage();
-
     }
 
     private void switchToCurrentPage(){
-        if(m_novel.currIndex + m_novel.currOffset == 0){
+        int index = m_pageManager.getCurrentIndex();
+        if(index == 0){
             //setCurrent is unavailable if the index is 0,so directly set detail
             setCurrentPage(0);
         }
-        else{
+        else if(index > 0){
             ViewPager vp = getView().findViewById(R.id.novel_text_pager);
-            PPReaderChapter chapter = m_novel.chapters.get(m_novel.currIndex);
-            int index = m_pageManager.getChapterFirstPageIndex(chapter.id);
-            if(index > -1){
-                index += m_novel.currOffset;
-                vp.setCurrentItem(index);
-            }
+            vp.setCurrentItem(index);
         }
     }
 
@@ -278,14 +285,13 @@ public class PPReaderNovelTextFragment extends PPReaderBaseFragment {
 
     private void setCurrentPage(int position){
         PPReaderTextPage page = m_pageManager.getItem(position);
-        m_novel.currIndex = page.chapterIndex;
-        m_novel.currOffset = page.offset;
-        if(page.status == PPReaderTextPage.STATUS_LOADED){
-            page.status = PPReaderTextPage.STATUS_TEXT_NO_SLICE;
+        if(page.status == PPReaderTextPage.STATUS_INVALID){
+            return;
         }
         else if(page.status == PPReaderTextPage.STATUS_INIT){
             fetchText(page);
         }
+        m_pageManager.setCurrentIndex(position);
         setChapterDetail(position);
         m_adapter.notifyDataSetChanged();
     }
@@ -293,7 +299,6 @@ public class PPReaderNovelTextFragment extends PPReaderBaseFragment {
     private void fetchText(PPReaderTextPage page){
         PPReaderFetchTextTask task = new PPReaderFetchTextTask(m_novel,m_novel.getChapter(page.chapterIndex));
         m_service.addTask(task);
-        page.status = PPReaderTextPage.STATUS_LOADING;
     }
 
     private void dbClicks(MotionEvent motionEvent){
@@ -307,4 +312,6 @@ public class PPReaderNovelTextFragment extends PPReaderBaseFragment {
     private long m_beginTime;
     private IPPReaderPageManager m_pageManager;
     private PPReaderTextAdapter m_adapter;
+
+
 }

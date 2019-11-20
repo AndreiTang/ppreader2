@@ -2,13 +2,15 @@ package org.andrei.ppreader.test;
 
 import android.support.annotation.NonNull;
 
+import org.andrei.ppreader.service.IPPReaderServiceNotification;
 import org.andrei.ppreader.service.engine.IPPReaderNovelEngineManager;
 import org.andrei.ppreader.service.IPPReaderService;
 import org.andrei.ppreader.service.task.IPPReaderTask;
 
 public class MockService implements IPPReaderService{
+
     @Override
-    public void start() {
+    public void start(IPPReaderServiceNotification notification) {
 
     }
 

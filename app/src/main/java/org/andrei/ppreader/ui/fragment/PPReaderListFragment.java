@@ -43,7 +43,7 @@ public class PPReaderListFragment extends PPReaderBaseFragment {
 
         initUI();
         initAdapter();
-        m_service.start();
+        m_service.start(null);
 
         for( int i = 0; i < m_dataManager.getNovelCount(); i++ ){
             PPReaderUpdateNovelTask task = new PPReaderUpdateNovelTask(m_dataManager.getNovel(i));

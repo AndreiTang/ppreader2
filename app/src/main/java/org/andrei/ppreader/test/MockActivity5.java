@@ -15,9 +15,22 @@ import org.andrei.ppreader.service.engine.PPReaderNovelEngineManager;
 import org.andrei.ppreader.service.message.PPReaderMessageCenter;
 import org.andrei.ppreader.ui.adapter.PPReaderBaseAdapter;
 import org.andrei.ppreader.ui.fragment.PPReaderBaseFragment;
+import org.andrei.ppreader.ui.fragment.PPReaderMainFragment;
 import org.andrei.ppreader.ui.fragment.PPReaderNovelTextFragment;
 
 public class MockActivity5 extends FragmentActivity {
+
+    @Override
+    public void onBackPressed(){
+        PPReaderNovelTextFragment text = (PPReaderNovelTextFragment)getSupportFragmentManager().findFragmentById(R.id.mock_root);
+
+
+            //main.switchFragment(0);
+        text.backPress();
+
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -53,7 +53,7 @@ public class PPReaderSearchFragment extends PPReaderBaseFragment {
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
         initUI();
-        m_service.start();
+        m_service.start(null);
         if(savedInstanceState != null){
             m_urls = (ArrayList<String>)savedInstanceState.getSerializable(KEY_URLS);
             ArrayList<PPReaderNovel> novels = (ArrayList<PPReaderNovel>)savedInstanceState.getSerializable(KEY_NOVELS);
@@ -121,7 +121,7 @@ public class PPReaderSearchFragment extends PPReaderBaseFragment {
             public boolean onQueryTextSubmit(String query) {
                 m_service.stop();
                 m_service.waitForExit();
-                m_service.start();
+                m_service.start(null);
                 removeFootView();
                 PPReaderSearchAdapter adapter = getAdapter();
                 adapter.clear();
