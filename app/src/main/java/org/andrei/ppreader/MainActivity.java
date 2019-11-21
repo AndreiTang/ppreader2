@@ -185,6 +185,7 @@ public class MainActivity extends FragmentActivity implements IPPReaderMessageHa
         main.addOnNotification(new IPPReaderMainFragmentNotification() {
             @Override
             public void onOpenNovel(PPReaderNovel novel) {
+                getSupportFragmentManager().beginTransaction().hide(main).show(text).commit();
                 text.setNovel(novel);
             }
         });
@@ -254,8 +255,6 @@ public class MainActivity extends FragmentActivity implements IPPReaderMessageHa
                     m_dataManager.setEngineInfos(infos);
                 }
                 e.onNext(ret);
-                Thread.sleep(3000);
-                e.onNext(1);
                 e.onComplete();
             }
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Integer>() {

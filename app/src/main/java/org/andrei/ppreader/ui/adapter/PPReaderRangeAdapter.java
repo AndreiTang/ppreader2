@@ -1,7 +1,6 @@
 package org.andrei.ppreader.ui.adapter;
 
 import android.content.Context;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +10,7 @@ import com.jakewharton.rxbinding2.view.RxView;
 
 import org.andrei.ppreader.R;
 import org.andrei.ppreader.data.PPReaderNovel;
-import org.andrei.ppreader.service.message.PPReaderCommonMessage;
-import org.andrei.ppreader.service.message.PPReaderMessageTypeDefine;
+
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -71,7 +69,7 @@ public class PPReaderRangeAdapter extends PPReaderBaseAdapter {
                 public void accept(Object obj) throws Exception {
                     int index = (Integer) v.getTag();
                     if(m_notify != null){
-                        m_notify.onNotify(index);
+                        m_notify.onNotify(index*50);
                     }
                 }
             });

@@ -12,7 +12,9 @@ import android.widget.TextView;
 import com.jakewharton.rxbinding2.view.RxView;
 
 import org.andrei.ppreader.R;
+import org.andrei.ppreader.data.PPReaderChapter;
 import org.andrei.ppreader.data.PPReaderNovel;
+import org.andrei.ppreader.data.PPReaderTextPage;
 import org.andrei.ppreader.service.IPPReaderServiceNotification;
 import org.andrei.ppreader.service.task.PPReaderUpdateNovelTask;
 import org.andrei.ppreader.service.message.IPPReaderMessage;
@@ -76,7 +78,15 @@ public class PPReaderListFragment extends PPReaderBaseFragment {
         if(message.getDelta().size() > 0){
             novel.isUpdated = true;
             novel.type = message.getNovelType();
+            int index = novel.chapters.size();
             novel.chapters.addAll(message.getDelta());
+            for(PPReaderChapter chapter : message.getDelta()){
+                PPReaderTextPage page = new PPReaderTextPage();
+                page.chapterId = chapter.id;
+                page.chapterIndex = index;
+                index++;
+                novel.textPages.add(page);
+            }
             GridView gv = getView().findViewById(R.id.novel_list);
             PPReaderListAdapter adapter = (PPReaderListAdapter)gv.getAdapter();
             if(adapter != null){

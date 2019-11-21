@@ -48,8 +48,6 @@ public class PPReaderNovelTextCatalog extends LinearLayout {
     public void loadNovel(final PPReaderNovel novel,final String imageRootUrl){
         m_novel = novel;
         m_imageRootUrl = imageRootUrl;
-        setNovelDetail();
-        initAdaptersFromNovel();
     }
 
     public void addOnClickItemNotify(PPReaderCatalogAdapter.IPPReaderCatalogAdapterNotify notify){
@@ -58,6 +56,8 @@ public class PPReaderNovelTextCatalog extends LinearLayout {
 
     public void show(int curIndex, long duration){
         setVisibility(View.VISIBLE);
+        setNovelDetail();
+        initAdaptersFromNovel();
         setDuration(duration);
         setCurrentChapter(curIndex);
     }
@@ -87,7 +87,7 @@ public class PPReaderNovelTextCatalog extends LinearLayout {
     }
 
     private void initAdaptersFromNovel(){
-        ListView listView = findViewById(R.id.novel_catalog_chapter_list);
+        ListView chapterList = findViewById(R.id.novel_catalog_chapter_list);
         BaseAdapter adapter = new PPReaderCatalogAdapter(m_novel, getContext(), new PPReaderCatalogAdapter.IPPReaderCatalogAdapterNotify() {
             @Override
             public void onClickItem(int index) {
@@ -96,16 +96,16 @@ public class PPReaderNovelTextCatalog extends LinearLayout {
                 }
             }
         });
-        listView.setAdapter(adapter);
+        chapterList.setAdapter(adapter);
 
-        listView = findViewById(R.id.novel_catalog_range_list);
+        ListView rangeList = findViewById(R.id.novel_catalog_range_list);
         adapter= new PPReaderRangeAdapter(m_novel, getContext(), new PPReaderRangeAdapter.IPPReaderRangeAdapterNotify() {
             @Override
             public void onNotify(int curIndex) {
-                setCurrentChapter(curIndex);
+                m_notify.onClickItem(curIndex);
             }
         });
-
+        rangeList.setAdapter(adapter);
     }
 
 
@@ -116,8 +116,8 @@ public class PPReaderNovelTextCatalog extends LinearLayout {
 
     private void initClickEvents(){
         //click to return reader page
-        View v = findViewById(R.id.novel_catalog_mask);
-        RxView.clicks(v).throttleFirst(200, TimeUnit.MICROSECONDS).subscribe(new Consumer<Object>() {
+        View mask = findViewById(R.id.novel_catalog_mask);
+        RxView.clicks(mask).throttleFirst(200, TimeUnit.MICROSECONDS).subscribe(new Consumer<Object>() {
             @Override
             public void accept(Object obj) throws Exception {
                 setVisibility(View.GONE);
@@ -125,33 +125,33 @@ public class PPReaderNovelTextCatalog extends LinearLayout {
         });
 
         //switch between group and dict
-        v = findViewById(R.id.novel_catalog_range);
-        RxView.clicks(v).throttleFirst(200, TimeUnit.MICROSECONDS).subscribe(new Consumer<Object>() {
+        View rangView = findViewById(R.id.novel_catalog_range);
+        RxView.clicks(rangView).throttleFirst(200, TimeUnit.MICROSECONDS).subscribe(new Consumer<Object>() {
             @Override
             public void accept(Object obj) throws Exception {
-                View l = findViewById(R.id.novel_catalog_chapter_list);
-                View g = findViewById(R.id.novel_catalog_range_list);
-                if (l.getVisibility() == View.GONE) {
-                    l.setVisibility(View.VISIBLE);
-                    g.setVisibility(View.GONE);
+                View chapterList = findViewById(R.id.novel_catalog_chapter_list);
+                View rangList = findViewById(R.id.novel_catalog_range_list);
+                if (chapterList.getVisibility() == View.GONE) {
+                    chapterList.setVisibility(View.VISIBLE);
+                    rangList.setVisibility(View.GONE);
                 } else {
-                    l.setVisibility(View.GONE);
-                    g.setVisibility(View.VISIBLE);
+                    chapterList.setVisibility(View.GONE);
+                    rangList.setVisibility(View.VISIBLE);
                 }
 
             }
         });
 
         //prev page
-        v = findViewById(R.id.novel_catalog_prev);
-        RxView.clicks(v).throttleFirst(200, TimeUnit.MICROSECONDS).subscribe(new Consumer<Object>() {
+        View  btn = findViewById(R.id.novel_catalog_prev);
+        RxView.clicks(btn).throttleFirst(200, TimeUnit.MICROSECONDS).subscribe(new Consumer<Object>() {
             @Override
             public void accept(Object obj) throws Exception {
-                ListView l = findViewById(R.id.novel_catalog_chapter_list);
-                ListView g = findViewById(R.id.novel_catalog_range_list);
-                ListView lv = l;
-                if (g.getVisibility() == View.VISIBLE) {
-                    lv = g;
+                ListView chapterList = findViewById(R.id.novel_catalog_chapter_list);
+                ListView rangList = findViewById(R.id.novel_catalog_range_list);
+                ListView lv = chapterList;
+                if (rangList.getVisibility() == View.VISIBLE) {
+                    lv = rangList;
                 }
 
                 int begin = lv.getFirstVisiblePosition() - 1;
@@ -167,15 +167,15 @@ public class PPReaderNovelTextCatalog extends LinearLayout {
         });
 
         //next page
-        v = findViewById(R.id.novel_catalog_next);
-        RxView.clicks(v).throttleFirst(200, TimeUnit.MICROSECONDS).subscribe(new Consumer<Object>() {
+        btn = findViewById(R.id.novel_catalog_next);
+        RxView.clicks(btn).throttleFirst(200, TimeUnit.MICROSECONDS).subscribe(new Consumer<Object>() {
             @Override
             public void accept(Object obj) throws Exception {
-                ListView l = findViewById(R.id.novel_catalog_chapter_list);
-                ListView g = findViewById(R.id.novel_catalog_range_list);
-                ListView lv = l;
-                if (g.getVisibility() == View.VISIBLE) {
-                    lv = g;
+                ListView chapterList = findViewById(R.id.novel_catalog_chapter_list);
+                ListView rangList = findViewById(R.id.novel_catalog_range_list);
+                ListView lv = chapterList;
+                if (rangList.getVisibility() == View.VISIBLE) {
+                    lv = rangList;
                 }
                 int end = lv.getLastVisiblePosition() + 1 ;
                 if(end <= lv.getAdapter().getCount()-1){
