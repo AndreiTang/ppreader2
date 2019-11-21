@@ -242,8 +242,8 @@ public class PPReaderPageManager implements IPPReaderPageManager {
         for(PPReaderTextPage.TextPosition pos : page.posArr){
             String tx = text.substring(pos.begin,pos.end);
             page.texts.add(tx);
-            page.status = PPReaderTextPage.STATUS_LOADED;
         }
+        page.status = PPReaderTextPage.STATUS_OK;
     }
     @Override
     public int getChapterFirstPageIndex(String chapterId) {
