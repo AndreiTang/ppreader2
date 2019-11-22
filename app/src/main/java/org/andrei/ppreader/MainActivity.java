@@ -46,7 +46,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
-public class MainActivity extends FragmentActivity implements IPPReaderMessageHandler {
+public class MainActivity extends FragmentActivity  {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,9 +60,6 @@ public class MainActivity extends FragmentActivity implements IPPReaderMessageHa
         PPReaderBaseFragment.setMessageCenter(PPReaderMessageCenter.instance());
         PPReaderBaseFragment.setServiceFactory(new PPReaderServiceFactory(m_engineManager,m_dataManager));
 
-        PPReaderMessageTool.collectInteresting(this,m_methods);
-        PPReaderMessageCenter.instance().register(this);
-
         setContentView(R.layout.activity_main);
 
         if(savedInstanceState == null){
@@ -71,9 +68,6 @@ public class MainActivity extends FragmentActivity implements IPPReaderMessageHa
         else{
             restoreFromSaveInstance(savedInstanceState);
         }
-
-
-
 
         changeStatusBarColor();
     }
@@ -127,71 +121,6 @@ public class MainActivity extends FragmentActivity implements IPPReaderMessageHa
         }
     }
 
-    @Override
-    public void onMessageHandler(IPPReaderMessage msg) {
-        Method method = PPReaderMessageTool.getMessageMethod(msg,this);
-        if(method != null){
-            try {
-                method.invoke(this,msg);
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    @Override
-    public boolean isInteresting(String type) {
-        return m_methods.contains(type);
-    }
-
-    @PPReaderMessageType(type = PPReaderMessageTypeDefine.TYPE_TO_LIST_PAGE)
-    protected void switchToListFragment(IPPReaderMessage msg){
-        Fragment main = getSupportFragmentManager().findFragmentByTag(PPReaderMainFragment.class.getName());
-        Fragment text = getSupportFragmentManager().findFragmentByTag(PPReaderNovelTextFragment.class.getName());
-        getSupportFragmentManager().beginTransaction().hide(text).show(main).commit();
-    }
-
-    @PPReaderMessageType(type = PPReaderMessageTypeDefine.TYPE_SELECT_NOVEL)
-    protected   void switchToTextFragment(IPPReaderMessage msg){
-        Fragment main = getSupportFragmentManager().findFragmentByTag(PPReaderMainFragment.class.getName());
-        Fragment text = getSupportFragmentManager().findFragmentByTag(PPReaderNovelTextFragment.class.getName());
-        getSupportFragmentManager().beginTransaction().hide(main).show(text).commit();
-    }
-
-    @PPReaderMessageType(type = PPReaderMessageTypeDefine.TYPE_ADD_NOVEL)
-    public void addNovel(IPPReaderMessage msg){
-        PPReaderAddNovelMessage message = (PPReaderAddNovelMessage)msg;
-        m_dataManager.addNovel(message.getNovel());
-    }
-
-//    private void initTextFragment(){
-//        PPReaderNovelTextFragment text = (PPReaderNovelTextFragment)getSupportFragmentManager().findFragmentByTag(PPReaderNovelTextFragment.class.getName());
-//        text.addOnNotification(new IPPReaderNovelTextFragmentNotification() {
-//            @Override
-//            public void onSwitchFragment(int index) {
-//
-//            }
-//
-//            @Override
-//            public void onAddNovel(PPReaderNovel novel) {
-//
-//            }
-//        });
-//    }
-
-    private void initMainFragment(final PPReaderMainFragment main, final PPReaderNovelTextFragment text){
-        main.addOnNotification(new IPPReaderMainFragmentNotification() {
-            @Override
-            public void onOpenNovel(PPReaderNovel novel) {
-                getSupportFragmentManager().beginTransaction().hide(main).show(text).commit();
-                text.setNovel(novel);
-            }
-        });
-
-    }
-
     private void restoreFromSaveInstance(Bundle savedInstanceState){
         Log.i("Andrei","restart");
         int frag = savedInstanceState.getInt(KEY_FRAGMENTS,-1);
@@ -217,7 +146,7 @@ public class MainActivity extends FragmentActivity implements IPPReaderMessageHa
             getSupportFragmentManager().beginTransaction().hide(text).show(main).commit();
         }
 
-        //initTextFragment();
+        initTextFragment(main,text);
         initMainFragment(main,text);
     }
 
@@ -226,7 +155,6 @@ public class MainActivity extends FragmentActivity implements IPPReaderMessageHa
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-
             window.setStatusBarColor(Color.parseColor("#DBC49B"));
             window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
@@ -236,41 +164,75 @@ public class MainActivity extends FragmentActivity implements IPPReaderMessageHa
         Fragment start = new PPReaderStartFragment();
         getSupportFragmentManager().beginTransaction().add(R.id.ppreader_root,start).commit();
 
-
         Observable.create(new ObservableOnSubscribe<Integer>() {
             @Override
             public void subscribe(ObservableEmitter<Integer> e) throws Exception {
-                Context appContext = getApplicationContext();
-                String path = appContext.getExternalFilesDir(null).getPath();
-                int ret = m_dataManager.load(path);
-                if(m_dataManager.getEngineInfoCount() == 0 && m_engineManager.count() > 0 ){
-                    ArrayList<PPReaderEngineInfo> infos = new ArrayList<>();
-                    for(int i = 0; i < m_engineManager.count(); i++){
-                        PPReaderEngineInfo info = new PPReaderEngineInfo();
-                        info.name = m_engineManager.get(i).getName();
-                        info.contentUrl = m_engineManager.get(i).getContentUrl();
-                        info.imageUrl = m_engineManager.get(i).getImageUrl();
-                        infos.add(info);
-                    }
-                    m_dataManager.setEngineInfos(infos);
-                }
+                int ret = loadData();
                 e.onNext(ret);
                 e.onComplete();
             }
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Integer>() {
             @Override
             public void accept(Integer integer) throws Exception {
-                PPReaderMainFragment main = new PPReaderMainFragment();
-                PPReaderNovelTextFragment text = new PPReaderNovelTextFragment();
-                getSupportFragmentManager().beginTransaction().
-                        replace(R.id.ppreader_root,main,PPReaderMainFragment.class.getName()).
-                        add(R.id.ppreader_root,text, PPReaderNovelTextFragment.class.getName()).
-                        hide(text).
-                        commit();
-                //initTextFragment();
-                initMainFragment(main,text);
+               buildFragments();
             }
         });
+    }
+
+    private void buildFragments(){
+        PPReaderMainFragment main = new PPReaderMainFragment();
+        PPReaderNovelTextFragment text = new PPReaderNovelTextFragment();
+        getSupportFragmentManager().beginTransaction().
+                replace(R.id.ppreader_root,main,PPReaderMainFragment.class.getName()).
+                add(R.id.ppreader_root,text, PPReaderNovelTextFragment.class.getName()).
+                hide(text).
+                commit();
+        initTextFragment(main,text);
+        initMainFragment(main,text);
+    }
+
+    private int loadData(){
+        Context appContext = getApplicationContext();
+        String path = appContext.getExternalFilesDir(null).getPath();
+        int ret = m_dataManager.load(path);
+        if(m_dataManager.getEngineInfoCount() == 0 && m_engineManager.count() > 0 ){
+            ArrayList<PPReaderEngineInfo> infos = new ArrayList<>();
+            for(int i = 0; i < m_engineManager.count(); i++){
+                PPReaderEngineInfo info = new PPReaderEngineInfo();
+                info.name = m_engineManager.get(i).getName();
+                info.contentUrl = m_engineManager.get(i).getContentUrl();
+                info.imageUrl = m_engineManager.get(i).getImageUrl();
+                infos.add(info);
+            }
+            m_dataManager.setEngineInfos(infos);
+        }
+        return ret;
+    }
+
+    private void initTextFragment(final PPReaderMainFragment main, final PPReaderNovelTextFragment text){
+        text.addOnNotification(new IPPReaderNovelTextFragmentNotification() {
+            @Override
+            public void onSwitchFragment(int index) {
+                main.switchFragment(index);
+                getSupportFragmentManager().beginTransaction().show(main).hide(text).commit();
+            }
+
+            @Override
+            public void onAddNovel(PPReaderNovel novel) {
+                m_dataManager.addNovel(novel);
+            }
+        });
+    }
+
+    private void initMainFragment(final PPReaderMainFragment main, final PPReaderNovelTextFragment text){
+        main.addOnNotification(new IPPReaderMainFragmentNotification() {
+            @Override
+            public void onOpenNovel(PPReaderNovel novel) {
+                getSupportFragmentManager().beginTransaction().hide(main).show(text).commit();
+                text.setNovel(novel);
+            }
+        });
+
     }
 
     private final static String KEY_FRAGMENTS = "key_fragments";
@@ -278,9 +240,4 @@ public class MainActivity extends FragmentActivity implements IPPReaderMessageHa
     private final static String KEY_INFOS = "key_infos";
     private IPPReaderDataManager m_dataManager;
     private IPPReaderNovelEngineManager m_engineManager;
-    private HashSet<String> m_methods = new HashSet<>();
-
-
-
-
 }

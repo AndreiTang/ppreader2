@@ -133,9 +133,6 @@ public class PPReaderNovelTextFragment extends PPReaderBaseFragment implements I
         }
     }
 
-
-
-
     private void  popUpSaveDlg(){
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.app_name);
@@ -144,7 +141,7 @@ public class PPReaderNovelTextFragment extends PPReaderBaseFragment implements I
         builder.setPositiveButton(R.string.btn_ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                m_novel.isUpdated = true;
+                m_novel.needValidate = true;
                 if(m_notification != null){
                     m_notification.onAddNovel(m_novel);
                 }
@@ -171,6 +168,7 @@ public class PPReaderNovelTextFragment extends PPReaderBaseFragment implements I
             bRet = true;
             text = message.getText();
         }
+        m_novel.needValidate = true;
         m_pageManager.updateText(message.getChapterId(),bRet,text);
         m_adapter.notifyDataSetChanged();
     }
@@ -222,6 +220,7 @@ public class PPReaderNovelTextFragment extends PPReaderBaseFragment implements I
         initViewPager();
         initPageAdapter();
         initNovelTextCatalog();
+        initControlPanel();
         m_isActive = true;
     }
 
@@ -285,14 +284,23 @@ public class PPReaderNovelTextFragment extends PPReaderBaseFragment implements I
             @Override
             public void doAction(Action action) {
                 if(action == Action.Catalog){
-
+                    showCatalog();
+                }
+                else{
+                    int index = 0;
+                    if(action == Action.Search){
+                        index = 1;
+                    }
+                    if(m_notification != null){
+                        m_notification.onSwitchFragment(index);
+                    }
                 }
             }
         });
     }
 
-    @PPReaderMessageType(type = PPReaderMessageTypeDefine.TYPE_SHOW_CATALOG)
-    pr void showCatalog(IPPReaderMessage message){
+    //@PPReaderMessageType(type = PPReaderMessageTypeDefine.TYPE_SHOW_CATALOG)
+    private void showCatalog(){
         ViewPager vp = getView().findViewById(R.id.novel_text_pager);
         int pos = vp.getCurrentItem();
         PPReaderTextPage page = m_pageManager.getItem(pos);

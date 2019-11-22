@@ -76,6 +76,7 @@ public class PPReaderListFragment extends PPReaderBaseFragment {
             return;
         }
         if(message.getDelta().size() > 0){
+            novel.needValidate = true;
             novel.isUpdated = true;
             novel.type = message.getNovelType();
             int index = novel.chapters.size();

@@ -25,10 +25,11 @@ public class PPReaderDataManager implements IPPReaderDataManager {
     @Override
     public void save(final String folder) {
         for (PPReaderNovel novel : m_novels) {
-            if(!novel.isUpdated){
+            if(!novel.needValidate){
                 continue;
             }
             saveNovel(folder,novel);
+            novel.needValidate = false;
         }
         saveEngines(folder);
     }

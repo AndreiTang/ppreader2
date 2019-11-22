@@ -16,6 +16,7 @@ public class PPReaderNovel implements Serializable {
     public String name;
     public String img;
     public transient boolean isUpdated = false;
+    public transient boolean needValidate = false;
     public String engineName;
     //public String url;
     public String author;

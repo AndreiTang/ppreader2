@@ -63,13 +63,12 @@ public class PPReaderMainFragment extends PPReaderBaseFragment {
         }
     }
 
-    @PPReaderMessageType(type= PPReaderMessageTypeDefine.TYPE_TO_LIST_PAGE)
-    public void switchFragment(final IPPReaderMessage msg){
-        PPReaderCommonMessage swMsg = (PPReaderCommonMessage)msg;
-        ViewPager vp = (ViewPager)getView().findViewById(R.id.main_viewpager);
-        vp.setCurrentItem(swMsg.getValue());
-    }
 
+    //@PPReaderMessageType(type= PPReaderMessageTypeDefine.TYPE_TO_LIST_PAGE)
+    public void switchFragment(int index){
+        ViewPager vp = (ViewPager)getView().findViewById(R.id.main_viewpager);
+        vp.setCurrentItem(index);
+    }
 
 
     private void firstRun(Fragment[] fragments){
@@ -116,6 +115,9 @@ public class PPReaderMainFragment extends PPReaderBaseFragment {
             }
         });
     }
+
+
+
 
 
     //private PPReaderListFragment m_listFragment;

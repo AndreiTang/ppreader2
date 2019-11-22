@@ -13,18 +13,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6f4cecb6-92c3-414f-b4dc-7b8991416484" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.4.1/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.4.1/executionHistory/executionHistory.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.4.1/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.4.1/executionHistory/executionHistory.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.4.1/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.4.1/fileHashes/fileHashes.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.4.1/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.4.1/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.4.1/javaCompile/classAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.4.1/javaCompile/classAnalysis.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.4.1/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.4.1/javaCompile/javaCompile.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/MainActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/test/MockActivity5.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/test/MockActivity5.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/test/MockDataManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/test/MockDataManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/ui/adapter/PPReaderListAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/ui/adapter/PPReaderListAdapter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/ui/adapter/PPReaderTextAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/ui/adapter/PPReaderTextAdapter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/ui/adapter/helper/PPReaderPageManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/ui/adapter/helper/PPReaderPageManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/data/PPReaderDataManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/data/PPReaderDataManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/data/PPReaderNovel.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/data/PPReaderNovel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/ui/fragment/PPReaderListFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/ui/fragment/PPReaderListFragment.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/ui/fragment/PPReaderMainFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/ui/fragment/PPReaderMainFragment.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/ui/fragment/PPReaderNovelTextFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/ui/fragment/PPReaderNovelTextFragment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/ui/fragment/helper/PPReaderText.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/ui/view/PPReaderNovelTextCatalog.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/ui/view/PPReaderNovelTextCatalog.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -53,42 +55,65 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="186">
-              <caret line="264" selection-start-line="264" selection-end-line="264" />
+            <state relative-caret-position="729">
+              <caret line="96" column="38" selection-start-line="96" selection-start-column="37" selection-end-line="96" selection-end-column="38" />
               <folding>
-                <element signature="e#7589#7768#0" expanded="true" />
-                <element signature="e#7767#7768#0" expanded="true" />
+                <element signature="e#6842#7088#0" expanded="true" />
+                <element signature="e#7087#7088#0" expanded="true" />
+                <element signature="e#9946#9947#0" expanded="true" />
+                <element signature="e#10007#10008#0" expanded="true" />
+                <element signature="e#9404#9683#0" expanded="true" />
+                <element signature="e#9682#9683#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/ui/adapter/helper/PPReaderPageManager.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1387">
-              <caret line="232" column="45" selection-start-line="232" selection-start-column="45" selection-end-line="232" selection-end-column="45" />
+            <state relative-caret-position="330">
+              <caret line="277" column="29" selection-start-line="277" selection-start-column="29" selection-end-line="277" selection-end-column="29" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/AppData/Local/Android/Sdk/sources/android-27/java/util/ArrayList.java">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/data/PPReaderTextPage.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1201">
-              <caret line="500" column="13" selection-start-line="500" selection-start-column="13" selection-end-line="500" selection-end-column="13" />
+            <state relative-caret-position="76">
+              <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
             </state>
           </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/test/MockActivity5.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-7">
+              <caret line="84" column="29" selection-start-line="84" selection-start-column="29" selection-end-line="84" selection-end-column="29" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="255">
+              <caret line="19" column="28" selection-start-line="19" selection-start-column="28" selection-end-line="19" selection-end-column="28" />
+            </state>
+          </provider>
+          <provider editor-type-id="android-manifest" />
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/ui/fragment/PPReaderListFragment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1178">
-              <caret line="41" column="5" lean-forward="true" selection-start-line="41" selection-start-column="5" selection-end-line="41" selection-end-column="5" />
+            <state relative-caret-position="171">
+              <caret line="78" column="38" selection-start-line="78" selection-start-column="38" selection-end-line="78" selection-end-column="38" />
               <folding>
-                <element signature="e#1853#2140#0" expanded="true" />
-                <element signature="e#2139#2140#0" expanded="true" />
+                <element signature="e#2027#2314#0" expanded="true" />
+                <element signature="e#2313#2314#0" expanded="true" />
                 <element signature="e#4583#4757#0" expanded="true" />
                 <element signature="e#4756#4757#0" expanded="true" />
               </folding>
@@ -97,22 +122,40 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/ui/fragment/IPPReaderMainFragmentNotification.java">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/ui/fragment/PPReaderNovelTextFragment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="76">
-              <caret line="4" column="29" lean-forward="true" selection-start-line="4" selection-start-column="17" selection-end-line="4" selection-end-column="50" />
+            <state relative-caret-position="346">
+              <caret line="294" selection-start-line="294" selection-end-line="294" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#4710#4727#0" expanded="true" />
+                <element signature="e#4757#4785#0" expanded="true" />
+                <element signature="e#4823#4838#0" expanded="true" />
+                <element signature="e#4840#5278#0" expanded="true" />
+                <element signature="e#5277#5278#0" expanded="true" />
+                <element signature="e#5315#5334#0" expanded="true" />
+                <element signature="e#5336#5614#0" expanded="true" />
+                <element signature="e#5613#5614#0" expanded="true" />
+                <element signature="e#7964#8167#0" expanded="true" />
+                <element signature="e#8166#8167#0" expanded="true" />
+                <element signature="e#8677#8678#0" expanded="true" />
+                <element signature="e#8732#8733#0" expanded="true" />
+                <element signature="e#8896#9085#0" expanded="true" />
+                <element signature="e#9084#9085#0" expanded="true" />
+                <element signature="e#9265#9775#0" expanded="true" />
+                <element signature="e#9774#9775#0" expanded="true" />
+                <element signature="e#9932#10149#0" expanded="true" />
+                <element signature="e#10148#10149#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/ui/fragment/PPReaderNovelTextFragment.java">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/data/PPReaderDataManager.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-705">
-              <caret line="157" column="55" lean-forward="true" selection-start-line="157" selection-start-column="55" selection-end-line="157" selection-end-column="55" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+            <state relative-caret-position="335">
+              <caret line="31" column="39" selection-start-line="31" selection-start-column="39" selection-end-line="31" selection-end-column="39" />
             </state>
           </provider>
         </entry>
@@ -120,32 +163,10 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/ui/adapter/PPReaderTextAdapter.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="292">
-              <caret line="152" column="27" lean-forward="true" selection-start-line="146" selection-start-column="14" selection-end-line="152" selection-end-column="27" />
+            <state relative-caret-position="167">
+              <caret line="152" column="21" selection-start-line="152" selection-start-column="21" selection-end-line="152" selection-end-column="21" />
               <folding>
                 <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/ui/fragment/IPPReaderNovelTextFragmentNotification.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="76">
-              <caret line="4" column="55" selection-start-line="4" selection-start-column="17" selection-end-line="4" selection-end-column="55" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/ui/adapter/PPReaderListAdapter.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="323">
-              <caret line="39" selection-start-line="39" selection-end-line="39" />
-              <folding>
-                <element signature="e#965#966#0" expanded="true" />
-                <element signature="e#3378#3430#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -154,11 +175,11 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/ui/fragment/PPReaderMainFragment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="283">
-              <caret line="105" selection-start-line="105" selection-end-line="105" />
+            <state relative-caret-position="359">
+              <caret line="70" selection-start-line="70" selection-end-line="70" />
               <folding>
-                <element signature="e#3952#4215#0" expanded="true" />
-                <element signature="e#4214#4215#0" expanded="true" />
+                <element signature="e#3868#4131#0" expanded="true" />
+                <element signature="e#4130#4131#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -204,6 +225,7 @@
       <find>TYPE_SET_RANGE</find>
       <find>on</find>
       <find>PPReaderControlPanel</find>
+      <find>J\n</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -213,7 +235,6 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/data/PPReaderEngineInfo.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/data/PPReaderDataManager.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/service/PPReaderMessageCenter.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/service/IPPReaderMessageProc.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/service/IPPReaderMessageHandler.java" />
@@ -250,19 +271,20 @@
         <option value="$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/ui/view/helper/PPReaderNovelTextViewPager.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/data/PPReaderTextPage.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/data/PPReaderChapter.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/data/PPReaderNovel.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/ui/view/PPReaderNovelTextCatalog.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/test/MockDataManager.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/test/MockActivity5.java" />
-        <option value="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/ui/fragment/IPPReaderNovelTextFragmentNotification.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/ui/fragment/PPReaderNovelTextFragment.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/ui/adapter/PPReaderListAdapter.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/ui/fragment/IPPReaderListFragmentNotification.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/ui/fragment/PPReaderListFragment.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/ui/fragment/PPReaderMainFragment.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/MainActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/ui/adapter/helper/PPReaderPageManager.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/ui/fragment/PPReaderMainFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/data/PPReaderNovel.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/ui/fragment/PPReaderListFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/data/PPReaderDataManager.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/ui/fragment/PPReaderNovelTextFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/MainActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
       </list>
     </option>
   </component>
@@ -388,22 +410,6 @@
               <item name="app" type="feadf853:AndroidModuleNode" />
               <item name="java" type="edd41e36:AndroidSourceTypeNode" />
               <item name="ppreader" type="cbb59c9e:AndroidPsiDirectoryNode" />
-              <item name="service" type="462c0819:PsiDirectoryNode" />
-              <item name="command" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ppreader2" type="1abcf292:AndroidViewProjectNode" />
-              <item name="app" type="feadf853:AndroidModuleNode" />
-              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
-              <item name="ppreader" type="cbb59c9e:AndroidPsiDirectoryNode" />
-              <item name="service" type="462c0819:PsiDirectoryNode" />
-              <item name="engine" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ppreader2" type="1abcf292:AndroidViewProjectNode" />
-              <item name="app" type="feadf853:AndroidModuleNode" />
-              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
-              <item name="ppreader" type="cbb59c9e:AndroidPsiDirectoryNode" />
               <item name="test" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -479,6 +485,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="android.sdk.path" value="$USER_HOME$/AppData/Local/Android/Sdk" />
     <property name="device.picker.selection" value="Nexus_5X_API_24" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
@@ -633,21 +640,21 @@
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3286334" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.3286334" />
-      <window_info anchor="bottom" id="Debug" order="3" visible="true" weight="0.3991323" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.3991323" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32936078" />
       <window_info anchor="bottom" id="Build" order="7" weight="0.3438178" />
       <window_info anchor="bottom" id="Android Profiler" order="8" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
-      <window_info anchor="bottom" id="Logcat" order="10" weight="0.3286334" />
-      <window_info anchor="bottom" id="Version Control" order="11" weight="0.32936078" />
-      <window_info anchor="bottom" id="Terminal" order="12" weight="0.32936078" />
+      <window_info anchor="bottom" id="Logcat" order="10" visible="true" weight="0.33741647" />
+      <window_info anchor="bottom" id="Version Control" order="11" weight="0.3286334" />
+      <window_info anchor="bottom" id="Terminal" order="12" weight="0.3286334" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" visible="true" weight="0.25" />
       <window_info anchor="right" id="Capture Analysis" order="3" />
-      <window_info anchor="right" id="Device File Explorer" order="4" side_tool="true" />
+      <window_info anchor="right" id="Device File Explorer" order="4" side_tool="true" visible="true" weight="0.32995737" />
       <window_info anchor="right" id="Gradle" order="5" />
       <window_info anchor="right" id="Palette&#9;" order="6" />
       <window_info anchor="right" id="Theme Preview" order="7" />
@@ -689,20 +696,8 @@
           <option name="timeStamp" value="30" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/MainActivity.java</url>
-          <line>56</line>
-          <properties />
-          <option name="timeStamp" value="32" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/MainActivity.java</url>
-          <line>52</line>
-          <properties />
-          <option name="timeStamp" value="33" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/ui/fragment/PPReaderListFragment.java</url>
-          <line>32</line>
+          <line>34</line>
           <properties />
           <option name="timeStamp" value="34" />
         </line-breakpoint>
@@ -713,10 +708,10 @@
           <option name="timeStamp" value="37" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/ui/adapter/helper/PPReaderPageManager.java</url>
-          <line>242</line>
+          <url>file://$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/ui/fragment/PPReaderNovelTextFragment.java</url>
+          <line>289</line>
           <properties />
-          <option name="timeStamp" value="38" />
+          <option name="timeStamp" value="39" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -899,13 +894,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/data/PPReaderTextPage.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="418">
-          <caret line="23" column="21" selection-start-line="23" selection-start-column="21" selection-end-line="23" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/data/PPReaderChapter.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="190">
@@ -964,13 +952,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/data/PPReaderNovel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="76">
-          <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/service/engine/IPPReaderNovelEngine.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="95">
@@ -1002,28 +983,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/data/PPReaderDataManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1273">
-          <caret line="84" column="64" lean-forward="true" selection-start-line="84" selection-start-column="64" selection-end-line="84" selection-end-column="64" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/test/MockActivity5.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="437">
-          <caret line="84" column="29" lean-forward="true" selection-start-line="84" selection-start-column="29" selection-end-line="84" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="407">
-          <caret line="28" column="19" lean-forward="true" selection-start-line="28" selection-start-column="19" selection-end-line="28" selection-end-column="19" />
-        </state>
-      </provider>
-      <provider editor-type-id="android-manifest" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/data/IPPReaderDataManager.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="76">
@@ -1035,19 +994,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="475">
           <caret line="45" column="24" selection-start-line="45" selection-start-column="24" selection-end-line="45" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/ui/fragment/PPReaderListFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1178">
-          <caret line="41" column="5" lean-forward="true" selection-start-line="41" selection-start-column="5" selection-end-line="41" selection-end-column="5" />
-          <folding>
-            <element signature="e#1853#2140#0" expanded="true" />
-            <element signature="e#2139#2140#0" expanded="true" />
-            <element signature="e#4583#4757#0" expanded="true" />
-            <element signature="e#4756#4757#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1065,17 +1011,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/ui/fragment/PPReaderMainFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="283">
-          <caret line="105" selection-start-line="105" selection-end-line="105" />
-          <folding>
-            <element signature="e#3952#4215#0" expanded="true" />
-            <element signature="e#4214#4215#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/ui/adapter/PPReaderListAdapter.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="323">
@@ -1087,17 +1022,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/MainActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="186">
-          <caret line="264" selection-start-line="264" selection-end-line="264" />
-          <folding>
-            <element signature="e#7589#7768#0" expanded="true" />
-            <element signature="e#7767#7768#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/AppData/Local/Android/Sdk/sources/android-27/java/util/ArrayList.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1201">
@@ -1105,32 +1029,125 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/ui/fragment/PPReaderNovelTextFragment.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/data/PPReaderNovel.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-705">
-          <caret line="157" column="55" lean-forward="true" selection-start-line="157" selection-start-column="55" selection-end-line="157" selection-end-column="55" />
+        <state relative-caret-position="323">
+          <caret line="18" column="50" selection-start-line="18" selection-start-column="50" selection-end-line="18" selection-end-column="50" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/ui/fragment/PPReaderListFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="171">
+          <caret line="78" column="38" selection-start-line="78" selection-start-column="38" selection-end-line="78" selection-end-column="38" />
+          <folding>
+            <element signature="e#2027#2314#0" expanded="true" />
+            <element signature="e#2313#2314#0" expanded="true" />
+            <element signature="e#4583#4757#0" expanded="true" />
+            <element signature="e#4756#4757#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/data/PPReaderDataManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="335">
+          <caret line="31" column="39" selection-start-line="31" selection-start-column="39" selection-end-line="31" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/ui/adapter/PPReaderTextAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="167">
+          <caret line="152" column="21" selection-start-line="152" selection-start-column="21" selection-end-line="152" selection-end-column="21" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/ui/adapter/PPReaderTextAdapter.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/ui/fragment/PPReaderNovelTextFragment.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="292">
-          <caret line="152" column="27" lean-forward="true" selection-start-line="146" selection-start-column="14" selection-end-line="152" selection-end-column="27" />
+        <state relative-caret-position="346">
+          <caret line="294" selection-start-line="294" selection-end-line="294" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#4710#4727#0" expanded="true" />
+            <element signature="e#4757#4785#0" expanded="true" />
+            <element signature="e#4823#4838#0" expanded="true" />
+            <element signature="e#4840#5278#0" expanded="true" />
+            <element signature="e#5277#5278#0" expanded="true" />
+            <element signature="e#5315#5334#0" expanded="true" />
+            <element signature="e#5336#5614#0" expanded="true" />
+            <element signature="e#5613#5614#0" expanded="true" />
+            <element signature="e#7964#8167#0" expanded="true" />
+            <element signature="e#8166#8167#0" expanded="true" />
+            <element signature="e#8677#8678#0" expanded="true" />
+            <element signature="e#8732#8733#0" expanded="true" />
+            <element signature="e#8896#9085#0" expanded="true" />
+            <element signature="e#9084#9085#0" expanded="true" />
+            <element signature="e#9265#9775#0" expanded="true" />
+            <element signature="e#9774#9775#0" expanded="true" />
+            <element signature="e#9932#10149#0" expanded="true" />
+            <element signature="e#10148#10149#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/ui/fragment/PPReaderMainFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="359">
+          <caret line="70" selection-start-line="70" selection-end-line="70" />
+          <folding>
+            <element signature="e#3868#4131#0" expanded="true" />
+            <element signature="e#4130#4131#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/MainActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="729">
+          <caret line="96" column="38" selection-start-line="96" selection-start-column="37" selection-end-line="96" selection-end-column="38" />
+          <folding>
+            <element signature="e#6842#7088#0" expanded="true" />
+            <element signature="e#7087#7088#0" expanded="true" />
+            <element signature="e#9946#9947#0" expanded="true" />
+            <element signature="e#10007#10008#0" expanded="true" />
+            <element signature="e#9404#9683#0" expanded="true" />
+            <element signature="e#9682#9683#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/ui/adapter/helper/PPReaderPageManager.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1387">
-          <caret line="232" column="45" selection-start-line="232" selection-start-column="45" selection-end-line="232" selection-end-column="45" />
+        <state relative-caret-position="330">
+          <caret line="277" column="29" selection-start-line="277" selection-start-column="29" selection-end-line="277" selection-end-column="29" />
         </state>
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/data/PPReaderTextPage.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="76">
+          <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/org/andrei/ppreader/test/MockActivity5.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-7">
+          <caret line="84" column="29" selection-start-line="84" selection-start-column="29" selection-end-line="84" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="19" column="28" selection-start-line="19" selection-start-column="28" selection-end-line="19" selection-end-column="28" />
+        </state>
+      </provider>
+      <provider editor-type-id="android-manifest" />
     </entry>
   </component>
 </project>
