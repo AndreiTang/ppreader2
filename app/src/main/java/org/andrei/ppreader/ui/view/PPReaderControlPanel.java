@@ -18,12 +18,26 @@ import org.andrei.ppreader.service.message.PPReaderMessageTypeDefine;
 
 
 public class PPReaderControlPanel extends View {
+
+    public interface IPPReaderControlPanelAction{
+        public enum  Action{
+            Catalog,
+            Search,
+            List
+        }
+        public void doAction(Action action);
+    }
+
     public PPReaderControlPanel(Context context) {
         super(context);
     }
 
     public PPReaderControlPanel(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+    }
+
+    public void addOnAction(IPPReaderControlPanelAction action){
+        m_action = action;
     }
 
     public void show(int x, int y){
@@ -40,21 +54,33 @@ public class PPReaderControlPanel extends View {
             int y = (int)event.getY();
             PPReaderCommonMessage msg = null;
             if(checkDict(x,y)==true){
-                msg = new PPReaderCommonMessage(PPReaderMessageTypeDefine.TYPE_SHOW_CATALOG,0);
+                if(m_action != null){
+                    m_action.doAction(IPPReaderControlPanelAction.Action.Catalog);
+                }
+                //msg = new PPReaderCommonMessage(PPReaderMessageTypeDefine.TYPE_SHOW_CATALOG,0);
             }
             else if(checkCache(x,y) == true){
-                msg = new PPReaderCommonMessage(PPReaderMessageTypeDefine.TYPE_SHOW_CATALOG,0);
+                if(m_action != null){
+                    m_action.doAction(IPPReaderControlPanelAction.Action.Catalog);
+                }
+               // msg = new PPReaderCommonMessage(PPReaderMessageTypeDefine.TYPE_SHOW_CATALOG,0);
             }
             else if(checkList(x,y) == true){
-                msg = new PPReaderCommonMessage(PPReaderMessageTypeDefine.TYPE_TO_LIST_PAGE,0);
+                if(m_action != null){
+                    m_action.doAction(IPPReaderControlPanelAction.Action.List);
+                }
+                //msg = new PPReaderCommonMessage(PPReaderMessageTypeDefine.TYPE_TO_LIST_PAGE,0);
             }
             else if(checkSearch(x,y) == true){
-                msg = new PPReaderCommonMessage(PPReaderMessageTypeDefine.TYPE_TO_LIST_PAGE,1);
+                //msg = new PPReaderCommonMessage(PPReaderMessageTypeDefine.TYPE_TO_LIST_PAGE,1);
+                if(m_action != null){
+                    m_action.doAction(IPPReaderControlPanelAction.Action.Search);
+                }
 
             }
-            if(msg != null){
-                PPReaderMessageCenter.instance().sendMessage(msg);
-            }
+//            if(msg != null){
+//                PPReaderMessageCenter.instance().sendMessage(msg);
+//            }
             setVisibility(View.GONE);
         }
         return true;
@@ -191,6 +217,8 @@ public class PPReaderControlPanel extends View {
 
     private int m_orgX = 200;
     private int m_orgY = 200;
+
+    private IPPReaderControlPanelAction m_action;
 
 
 }

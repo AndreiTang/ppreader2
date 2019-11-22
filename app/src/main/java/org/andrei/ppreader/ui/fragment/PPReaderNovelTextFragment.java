@@ -134,16 +134,7 @@ public class PPReaderNovelTextFragment extends PPReaderBaseFragment implements I
     }
 
 
-    @PPReaderMessageType(type = PPReaderMessageTypeDefine.TYPE_SHOW_CATALOG)
-    protected void showCatalog(IPPReaderMessage message){
-        ViewPager vp = getView().findViewById(R.id.novel_text_pager);
-        int pos = vp.getCurrentItem();
-        PPReaderTextPage page = m_pageManager.getItem(pos);
-        int index = m_novel.getChapterIndex(page.chapterId);
-        long duration = (m_novel.duration + System.currentTimeMillis() - m_beginTime)/1000;
-        PPReaderNovelTextCatalog catalog = getView().findViewById(R.id.novel_text_catalog);
-        catalog.show(index,duration);
-    }
+
 
     private void  popUpSaveDlg(){
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -286,6 +277,29 @@ public class PPReaderNovelTextFragment extends PPReaderBaseFragment implements I
                 getView().findViewById(R.id.novel_text_catalog).setVisibility(View.GONE);
             }
         });
+    }
+
+    private void initControlPanel(){
+        PPReaderControlPanel panel = getView().findViewById(R.id.novel_text_panel);
+        panel.addOnAction(new PPReaderControlPanel.IPPReaderControlPanelAction() {
+            @Override
+            public void doAction(Action action) {
+                if(action == Action.Catalog){
+
+                }
+            }
+        });
+    }
+
+    @PPReaderMessageType(type = PPReaderMessageTypeDefine.TYPE_SHOW_CATALOG)
+    pr void showCatalog(IPPReaderMessage message){
+        ViewPager vp = getView().findViewById(R.id.novel_text_pager);
+        int pos = vp.getCurrentItem();
+        PPReaderTextPage page = m_pageManager.getItem(pos);
+        int index = m_novel.getChapterIndex(page.chapterId);
+        long duration = (m_novel.duration + System.currentTimeMillis() - m_beginTime)/1000;
+        PPReaderNovelTextCatalog catalog = getView().findViewById(R.id.novel_text_catalog);
+        catalog.show(index,duration);
     }
 
     private void setCurrentPage(int position){
