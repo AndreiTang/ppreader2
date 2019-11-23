@@ -178,8 +178,8 @@ public class PPReaderNovelTextFragment extends PPReaderBaseFragment implements I
             return;
         }
 
+        initPageAdapter();
         setChapterDetail(m_novel.currIndex);
-
         PPReaderNovelTextCatalog catalog = getView().findViewById(R.id.novel_text_catalog);
         String imgRootUrl = m_dataManager.getEngineInfo(m_novel.engineName).imageUrl;
         catalog.loadNovel(m_novel,imgRootUrl);
@@ -218,7 +218,6 @@ public class PPReaderNovelTextFragment extends PPReaderBaseFragment implements I
         PPReaderNovelTextTitleBar bar = getView().findViewById(R.id.novel_action_bar);
         bar.registerBatteryReceiver(getActivity());
         initViewPager();
-        initPageAdapter();
         initNovelTextCatalog();
         initControlPanel();
         m_isActive = true;

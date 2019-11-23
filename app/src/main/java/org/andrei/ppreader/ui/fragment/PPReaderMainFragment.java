@@ -17,7 +17,7 @@ import org.andrei.ppreader.service.message.PPReaderMessageType;
 import org.andrei.ppreader.service.message.PPReaderMessageTypeDefine;
 import org.andrei.ppreader.ui.adapter.PPReaderMainAdapter;
 
-public class PPReaderMainFragment extends PPReaderBaseFragment {
+public class PPReaderMainFragment extends PPReaderBaseFragment implements IPPReaderMainFragmentNotification  {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -70,6 +70,13 @@ public class PPReaderMainFragment extends PPReaderBaseFragment {
         vp.setCurrentItem(index);
     }
 
+    @Override
+    public void onOpenNovel(PPReaderNovel novel) {
+        if(m_notification != null){
+            m_notification.onOpenNovel(novel);
+        }
+    }
+
 
     private void firstRun(Fragment[] fragments){
         PPReaderListFragment listFragment = new PPReaderListFragment();
@@ -101,29 +108,13 @@ public class PPReaderMainFragment extends PPReaderBaseFragment {
         vp.setAdapter(adapter);
 
         PPReaderListFragment listFragment = (PPReaderListFragment)fragments[0];
-        initListFragment(listFragment);
+        listFragment.addOnNotification(this);
+
+        PPReaderSearchFragment searchFragment = (PPReaderSearchFragment)fragments[1];
+        searchFragment.addOnNotification(this);
 
     }
 
-    private void initListFragment(PPReaderListFragment listFragment){
-        listFragment.addOnNotification(new IPPReaderMainFragmentNotification() {
-            @Override
-            public void onOpenNovel(PPReaderNovel novel) {
-                if(m_notification != null){
-                    m_notification.onOpenNovel(novel);
-                }
-            }
-        });
-    }
-
-
-
-
-
-    //private PPReaderListFragment m_listFragment;
     private final static String KEY_INDEX = "key_index";
     private IPPReaderMainFragmentNotification m_notification;
-
-
-
 }

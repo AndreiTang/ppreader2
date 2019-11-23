@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.jakewharton.rxbinding2.view.RxView;
@@ -19,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 
 import io.reactivex.functions.Consumer;
 
-public class PPReaderCatalogAdapter extends PPReaderBaseAdapter {
+public class PPReaderCatalogAdapter extends BaseAdapter {
 
     public interface IPPReaderCatalogAdapterNotify{
         void onClickItem(int index);

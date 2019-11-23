@@ -28,14 +28,17 @@ public class PPReaderService implements IPPReaderService {
             return;
         }
         m_isRunning = false;
-        m_notification = null;
         synchronized(this){
+            m_notification = null;
             m_tasks.clear();
         }
     }
 
     @Override
     public void waitForExit() {
+        if(m_thread == null){
+            return;
+        }
         try {
             m_thread.join();
         } catch (InterruptedException e) {
@@ -106,7 +109,7 @@ public class PPReaderService implements IPPReaderService {
             @Override
             public void run() {
                 synchronized (this){
-                    PPReaderMessageCenter.instance().sendMessage(ret);
+                    //PPReaderMessageCenter.instance().sendMessage(ret);
                     if(m_notification != null){
                         m_notification.onNotify(ret);
                     }

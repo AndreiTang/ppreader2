@@ -18,26 +18,14 @@ import org.andrei.ppreader.data.PPReaderNovel;
 import org.andrei.ppreader.service.PPReaderServiceFactory;
 import org.andrei.ppreader.service.engine.IPPReaderNovelEngineManager;
 import org.andrei.ppreader.service.engine.PPReaderNovelEngineManager;
-import org.andrei.ppreader.service.message.IPPReaderMessage;
-import org.andrei.ppreader.service.message.IPPReaderMessageHandler;
-import org.andrei.ppreader.service.message.PPReaderAddNovelMessage;
-import org.andrei.ppreader.service.message.PPReaderMessageCenter;
-import org.andrei.ppreader.service.message.PPReaderMessageTool;
-import org.andrei.ppreader.service.message.PPReaderMessageType;
-import org.andrei.ppreader.service.message.PPReaderMessageTypeDefine;
-import org.andrei.ppreader.test.MockDataManager;
-import org.andrei.ppreader.ui.adapter.PPReaderBaseAdapter;
+
 import org.andrei.ppreader.ui.fragment.IPPReaderMainFragmentNotification;
 import org.andrei.ppreader.ui.fragment.IPPReaderNovelTextFragmentNotification;
-import org.andrei.ppreader.ui.fragment.PPReaderBaseFragment;
 import org.andrei.ppreader.ui.fragment.PPReaderMainFragment;
 import org.andrei.ppreader.ui.fragment.PPReaderStartFragment;
 import org.andrei.ppreader.ui.fragment.PPReaderNovelTextFragment;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashSet;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -48,17 +36,16 @@ import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends FragmentActivity  {
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        m_dataManager = new PPReaderDataManager();
         m_engineManager = new PPReaderNovelEngineManager();
-        PPReaderBaseAdapter.setDataManager(m_dataManager);
-        PPReaderBaseFragment.setDataManager(m_dataManager);
-        PPReaderBaseAdapter.setMessageCenter(PPReaderMessageCenter.instance());
-        PPReaderBaseFragment.setMessageCenter(PPReaderMessageCenter.instance());
-        PPReaderBaseFragment.setServiceFactory(new PPReaderServiceFactory(m_engineManager,m_dataManager));
+        PPReader.setDataManager(new PPReaderDataManager());
+        m_dataManager = PPReader.getDataManager();
+        PPReader.setServiceFactory(new PPReaderServiceFactory(m_engineManager,m_dataManager) );
 
         setContentView(R.layout.activity_main);
 

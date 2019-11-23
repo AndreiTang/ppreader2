@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 
+import org.andrei.ppreader.PPReader;
 import org.andrei.ppreader.data.IPPReaderDataManager;
 import org.andrei.ppreader.service.IPPReaderService;
 import org.andrei.ppreader.service.IPPReaderServiceFactory;
@@ -21,12 +22,11 @@ public class PPReaderBaseFragment extends Fragment implements IPPReaderMessageHa
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        m_msgCenter.register(this);
+        //m_msgCenter.register(this);
         super.onActivityCreated(savedInstanceState);
-        collectInteresting();
-        if(m_serviceFactory != null){
-            m_service = m_serviceFactory.createServiceInstance();
-        }
+        //collectInteresting();
+        m_dataManager = PPReader.getDataManager();
+        m_service = PPReader.getServiceFactory().createServiceInstance();
     }
 
     @Override
@@ -69,31 +69,14 @@ public class PPReaderBaseFragment extends Fragment implements IPPReaderMessageHa
 
     private void collectInteresting(){
         PPReaderMessageTool.collectInteresting(this,m_methods);
-//        Class<?> cl = this.getClass();
-//        for(Method m : cl.getDeclaredMethods()){
-//            PPReaderMessageType ct = m.getAnnotation(PPReaderMessageType.class);
-//            if(ct != null){
-//                m_methods.add(ct.type());
-//            }
-//        }
     }
 
     public static void setMessageCenter(IPPReaderMessageCenter msgCenter){
         m_msgCenter = msgCenter;
     }
 
-    public static void setDataManager(IPPReaderDataManager dataManager){
-        m_dataManager = dataManager;
-    }
-
-    public static void setServiceFactory(IPPReaderServiceFactory factory){
-        m_serviceFactory = factory;
-    }
-
     protected IPPReaderService m_service;
-    protected static IPPReaderDataManager m_dataManager = null;
+    protected IPPReaderDataManager m_dataManager = null;
     private HashSet<String> m_methods = new HashSet<>();
     private static IPPReaderMessageCenter m_msgCenter;
-    private static IPPReaderServiceFactory m_serviceFactory;
-
 }

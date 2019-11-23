@@ -23,6 +23,7 @@ import org.andrei.ppreader.service.message.PPReaderMessageTypeDefine;
 import org.andrei.ppreader.service.message.PPReaderUpdateNovelMessage;
 import org.andrei.ppreader.ui.adapter.PPReaderListAdapter;
 
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.functions.Consumer;
@@ -75,12 +76,13 @@ public class PPReaderListFragment extends PPReaderBaseFragment {
         if(novel == null){
             return;
         }
-        if(message.getDelta().size() > 0){
-            novel.needValidate = true;
+        int delta = message.getDelta().size() - novel.chapters.size();
+        if(delta > 0){
             novel.isUpdated = true;
+            novel.needValidate = true;
             novel.type = message.getNovelType();
             int index = novel.chapters.size();
-            novel.chapters.addAll(message.getDelta());
+            novel.chapters.addAll(message.getDelta().subList(delta,message.getDelta().size()));
             for(PPReaderChapter chapter : message.getDelta()){
                 PPReaderTextPage page = new PPReaderTextPage();
                 page.chapterId = chapter.id;

@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,7 +16,9 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.jakewharton.rxbinding2.view.RxView;
 
+import org.andrei.ppreader.PPReader;
 import org.andrei.ppreader.R;
+import org.andrei.ppreader.data.IPPReaderDataManager;
 import org.andrei.ppreader.data.PPReaderNovel;
 import org.andrei.ppreader.service.message.PPReaderSelectNovelMessage;
 
@@ -24,15 +27,16 @@ import java.util.concurrent.TimeUnit;
 import io.reactivex.Observer;
 import io.reactivex.functions.Consumer;
 
-public class PPReaderListAdapter extends PPReaderBaseAdapter {
+public class PPReaderListAdapter extends BaseAdapter {
 
     public interface  IPPReaderListAdapterAction {
-        public void openNovel(PPReaderNovel novel);
+        void openNovel(PPReaderNovel novel);
     }
 
     public PPReaderListAdapter(@NonNull Fragment fragment,IPPReaderListAdapterAction action){
         m_fragment = fragment;
         m_action = action;
+        m_dataManager = PPReader.getDataManager();
     }
 
     @Override
@@ -142,5 +146,6 @@ public class PPReaderListAdapter extends PPReaderBaseAdapter {
     private Fragment m_fragment;
     private boolean m_isEditMode = false;
     private IPPReaderListAdapterAction m_action;
+    private IPPReaderDataManager m_dataManager;
 
 }

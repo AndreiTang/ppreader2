@@ -12,7 +12,9 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.jakewharton.rxbinding2.view.RxView;
 
+import org.andrei.ppreader.PPReader;
 import org.andrei.ppreader.R;
+import org.andrei.ppreader.data.IPPReaderDataManager;
 import org.andrei.ppreader.data.PPReaderEngineInfo;
 import org.andrei.ppreader.data.PPReaderNovel;
 import org.andrei.ppreader.service.message.PPReaderSelectNovelMessage;
@@ -22,10 +24,16 @@ import java.util.concurrent.TimeUnit;
 
 import io.reactivex.functions.Consumer;
 
-public class PPReaderSearchAdapter extends PPReaderBaseAdapter {
+public class PPReaderSearchAdapter extends BaseAdapter {
 
-    public PPReaderSearchAdapter(Fragment parent){
+    public interface IPPReaderSearchAdapterAction{
+        void openNovel(PPReaderNovel novel);
+    }
+
+    public PPReaderSearchAdapter(Fragment parent,IPPReaderSearchAdapterAction action){
         m_parent = parent;
+        m_action = action;
+        m_dataManager  = PPReader.getDataManager();
     }
 
     @Override
@@ -75,8 +83,9 @@ public class PPReaderSearchAdapter extends PPReaderBaseAdapter {
             public void accept(Object o) throws Exception {
                int index= (Integer) v.getTag();
                PPReaderNovel novel = m_novels.get(index);
-                PPReaderSelectNovelMessage msg = new PPReaderSelectNovelMessage(novel);
-                sendMessage(msg);
+               if(m_action != null){
+                   m_action.openNovel(novel);
+               }
             }
         });
         return v;
@@ -113,4 +122,6 @@ public class PPReaderSearchAdapter extends PPReaderBaseAdapter {
 
     private ArrayList<PPReaderNovel> m_novels = new ArrayList<>();
     private Fragment m_parent;
+    private IPPReaderSearchAdapterAction m_action;
+    private IPPReaderDataManager m_dataManager;
 }

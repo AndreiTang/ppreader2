@@ -10,15 +10,10 @@ import org.andrei.ppreader.data.PPReaderDataManager;
 import org.andrei.ppreader.data.PPReaderEngineInfo;
 import org.andrei.ppreader.data.PPReaderNovel;
 import org.andrei.ppreader.data.PPReaderTextPage;
-import org.andrei.ppreader.service.PPReaderServiceFactory;
 import org.andrei.ppreader.service.engine.EngineNames;
 import org.andrei.ppreader.service.engine.IPPReaderNovelEngineManager;
 import org.andrei.ppreader.service.engine.PPReaderNovelEngineManager;
-import org.andrei.ppreader.service.message.PPReaderMessageCenter;
-import org.andrei.ppreader.ui.adapter.PPReaderBaseAdapter;
 import org.andrei.ppreader.ui.fragment.IPPReaderNovelTextFragmentNotification;
-import org.andrei.ppreader.ui.fragment.PPReaderBaseFragment;
-import org.andrei.ppreader.ui.fragment.PPReaderMainFragment;
 import org.andrei.ppreader.ui.fragment.PPReaderNovelTextFragment;
 
 import java.util.ArrayList;
@@ -57,11 +52,6 @@ public class MockActivity5 extends FragmentActivity {
         m_dataManager.setEngineInfos(infos);
 
         m_engineManager = new PPReaderNovelEngineManager();
-        PPReaderBaseAdapter.setDataManager(m_dataManager);
-        PPReaderBaseFragment.setDataManager(m_dataManager);
-        PPReaderBaseAdapter.setMessageCenter(PPReaderMessageCenter.instance());
-        PPReaderBaseFragment.setMessageCenter(PPReaderMessageCenter.instance());
-        PPReaderBaseFragment.setServiceFactory(new PPReaderServiceFactory(m_engineManager,m_dataManager));
 
         PPReaderNovelTextFragment textFragment = null;
         if(savedInstanceState != null) {

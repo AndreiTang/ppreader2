@@ -15,6 +15,7 @@ import com.jakewharton.rxbinding2.view.RxView;
 import org.andrei.ppreader.R;
 import org.andrei.ppreader.data.PPReaderNovel;
 import org.andrei.ppreader.service.IPPReaderService;
+import org.andrei.ppreader.service.IPPReaderServiceNotification;
 import org.andrei.ppreader.service.message.PPReaderFetchNovelMessage;
 import org.andrei.ppreader.service.task.PPReaderFetchNovelTask;
 import org.andrei.ppreader.service.task.PPReaderSearchNovelsTask;
@@ -42,6 +43,10 @@ public class PPReaderSearchFragment extends PPReaderBaseFragment {
         m_service = service;
     }
 
+    public void addOnNotification(IPPReaderMainFragmentNotification notification){
+        m_notification = notification;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -53,7 +58,6 @@ public class PPReaderSearchFragment extends PPReaderBaseFragment {
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
         initUI();
-        m_service.start(null);
         if(savedInstanceState != null){
             m_urls = (ArrayList<String>)savedInstanceState.getSerializable(KEY_URLS);
             ArrayList<PPReaderNovel> novels = (ArrayList<PPReaderNovel>)savedInstanceState.getSerializable(KEY_NOVELS);
@@ -79,6 +83,24 @@ public class PPReaderSearchFragment extends PPReaderBaseFragment {
         if(adapter != null){
             adapter.saveInstanceState(savedInstanceState,KEY_NOVELS);
         }
+    }
+
+    private void startService(){
+        m_service.start(new IPPReaderServiceNotification() {
+            @Override
+            public void onNotify(IPPReaderMessage msg) {
+                if(msg.type().compareTo(PPReaderMessageTypeDefine.TYPE_SEARCH_URLS) == 0){
+                    searchUrls(msg);
+                }
+                else if(msg.type().compareTo(PPReaderMessageTypeDefine.TYPE_SEARCH_NOVELS) == 0){
+                    searchNovels(msg);
+                }
+                else if(msg.type().compareTo(PPReaderMessageTypeDefine.TYPE_FETCH_NOVEL) == 0){
+                    fetchNovel(msg);
+                }
+            }
+
+        });
     }
 
     private void initUI(){
@@ -121,7 +143,7 @@ public class PPReaderSearchFragment extends PPReaderBaseFragment {
             public boolean onQueryTextSubmit(String query) {
                 m_service.stop();
                 m_service.waitForExit();
-                m_service.start(null);
+                startService();
                 removeFootView();
                 PPReaderSearchAdapter adapter = getAdapter();
                 adapter.clear();
@@ -158,11 +180,18 @@ public class PPReaderSearchFragment extends PPReaderBaseFragment {
                 }
             }
         });
-        PPReaderSearchAdapter adapter = new PPReaderSearchAdapter(this);
+        PPReaderSearchAdapter adapter = new PPReaderSearchAdapter(this, new PPReaderSearchAdapter.IPPReaderSearchAdapterAction() {
+            @Override
+            public void openNovel(PPReaderNovel novel) {
+                if(m_notification != null){
+                    m_notification.onOpenNovel(novel);
+                }
+            }
+        });
         lv.setAdapter(adapter);
     }
 
-    @PPReaderMessageType(type=PPReaderMessageTypeDefine.TYPE_SEARCH_URLS)
+    //@PPReaderMessageType(type=PPReaderMessageTypeDefine.TYPE_SEARCH_URLS)
     protected void searchUrls(IPPReaderMessage msg){
 
         PPReaderSearchUrlsMessage message = (PPReaderSearchUrlsMessage)msg;
@@ -188,8 +217,8 @@ public class PPReaderSearchFragment extends PPReaderBaseFragment {
         }
     }
 
-    @PPReaderMessageType(type = PPReaderMessageTypeDefine.TYPE_SEARCH_NOVELS)
-    protected void searchNovels(IPPReaderMessage msg){
+    //@PPReaderMessageType(type = PPReaderMessageTypeDefine.TYPE_SEARCH_NOVELS)
+    private void searchNovels(IPPReaderMessage msg){
         PPReaderSearchNovelsMessage message = (PPReaderSearchNovelsMessage)msg;
         if(message.getRetCode() == ServiceError.ERR_OK){
             ArrayList<PPReaderNovel> novels = message.getNovels();
@@ -201,8 +230,8 @@ public class PPReaderSearchFragment extends PPReaderBaseFragment {
         }
     }
 
-    @PPReaderMessageType(type = PPReaderMessageTypeDefine.TYPE_FETCH_NOVEL)
-    protected void fetchNovel(IPPReaderMessage msg){
+    //@PPReaderMessageType(type = PPReaderMessageTypeDefine.TYPE_FETCH_NOVEL)
+    private void fetchNovel(IPPReaderMessage msg){
         PPReaderFetchNovelMessage message = (PPReaderFetchNovelMessage)msg;
         if(message.getRetCode() == ServiceError.ERR_OK){
             PPReaderNovel novel = message.getNovel();
@@ -277,4 +306,5 @@ public class PPReaderSearchFragment extends PPReaderBaseFragment {
     private String m_engineName;
     private View m_footView;
     private ArrayList<PPReaderNovel> m_novels = new ArrayList<>();
+    private IPPReaderMainFragmentNotification m_notification;
 }

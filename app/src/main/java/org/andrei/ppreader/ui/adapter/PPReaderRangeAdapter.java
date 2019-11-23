@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.jakewharton.rxbinding2.view.RxView;
@@ -17,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 
 import io.reactivex.functions.Consumer;
 
-public class PPReaderRangeAdapter extends PPReaderBaseAdapter {
+public class PPReaderRangeAdapter extends BaseAdapter {
 
     public interface IPPReaderRangeAdapterNotify{
         void onNotify(int curIndex);
