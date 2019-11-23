@@ -26,6 +26,10 @@ public class PPReaderSettingFragment extends PPReaderBaseFragment {
         return inflater.inflate(R.layout.fragment_ppreader_setting, container, false);
     }
 
+    public void addOnNotification(IPPReaderMainFragmentNotification notification){
+        m_notification = notification;
+    }
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
@@ -42,8 +46,9 @@ public class PPReaderSettingFragment extends PPReaderBaseFragment {
         RxView.clicks(tv).throttleFirst(1, TimeUnit.SECONDS).subscribe(new Consumer<Object>() {
             @Override
             public void accept(Object o) throws Exception{
-                PPReaderCommonMessage msg = new PPReaderCommonMessage(PPReaderMessageTypeDefine.TYPE_TO_LIST_PAGE,1);
-                sendMessage(msg);
+                if(m_notification != null){
+                    m_notification.onSwitchPage(1);
+                }
             }
         });
 
@@ -52,8 +57,9 @@ public class PPReaderSettingFragment extends PPReaderBaseFragment {
         RxView.clicks(tv).throttleFirst(1, TimeUnit.SECONDS).subscribe(new Consumer<Object>() {
             @Override
             public void accept(Object o) throws Exception{
-                PPReaderCommonMessage msg = new PPReaderCommonMessage(PPReaderMessageTypeDefine.TYPE_TO_LIST_PAGE,0);
-                sendMessage(msg);
+                if(m_notification != null){
+                    m_notification.onSwitchPage(0);
+                }
             }
         });
 
@@ -67,6 +73,7 @@ public class PPReaderSettingFragment extends PPReaderBaseFragment {
             getActivity().getSupportFragmentManager().beginTransaction().add(R.id.setting_container,fragment).commit();
         }
     }
+    private IPPReaderMainFragmentNotification m_notification;
 
 }
 

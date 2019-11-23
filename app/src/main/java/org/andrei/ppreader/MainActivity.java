@@ -218,6 +218,11 @@ public class MainActivity extends FragmentActivity  {
                 getSupportFragmentManager().beginTransaction().hide(main).show(text).commit();
                 text.setNovel(novel);
             }
+
+            @Override
+            public void onSwitchPage(int index) {
+
+            }
         });
 
     }

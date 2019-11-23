@@ -67,7 +67,7 @@ public class PPReaderDataManager implements IPPReaderDataManager {
         for (PPReaderNovel novel : m_novels) {
             if (id.compareTo(novel.id) == 0 ) {
                 m_novels.remove(novel);
-                String path = folder + "/" + novel.name + "-" + novel.id + ".json";
+                String path = folder + "/" + novel.id + ".json";
                 File file = new File(path);
                 if (file.exists()) {
                     file.delete();

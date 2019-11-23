@@ -126,8 +126,9 @@ public class PPReaderListFragment extends PPReaderBaseFragment {
         RxView.clicks(tv).throttleFirst(1, TimeUnit.SECONDS).subscribe(new Consumer<Object>() {
             @Override
             public void accept(Object o) throws Exception{
-                PPReaderCommonMessage msg = new PPReaderCommonMessage(PPReaderMessageTypeDefine.TYPE_TO_LIST_PAGE,1);
-                sendMessage(msg);
+                if(m_notification != null){
+                    m_notification.onSwitchPage(1);
+                }
             }
         });
 

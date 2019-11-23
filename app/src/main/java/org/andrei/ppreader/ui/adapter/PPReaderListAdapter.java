@@ -129,7 +129,8 @@ public class PPReaderListAdapter extends BaseAdapter {
         dlg.setPositiveButton(R.string.btn_ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                //m_dataManager.removeNovel(novel.id);
+                String path = m_fragment.getContext().getExternalFilesDir(null).getPath();
+                m_dataManager.removeNovel(path,novel.id);
                 notifyDataSetChanged();
             }
         });

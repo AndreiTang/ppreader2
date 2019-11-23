@@ -136,7 +136,9 @@ public class PPReaderNovelTextFragment extends PPReaderBaseFragment implements I
     private void  popUpSaveDlg(){
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.app_name);
-        builder.setMessage(R.string.novel_text_save_dlg);
+        String msg = getString(R.string.novel_text_save_dlg);
+        msg = String.format(msg,m_novel.name);
+        builder.setMessage(msg);
 
         builder.setPositiveButton(R.string.btn_ok, new DialogInterface.OnClickListener() {
             @Override

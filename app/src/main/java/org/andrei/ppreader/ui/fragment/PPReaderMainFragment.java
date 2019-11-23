@@ -77,6 +77,11 @@ public class PPReaderMainFragment extends PPReaderBaseFragment implements IPPRea
         }
     }
 
+    @Override
+    public void onSwitchPage(int index) {
+        switchFragment(index);
+    }
+
 
     private void firstRun(Fragment[] fragments){
         PPReaderListFragment listFragment = new PPReaderListFragment();
@@ -113,6 +118,8 @@ public class PPReaderMainFragment extends PPReaderBaseFragment implements IPPRea
         PPReaderSearchFragment searchFragment = (PPReaderSearchFragment)fragments[1];
         searchFragment.addOnNotification(this);
 
+        PPReaderSettingFragment settingFragment = (PPReaderSettingFragment)fragments[2];
+        settingFragment.addOnNotification(this);
     }
 
     private final static String KEY_INDEX = "key_index";
