@@ -82,7 +82,7 @@ public class PPReaderListFragment extends PPReaderBaseFragment {
             novel.needValidate = true;
             novel.type = message.getNovelType();
             int index = novel.chapters.size();
-            novel.chapters.addAll(message.getDelta().subList(delta,message.getDelta().size()));
+            novel.chapters.addAll(message.getDelta().subList( index,message.getDelta().size()));
             for(PPReaderChapter chapter : message.getDelta()){
                 PPReaderTextPage page = new PPReaderTextPage();
                 page.chapterId = chapter.id;

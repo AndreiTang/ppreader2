@@ -182,11 +182,14 @@ public class MainActivity extends FragmentActivity  {
         Context appContext = getApplicationContext();
         String path = appContext.getExternalFilesDir(null).getPath();
         int ret = m_dataManager.load(path);
-        if(m_dataManager.getEngineInfoCount() == 0 && m_engineManager.count() > 0 ){
+        if(m_dataManager.getEngineInfoCount() != m_engineManager.count()  ){
             ArrayList<PPReaderEngineInfo> infos = new ArrayList<>();
             for(int i = 0; i < m_engineManager.count(); i++){
                 PPReaderEngineInfo info = new PPReaderEngineInfo();
                 info.name = m_engineManager.get(i).getName();
+                if(m_dataManager.getEngineInfo(info.name)!=null){
+                    info.isUsed = m_dataManager.getEngineInfo(info.name).isUsed;
+                }
                 info.contentUrl = m_engineManager.get(i).getContentUrl();
                 info.imageUrl = m_engineManager.get(i).getImageUrl();
                 infos.add(info);

@@ -204,5 +204,5 @@ public class PPReaderDataManager implements IPPReaderDataManager {
     }
 
     protected ArrayList<PPReaderNovel> m_novels = new ArrayList<>();
-    protected ArrayList<PPReaderEngineInfo> m_infos;
+    protected ArrayList<PPReaderEngineInfo> m_infos = new ArrayList<>();
 }
