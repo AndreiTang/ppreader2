@@ -5,6 +5,7 @@ import android.view.Gravity;
 import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
+import org.andrei.ppreader.PPReader;
 import org.andrei.ppreader.R;
 import org.andrei.ppreader.data.PPReaderChapter;
 import org.andrei.ppreader.data.PPReaderNovel;
@@ -48,7 +49,7 @@ public class PPReaderPageManager implements IPPReaderPageManager {
         if(chapter == null){
             return "";
         }
-        return chapter.text;
+        return cleanText(chapter.text);
     }
 
     public String getPageTitle(final PPReaderTextPage page){
@@ -84,6 +85,7 @@ public class PPReaderPageManager implements IPPReaderPageManager {
         }
         m_novel.currIndex = page.chapterIndex;
         m_novel.currOffset = page.offset;
+        m_novel.needValidate = true;
         if(page.status == PPReaderTextPage.STATUS_LOADED){
             page.status = PPReaderTextPage.STATUS_TEXT_NO_SLICE;
         }
@@ -211,7 +213,18 @@ public class PPReaderPageManager implements IPPReaderPageManager {
 
     private void allocateTexts(PPReaderChapter chapter) {
         int index = getChapterFirstPageIndex(chapter.id);
+        if(index == -1){
+            return;
+        }
+
+        //it mean this text isn't downloaded.
         if(chapter.text.length() == 0){
+            m_pages.get(index).status = PPReaderTextPage.STATUS_INIT;
+            return;
+        }
+        else if(chapter.text.length() > 0 && m_pages.get(index).posArr.size() == 0){
+            //it mean text is fetched, but it isn't allocated.
+            m_pages.get(index).status = PPReaderTextPage.STATUS_LOADED;
             return;
         }
 
@@ -237,14 +250,19 @@ public class PPReaderPageManager implements IPPReaderPageManager {
     private void allocateText(PPReaderTextPage page, String text){
         //has been allocated
         if(page.texts.size() > 0){
+            page.status = PPReaderTextPage.STATUS_OK;
             return;
         }
         for(PPReaderTextPage.TextPosition pos : page.posArr){
             String tx = text.substring(pos.begin,pos.end);
+            if(pos.end == text.length() -1 ){
+
+            }
             page.texts.add(tx);
         }
         page.status = PPReaderTextPage.STATUS_OK;
     }
+
     @Override
     public int getChapterFirstPageIndex(String chapterId) {
         for (int i = 0; i < m_pages.size(); i++) {
@@ -272,7 +290,12 @@ public class PPReaderPageManager implements IPPReaderPageManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return sb.toString();
+        String tx = sb.toString();
+        char end = tx.charAt(tx.length() - 1);
+        if(end != '\n'){
+            tx += "\n";
+        }
+        return tx;
     }
 
     private ArrayList<PPReaderTextPage> m_pages = new ArrayList<>();
