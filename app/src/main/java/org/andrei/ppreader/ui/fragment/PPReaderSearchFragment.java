@@ -153,7 +153,7 @@ public class PPReaderSearchFragment extends PPReaderBaseFragment {
                 getView().findViewById(R.id.novel_search_error_mask).setVisibility(View.GONE);
                 getView().findViewById(R.id.novel_search_loading_mask).setVisibility(View.VISIBLE);
 
-                PPReaderSearchUrlsTask task = new PPReaderSearchUrlsTask("大明");
+                PPReaderSearchUrlsTask task = new PPReaderSearchUrlsTask(query);
                 m_service.addTask(task);
 
                 return false;
