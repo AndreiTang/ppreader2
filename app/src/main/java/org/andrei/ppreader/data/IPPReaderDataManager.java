@@ -14,4 +14,5 @@ public interface IPPReaderDataManager {
     public PPReaderEngineInfo getEngineInfo(String engineName);
     public int getEngineInfoCount();
     public void setEngineInfos(ArrayList<PPReaderEngineInfo> infos);
+    public void moveNovelToHead(PPReaderNovel novel);
 }

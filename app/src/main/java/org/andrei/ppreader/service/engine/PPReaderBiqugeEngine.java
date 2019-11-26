@@ -1,7 +1,5 @@
 package org.andrei.ppreader.service.engine;
 
-import android.app.Service;
-
 import org.andrei.ppreader.data.PPReaderChapter;
 import org.andrei.ppreader.data.PPReaderNovel;
 import org.andrei.ppreader.service.ServiceError;
@@ -10,16 +8,11 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Base64;
-import java.util.UUID;
 
-public class PPReader88dushuEngine implements IPPReaderNovelEngine {
+public class PPReaderBiqugeEngine implements IPPReaderNovelEngine {
     @Override
     public int searchUrls(Document doc, ArrayList<String> novels) {
-
         Elements elements = doc.getElementsByClass("pagelink");
         if(elements.size() == 1){
             Element pages = elements.first();
@@ -28,7 +21,7 @@ public class PPReader88dushuEngine implements IPPReaderNovelEngine {
                 for(Element item : hrefs){
                     String href = getContentUrl() + item.attr("href");
                     boolean isExist = Helper.containNovelUrl(href,novels);
-                    if(!isExist){
+                    if(!isExist) {
                         novels.add(href);
                     }
                 }
@@ -43,24 +36,23 @@ public class PPReader88dushuEngine implements IPPReaderNovelEngine {
 
     @Override
     public int searchNovels(Document doc, ArrayList<PPReaderNovel> novels) {
-
-        Elements els = doc.getElementsByClass("booklist");
+        Elements els = doc.getElementsByClass("grid");
         if (els.size() == 0) {
             return ServiceError.ERR_NOT_FOUND;
         }
 
-        Elements elements = els.get(0).getElementsByTag("li");
+        Elements elements = els.get(0).getElementsByTag("tr");
         if (elements.size() == 0) {
             return  ServiceError.ERR_NOT_FOUND;
         }
 
         for(Element element : elements){
-            if(element.className().compareTo("t") == 0){
+            if(element.attr("align").compareTo("center") == 0){
                 continue;
             }
+            Element item =  element.getElementsByClass("odd").get(0).getElementsByTag("a").get(0);
             PPReaderNovel novel = new PPReaderNovel();
-            Element item = element.getElementsByTag("a").get(0);
-            novel.chapterUrl = item.attr("href");
+            novel.chapterUrl = item.attr("href").substring(getContentUrl().length());
             novel.detailUrl = novel.chapterUrl;
             novels.add(novel);
         }
@@ -70,19 +62,21 @@ public class PPReader88dushuEngine implements IPPReaderNovelEngine {
 
     @Override
     public int updateNovel(Document doc, ArrayList<PPReaderChapter> delta) {
-
-
-        Elements mulus = doc.getElementsByClass("mulu");
-        if(mulus == null || mulus.size() == 0){
+        Elements cs = doc.getElementsByTag("dd");
+        if(cs == null || cs.size() == 0){
             return ServiceError.ERR_NOT_FOUND;
         }
-        Element root = mulus.get(0);
-        Elements cs = root.getElementsByTag("a");
         for(Element c :cs){
+            if(c.getElementsByTag("a").size() == 0){
+               continue;
+            }
+            Element a = c.getElementsByTag("a").get(0);
             PPReaderChapter chapter = new PPReaderChapter();
-            chapter.url = c.attr("href");
-            chapter.title = c.text();
-            chapter.id = c.attr("href");;
+            chapter.url = a.attr("href");
+            int index = chapter.url.lastIndexOf("/");
+            chapter.url = chapter.url.substring(index+1);
+            chapter.title = a.text();
+            chapter.id = a.attr("href");
             delta.add(chapter);
         }
         return ServiceError.ERR_OK;
@@ -90,72 +84,51 @@ public class PPReader88dushuEngine implements IPPReaderNovelEngine {
 
     @Override
     public int fetchNovelDetail(Document doc, PPReaderNovel novel) {
-
         try{
-            Element root = doc.getElementsByClass("jieshao").get(0);
-            Elements items = root.getElementsByClass("lf");
-            novel.img = items.get(0).getElementsByTag("img").get(0).attr("src");
-            if(novel.img.indexOf(getImageUrl()) ==1){
-                novel.img = "";
-            }
-            else{
-                novel.img = novel.img.substring(getImageUrl().length());
-            }
-
-            items = root.getElementsByClass("rt");
-            novel.name = items.get(0).getElementsByTag("h1").get(0).text();
-
-            items = root.getElementsByClass("msg");
-            novel.author = items.get(0).getElementsByTag("em").get(0).text().trim();
-            novel.author = novel.author.substring(3);
-
-            items = root.getElementsByClass("intro");
-            novel.desc = items.get(0).text().trim();
-
+            novel.author = doc.select("meta[name=author]").get(0).attr("content");
+            novel.name = doc.select("meta[property=og:title]").get(0).attr("content");
+            novel.img = doc.select("meta[property=og:image]").get(0).attr("content").substring(getImageUrl().length());
+            novel.desc = doc.select("meta[property=og:description]").get(0).attr("content").substring(getImageUrl().length());
         }
         catch (Exception ex){
             return ServiceError.ERR_NOT_FOUND;
         }
-
         return ServiceError.ERR_OK;
     }
 
     @Override
-    public int fetchChapterText(Document doc, StringBuilder ret){
-        Element item = doc.getElementsByClass("yd_text2").get(0);
-        String text = item.html();
-        if(text.isEmpty()){
+    public int fetchChapterText(Document doc, StringBuilder ret) {
+        Element el = doc.getElementById("booktext");
+        if(el == null){
             return ServiceError.ERR_NOT_FOUND;
         }
-        text = Utils.adjustText(text);
+        String text = Utils.adjustText(el.text());
         ret.append(text);
-
         return ServiceError.ERR_OK;
     }
 
     @Override
     public String getName() {
-        return EngineNames.ENGINE_88dushu;
+        return EngineNames.ENGINE_biquge;
     }
 
     @Override
     public String getContentUrl() {
-        return "https://www.88dushu.com";
+        return "https://www.biquger.com";
     }
 
     @Override
     public String getImageUrl() {
-        return "https://fm.88dushu.com";
+        return "https://www.biquger.com";
     }
 
     @Override
     public String getSearchUrl() {
-        return "https://www.88dushu.com/modules/article/search.php?searchtype=articlename&searchkey=";
+        return "https://www.biquger.com/modules/article/search.php?searchkey=";
     }
 
     @Override
     public EncodeType getEncodeType() {
         return EncodeType.GB2312;
     }
-
 }

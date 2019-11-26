@@ -6,6 +6,7 @@ public class PPReaderNovelEngineManager implements IPPReaderNovelEngineManager {
 
     public PPReaderNovelEngineManager(){
         m_engines.add(new PPReader88dushuEngine());
+        m_engines.add(new PPReaderBiqugeEngine());
     }
 
     @Override

@@ -144,7 +144,7 @@ public class PPReaderSearchFragment extends PPReaderBaseFragment {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 m_service.stop();
-                m_service.waitForExit();
+                //m_service.waitForExit();
                 startService();
                 removeFootView();
                 PPReaderSearchAdapter adapter = getAdapter();

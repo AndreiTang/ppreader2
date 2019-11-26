@@ -90,17 +90,20 @@ public class PPReaderNovelTextFragment extends PPReaderBaseFragment implements I
 
     @Override
     public void onStop(){
-        super.onStop();
+        PPReaderNovelTextTitleBar bar = getView().findViewById(R.id.novel_action_bar);
+        bar.unregisterBatteryReceiver(getActivity());
         if(m_beginTime != 0){
             m_novel.duration += System.currentTimeMillis() - m_beginTime;
             m_beginTime  = 0;
         }
+        super.onStop();
     }
 
     @Override
     public void onDestroy(){
-        super.onDestroy();
         m_service.stop();
+
+        super.onDestroy();
     }
 
     @Override
@@ -129,7 +132,9 @@ public class PPReaderNovelTextFragment extends PPReaderBaseFragment implements I
             popUpSaveDlg();
         }
         else{
+            m_dataManager.moveNovelToHead(m_novel);
             getActivity().getSupportFragmentManager().beginTransaction().hide(this).commit();
+
         }
     }
 

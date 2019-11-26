@@ -48,6 +48,12 @@ public class PPReaderNovelTextTitleBar extends LinearLayout {
         activity.registerReceiver(m_batteryReceiver, intentFilter);
     }
 
+    public void unregisterBatteryReceiver(Activity activity){
+        activity.unregisterReceiver(m_batteryReceiver);
+    }
+
+
+
     private void init(Context context){
         LayoutInflater.from(context).inflate(R.layout.view_ppreader_text_title_bar,this,true);
         initTimeClock();

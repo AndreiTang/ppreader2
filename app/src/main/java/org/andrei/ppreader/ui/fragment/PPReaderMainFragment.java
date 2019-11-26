@@ -59,6 +59,7 @@ public class PPReaderMainFragment extends PPReaderBaseFragment implements IPPRea
     public void onHiddenChanged(boolean hidden){
         super.onHiddenChanged(hidden);
         if(!hidden){
+            //m_listFragment.invalidate();
             getActivity().findViewById(android.R.id.content).setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE|View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
     }
@@ -75,6 +76,10 @@ public class PPReaderMainFragment extends PPReaderBaseFragment implements IPPRea
         if(m_notification != null){
             m_notification.onOpenNovel(novel);
         }
+    }
+
+    public void invalidate(){
+        m_listFragment.invalidate();
     }
 
     @Override
@@ -114,6 +119,7 @@ public class PPReaderMainFragment extends PPReaderBaseFragment implements IPPRea
 
         PPReaderListFragment listFragment = (PPReaderListFragment)fragments[0];
         listFragment.addOnNotification(this);
+        m_listFragment = listFragment;
 
         PPReaderSearchFragment searchFragment = (PPReaderSearchFragment)fragments[1];
         searchFragment.addOnNotification(this);
@@ -124,4 +130,5 @@ public class PPReaderMainFragment extends PPReaderBaseFragment implements IPPRea
 
     private final static String KEY_INDEX = "key_index";
     private IPPReaderMainFragmentNotification m_notification;
+    private PPReaderListFragment m_listFragment;
 }

@@ -39,7 +39,7 @@ public class PPReaderDataManager implements IPPReaderDataManager {
         if (getNovel(novel.id) != null) {
             return;
         }
-        m_novels.add(novel);
+        m_novels.add(0,novel);
     }
 
     @Override
@@ -105,6 +105,16 @@ public class PPReaderDataManager implements IPPReaderDataManager {
         m_infos = infos;
     }
 
+    @Override
+    public void moveNovelToHead(PPReaderNovel novel) {
+        PPReaderNovel item = getNovel(novel.id);
+        if(item == null){
+            return;
+        }
+        m_novels.remove(item);
+        m_novels.add(0,item);
+    }
+
     private void saveEngines(final String folder) {
         Gson gson = new Gson();
         String infos = gson.toJson(m_infos);
@@ -151,6 +161,9 @@ public class PPReaderDataManager implements IPPReaderDataManager {
     private void loadEngines(final String folder){
         String path = folder + "/infos.json";
         File file = new File(path);
+        if(!file.exists()){
+            return;
+        }
 
         String txt = "";
         try {

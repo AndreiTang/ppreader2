@@ -60,11 +60,11 @@ public class MainActivity extends FragmentActivity  {
     }
 
     @Override
-    public void onDestroy(){
-        super.onDestroy();
+    public void onStop(){
         Context appContext = getApplicationContext();
         String path = appContext.getExternalFilesDir(null).getPath();
         m_dataManager.save(path);
+        super.onStop();
     }
 
     @Override
@@ -103,8 +103,10 @@ public class MainActivity extends FragmentActivity  {
         }
         else{
             //main.switchFragment(0);
-            getSupportFragmentManager().beginTransaction().show(main).commit();
             text.backPress();
+            getSupportFragmentManager().beginTransaction().show(main).commit();
+            main.invalidate();
+            main.switchFragment(0);
         }
     }
 
@@ -210,6 +212,7 @@ public class MainActivity extends FragmentActivity  {
             @Override
             public void onAddNovel(PPReaderNovel novel) {
                 m_dataManager.addNovel(novel);
+                main.invalidate();
             }
         });
     }

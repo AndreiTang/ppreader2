@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.TextView;
 
@@ -55,6 +56,14 @@ public class PPReaderListFragment extends PPReaderBaseFragment {
         for( int i = 0; i < m_dataManager.getNovelCount(); i++ ){
             PPReaderUpdateNovelTask task = new PPReaderUpdateNovelTask(m_dataManager.getNovel(i));
             m_service.addTask(task);
+        }
+    }
+
+    public void invalidate(){
+        GridView gv = getView().findViewById(R.id.novel_list);
+        if(gv != null && gv.getAdapter()!=null){
+            BaseAdapter adapter =  (BaseAdapter)gv.getAdapter();
+            adapter.notifyDataSetChanged();
         }
     }
 
