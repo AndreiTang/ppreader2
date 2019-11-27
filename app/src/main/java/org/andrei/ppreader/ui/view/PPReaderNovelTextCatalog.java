@@ -87,7 +87,7 @@ public class PPReaderNovelTextCatalog extends LinearLayout {
     }
 
     private void initAdaptersFromNovel(){
-        ListView chapterList = findViewById(R.id.novel_catalog_chapter_list);
+        final ListView chapterList = findViewById(R.id.novel_catalog_chapter_list);
         BaseAdapter adapter = new PPReaderCatalogAdapter(m_novel, getContext(), new PPReaderCatalogAdapter.IPPReaderCatalogAdapterNotify() {
             @Override
             public void onClickItem(int index) {
@@ -98,11 +98,14 @@ public class PPReaderNovelTextCatalog extends LinearLayout {
         });
         chapterList.setAdapter(adapter);
 
-        ListView rangeList = findViewById(R.id.novel_catalog_range_list);
+        final ListView rangeList = findViewById(R.id.novel_catalog_range_list);
         adapter= new PPReaderRangeAdapter(m_novel, getContext(), new PPReaderRangeAdapter.IPPReaderRangeAdapterNotify() {
             @Override
             public void onNotify(int curIndex) {
-                m_notify.onClickItem(curIndex);
+//                m_notify.onClickItem(curIndex);
+                chapterList.setSelection(curIndex);
+                chapterList.setVisibility(View.VISIBLE);
+                rangeList.setVisibility(View.GONE);
             }
         });
         rangeList.setAdapter(adapter);

@@ -62,19 +62,19 @@ public class MockActivity5 extends FragmentActivity {
             getSupportFragmentManager().beginTransaction().add(R.id.mock_root,textFragment).commit();
         }
 
-        textFragment.addOnNotification(new IPPReaderNovelTextFragmentNotification() {
-            @Override
-            public void onSwitchFragment(int index) {
-
-            }
-
-            @Override
-            public void onAddNovel(PPReaderNovel novel) {
-                String path = getExternalFilesDir(null).getPath();
-                m_dataManager.addNovel(novel);
-                m_dataManager.save(path);
-            }
-        });
+//        textFragment.addOnNotification(new IPPReaderNovelTextFragmentNotification() {
+//            @Override
+//            public void onSwitchFragment(int index) {
+//
+//            }
+//
+//            @Override
+//            public void onAddNovel(PPReaderNovel novel) {
+//                String path = getExternalFilesDir(null).getPath();
+//                m_dataManager.addNovel(novel);
+//                m_dataManager.save(path);
+//            }
+//        });
 
 
         PPReaderNovel novel = new PPReaderNovel();

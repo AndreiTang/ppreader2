@@ -4,5 +4,5 @@ import org.andrei.ppreader.data.PPReaderNovel;
 
 public interface IPPReaderNovelTextFragmentNotification {
     public void onSwitchFragment(int index);
-    public void onAddNovel(PPReaderNovel novel);
+    public void onRefresh(boolean needInvalidate);
 }

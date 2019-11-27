@@ -81,6 +81,8 @@ public class PPReaderTextAdapter extends PagerAdapter {
                        if(m_notify != null){
                            m_notify.sendFetchTextRequest(vs.page);
                        }
+                       vs.page.status = PPReaderTextPage.STATUS_LOADING;
+                       notifyDataSetChanged();
                     }
                 }
         );

@@ -89,6 +89,14 @@ public class PPReaderNovelTextFragment extends PPReaderBaseFragment implements I
     }
 
     @Override
+    public void onResume(){
+        super.onResume();
+        if(isVisible()){
+            getActivity().findViewById(android.R.id.content).setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+        }
+    }
+
+    @Override
     public void onStop(){
         PPReaderNovelTextTitleBar bar = getView().findViewById(R.id.novel_action_bar);
         bar.unregisterBatteryReceiver(getActivity());
@@ -128,13 +136,17 @@ public class PPReaderNovelTextFragment extends PPReaderBaseFragment implements I
     }
 
     public void backPress(){
+        m_novel.needValidate = true;
+        m_novel.timeStamp = System.currentTimeMillis();
         if(m_dataManager.getNovel(m_novel.id) == null){
             popUpSaveDlg();
         }
         else{
             m_dataManager.moveNovelToHead(m_novel);
-            getActivity().getSupportFragmentManager().beginTransaction().hide(this).commit();
-
+            //getActivity().getSupportFragmentManager().beginTransaction().hide(this).commit();
+            if(m_notification != null){
+                m_notification.onRefresh(true);
+            }
         }
     }
 
@@ -148,17 +160,20 @@ public class PPReaderNovelTextFragment extends PPReaderBaseFragment implements I
         builder.setPositiveButton(R.string.btn_ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                m_novel.needValidate = true;
+                m_dataManager.addNovel(m_novel);
                 if(m_notification != null){
-                    m_notification.onAddNovel(m_novel);
+                    m_notification.onRefresh(true);
                 }
-                getActivity().getSupportFragmentManager().beginTransaction().hide(PPReaderNovelTextFragment.this).commit();
+                //getActivity().getSupportFragmentManager().beginTransaction().hide(PPReaderNovelTextFragment.this).commit();
             }
         });
         builder.setNegativeButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                getActivity().getSupportFragmentManager().beginTransaction().hide(PPReaderNovelTextFragment.this).commit();
+                if(m_notification != null){
+                    m_notification.onRefresh(false);
+                }
+                //getActivity().getSupportFragmentManager().beginTransaction().hide(PPReaderNovelTextFragment.this).commit();
             }
         });
         builder.show();
@@ -175,7 +190,12 @@ public class PPReaderNovelTextFragment extends PPReaderBaseFragment implements I
             bRet = true;
             text = message.getText();
         }
-        m_novel.needValidate = true;
+
+        PPReaderChapter chapter = m_novel.getChapter(message.getChapterId());
+        //it has had text. this update will be ignored.
+        if(chapter != null && chapter.text.length() > 0) {
+            return;
+        }
         m_pageManager.updateText(message.getChapterId(),bRet,text);
         m_adapter.notifyDataSetChanged();
     }

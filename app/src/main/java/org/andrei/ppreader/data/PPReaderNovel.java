@@ -26,6 +26,7 @@ public class PPReaderNovel implements Serializable {
     public long duration = 0;
     public String chapterUrl;
     public String detailUrl;
+    public long timeStamp = 0;
     public ArrayList<PPReaderTextPage> textPages = new ArrayList<>();
 
 

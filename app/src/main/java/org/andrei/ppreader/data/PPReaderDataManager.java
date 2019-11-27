@@ -12,8 +12,22 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class PPReaderDataManager implements IPPReaderDataManager {
+
+    class SortNovel implements Comparator {
+
+        @Override
+        public int compare(Object o1, Object o2) {
+            PPReaderNovel novel1 = (PPReaderNovel)o1;
+            PPReaderNovel novel2 = (PPReaderNovel)o2;
+            if(novel1.timeStamp >= novel2.timeStamp){
+                return -1;
+            }
+            return 1;
+        }
+    }
 
     @Override
     public int load(final String folder) {
@@ -214,6 +228,7 @@ public class PPReaderDataManager implements IPPReaderDataManager {
                 m_novels.add(novel);
             }
         }
+        m_novels.sort(new SortNovel());
     }
 
     protected ArrayList<PPReaderNovel> m_novels = new ArrayList<>();
