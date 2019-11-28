@@ -59,7 +59,20 @@ public class PPReaderNovelTextCatalog extends LinearLayout {
         setNovelDetail();
         initAdaptersFromNovel();
         setDuration(duration);
+        setProgress();
         setCurrentChapter(curIndex);
+    }
+
+    private void setProgress(){
+        float per = (float)(m_novel.currIndex + 1)/(float)m_novel.chapters.size();
+        per = 100*per;
+        int iPer = (int)per;
+        if(iPer == 0){
+            iPer++;
+        }
+        TextView tx = findViewById(R.id.novel_catalog_progress);
+        tx.setText(Integer.toString((iPer))+ "%");
+
     }
 
     private void setCurrentChapter(int curIndex){
@@ -88,6 +101,7 @@ public class PPReaderNovelTextCatalog extends LinearLayout {
 
     private void initAdaptersFromNovel(){
         final ListView chapterList = findViewById(R.id.novel_catalog_chapter_list);
+        chapterList.setDividerHeight(1);
         BaseAdapter adapter = new PPReaderCatalogAdapter(m_novel, getContext(), new PPReaderCatalogAdapter.IPPReaderCatalogAdapterNotify() {
             @Override
             public void onClickItem(int index) {

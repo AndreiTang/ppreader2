@@ -128,10 +128,13 @@ public class PPReaderPageManager implements IPPReaderPageManager {
 
                 //the the font size of title is bigger than lines in body. So the line size in body decrease 1
                 if (offset == 0) {
-                    for (int t = 0; t < 4; t++) {
-                        item.texts.remove(0);
-                        item.posArr.remove(0);
-                    }
+                     while(item.texts.size() != 0){
+                         String str = item.texts.remove(0);
+                         item.posArr.remove(0);
+                         if(str.indexOf("##end##") != -1){
+                             break;
+                         }
+                     }
                     item.gravity = Gravity.BOTTOM;
                 }
 

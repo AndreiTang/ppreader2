@@ -29,9 +29,11 @@
         <TextView
             android:id="@+id/novel_bottom_bar"
             android:layout_width="match_parent"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
             android:layout_height="40dp"
             android:layout_weight="0"
-            android:gravity="center"
+            android:gravity="right"
             android:orientation="horizontal"
             android:paddingBottom="5dp"
             android:text="1/500"

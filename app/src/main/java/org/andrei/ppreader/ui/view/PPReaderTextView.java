@@ -1,9 +1,13 @@
 package org.andrei.ppreader.ui.view;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.annotation.Nullable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.AbsoluteSizeSpan;
+import android.text.style.StyleSpan;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.widget.TextView;
@@ -31,15 +35,15 @@ public class PPReaderTextView extends TextView {
     }
 
     public void setText(PPReaderTextPage page,String textTitle){
-
         SpannableStringBuilder sb = new SpannableStringBuilder();
-
         float fontSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 18, getResources().getDisplayMetrics());
-        float padding = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, getResources().getDisplayMetrics());
+        //float padding = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, getResources().getDisplayMetrics());
         if(page.offset == 0){
             sb.append('\n');
             SpannableString title = new SpannableString(textTitle);
-            title.setSpan(new PPReaderTitleCenterBoldSpan(fontSize, padding), 0, textTitle.length(), 0);
+            //title.setSpan(new PPReaderTitleCenterBoldSpan(fontSize, padding), 0, textTitle.length(), 0);
+            title.setSpan(new AbsoluteSizeSpan(18, true), 0, textTitle.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE );
+            title.setSpan(new StyleSpan(Typeface.BOLD), 0, textTitle.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE );
             sb.append(title);
             sb.append('\n');
             sb.append('\n');

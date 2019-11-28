@@ -1,9 +1,15 @@
 package org.andrei.ppreader.ui.adapter;
 
 
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.AbsoluteSizeSpan;
+import android.text.style.StyleSpan;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -146,13 +152,19 @@ public class PPReaderTextAdapter extends PagerAdapter {
     }
 
     private void setNoSliceText(final PPReaderTextFragmentViews vs,final PPReaderTextPage page){
-        final StringBuilder text = new StringBuilder();
-        text.append("J\n");
+        //final StringBuilder text = new StringBuilder();
+        SpannableStringBuilder text = new SpannableStringBuilder();
+        text.append("\n");
         //using dummy title to occupy title place which is just one line.
         // If the real title is length than the width of textview. it will occupy more than 1 line which will cause error.
-        text.append("This is dummy\n");
-        text.append("J\n");
-        text.append("J\n");
+        String textTitle = m_pageMgr.getPageTitle(page);
+        SpannableString title = new SpannableString(textTitle);
+        //title.setSpan(new PPReaderTitleCenterBoldSpan(fontSize, padding), 0, textTitle.length(), 0);
+        title.setSpan(new AbsoluteSizeSpan(18, true), 0, textTitle.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE );
+        title.setSpan(new StyleSpan(Typeface.BOLD), 0, textTitle.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE );
+        text.append(title);
+        text.append("\n");
+        text.append("##end##\n");
         String tx = m_pageMgr.getPageText(page);
         text.append(tx);
         final TextView textView = vs.textView;
