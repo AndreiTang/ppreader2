@@ -1,15 +1,16 @@
 <resources>
 
     <style name="p1" parent="PreferenceThemeOverlay.v14.Material">
-        <item name="android:background">#DBC49B</item>
+        <item name="android:background">@color/colorPPReaderBase</item>
     </style>
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/colorPPReaderBase</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:background">@color/colorPPReaderBase</item>
         <!--The blank page with white will be shown. Now this bug fix it -->
         <item name="android:windowIsTranslucent">true</item>
         <item name="preferenceTheme">@style/p1</item>

@@ -99,12 +99,18 @@ public class PPReaderListFragment extends PPReaderBaseFragment {
                 index++;
                 novel.textPages.add(page);
             }
+
             GridView gv = getView().findViewById(R.id.novel_list);
             PPReaderListAdapter adapter = (PPReaderListAdapter)gv.getAdapter();
             if(adapter != null){
                 adapter.notifyDataSetChanged();
             }
+
+            if(m_notification != null){
+                m_notification.onAddChapters(novel);
+            }
         }
+
     }
 
     private void initUI(){

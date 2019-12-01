@@ -87,6 +87,13 @@ public class PPReaderMainFragment extends PPReaderBaseFragment implements IPPRea
         switchFragment(index);
     }
 
+    @Override
+    public void onAddChapters(PPReaderNovel novel) {
+        if(m_notification != null){
+            m_notification.onAddChapters(novel);
+        }
+    }
+
 
     private void firstRun(Fragment[] fragments){
         PPReaderListFragment listFragment = new PPReaderListFragment();

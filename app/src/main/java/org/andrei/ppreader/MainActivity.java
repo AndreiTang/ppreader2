@@ -36,8 +36,6 @@ import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends FragmentActivity  {
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,8 +53,6 @@ public class MainActivity extends FragmentActivity  {
         else{
             restoreFromSaveInstance(savedInstanceState);
         }
-
-        changeStatusBarColor();
     }
 
     @Override
@@ -228,12 +224,24 @@ public class MainActivity extends FragmentActivity  {
             @Override
             public void onOpenNovel(PPReaderNovel novel) {
                 getSupportFragmentManager().beginTransaction().hide(main).show(text).commit();
-                text.setNovel(novel);
+                PPReaderNovel item = m_dataManager.getNovel(novel.id);
+                if(item != null){
+                    text.setNovel(item);
+                }
+                else{
+                    text.setNovel(novel);
+                }
+
             }
 
             @Override
             public void onSwitchPage(int index) {
 
+            }
+
+            @Override
+            public void onAddChapters(PPReaderNovel novel) {
+                text.refresh(novel);
             }
         });
 

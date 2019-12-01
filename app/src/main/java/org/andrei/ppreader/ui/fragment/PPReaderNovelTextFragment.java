@@ -2,6 +2,7 @@ package org.andrei.ppreader.ui.fragment;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -76,9 +77,9 @@ public class PPReaderNovelTextFragment extends PPReaderBaseFragment implements I
             m_service.stop();
         }
         else{
+            getActivity().findViewById(android.R.id.content).setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
             m_service.start(this);
             m_beginTime = System.currentTimeMillis();
-            getActivity().findViewById(android.R.id.content).setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
         }
     }
 
@@ -148,6 +149,21 @@ public class PPReaderNovelTextFragment extends PPReaderBaseFragment implements I
                 m_notification.onRefresh(true);
             }
         }
+    }
+
+    public void refresh(PPReaderNovel novel){
+        if(m_novel == null || novel.id.compareTo(m_novel.id) != 0){
+            return;
+        }
+
+        ViewPager vp = getView().findViewById(R.id.novel_text_pager);
+        PagerAdapter adapter = vp.getAdapter();
+        if(adapter != null){
+            adapter.notifyDataSetChanged();
+        }
+
+        PPReaderNovelTextCatalog catalog = getView().findViewById(R.id.novel_text_catalog);
+        catalog.refresh();
     }
 
     private void  popUpSaveDlg(){
