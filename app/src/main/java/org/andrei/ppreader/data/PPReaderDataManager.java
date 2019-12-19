@@ -5,12 +5,10 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Comparator;
 
@@ -92,13 +90,13 @@ public class PPReaderDataManager implements IPPReaderDataManager {
     }
 
     @Override
-    public PPReaderEngineInfo getEngineInfo(int index) {
-        return m_infos.get(index);
+    public PPReaderEngineSetting getEngineSetting(int index) {
+        return m_engineSettings.get(index);
     }
 
     @Override
-    public PPReaderEngineInfo getEngineInfo(String engineName) {
-        for(PPReaderEngineInfo info : m_infos){
+    public PPReaderEngineSetting getEngineSetting(String engineName) {
+        for(PPReaderEngineSetting info : m_engineSettings){
             if(info.name.compareTo(engineName) == 0){
                 return info;
             }
@@ -107,16 +105,16 @@ public class PPReaderDataManager implements IPPReaderDataManager {
     }
 
     @Override
-    public int getEngineInfoCount() {
-        if (m_infos == null) {
+    public int getEngineSettingCount() {
+        if (m_engineSettings == null) {
             return  0;
         }
-        return m_infos.size();
+        return m_engineSettings.size();
     }
 
     @Override
-    public void setEngineInfos(ArrayList<PPReaderEngineInfo> infos) {
-        m_infos = infos;
+    public void setEngineSettings(ArrayList<PPReaderEngineSetting> settings) {
+        m_engineSettings = settings;
     }
 
     @Override
@@ -131,7 +129,7 @@ public class PPReaderDataManager implements IPPReaderDataManager {
 
     private void saveEngines(final String folder) {
         Gson gson = new Gson();
-        String infos = gson.toJson(m_infos);
+        String infos = gson.toJson(m_engineSettings);
         String path = folder + "/infos.json";
 
         File file = new File(path);
@@ -194,8 +192,8 @@ public class PPReaderDataManager implements IPPReaderDataManager {
         }
 
         Gson gson = new Gson();
-        ArrayList<PPReaderEngineInfo> infos = gson.fromJson(txt,new TypeToken<ArrayList<PPReaderEngineInfo>>(){}.getType());
-        setEngineInfos(infos);
+        ArrayList<PPReaderEngineSetting> infos = gson.fromJson(txt,new TypeToken<ArrayList<PPReaderEngineSetting>>(){}.getType());
+        setEngineSettings(infos);
     }
 
     private void loadNovels(final String path) {
@@ -232,5 +230,5 @@ public class PPReaderDataManager implements IPPReaderDataManager {
     }
 
     protected ArrayList<PPReaderNovel> m_novels = new ArrayList<>();
-    protected ArrayList<PPReaderEngineInfo> m_infos = new ArrayList<>();
+    protected ArrayList<PPReaderEngineSetting> m_engineSettings = new ArrayList<>();
 }

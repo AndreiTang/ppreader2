@@ -140,17 +140,17 @@ public class PPReader88dushuEngine implements IPPReaderNovelEngine {
 
     @Override
     public String getContentUrl() {
-        return "https://www.88dushu.com";
+        return "https://www.x88dushu.com";
     }
 
     @Override
     public String getImageUrl() {
-        return "https://fm.88dushu.com";
+        return "https://fm.88dus.com";
     }
 
     @Override
     public String getSearchUrl() {
-        return "https://www.88dushu.com/modules/article/search.php?searchtype=articlename&searchkey=";
+        return "https://www.x88dushu.com/modules/article/search.php?searchtype=articlename&searchkey=";
     }
 
     @Override

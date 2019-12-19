@@ -99,7 +99,7 @@ public class PPReaderListAdapter extends BaseAdapter {
         PPReaderNovel novel = m_dataManager.getNovel(position);
         ImageView img = view.findViewById(R.id.novel_cover);
         Glide.with(view).clear(img);
-        String imgRootUrl = m_dataManager.getEngineInfo(novel.engineName).imageUrl;
+        String imgRootUrl = m_dataManager.getEngineSetting(novel.engineName).imageUrl;
         Glide.with(view).load(imgRootUrl + novel.img).apply(RequestOptions.fitCenterTransform().error(R.drawable.nocover)).into(img);
         TextView tv = view.findViewById(R.id.novel_title);
         tv.setText(novel.name);

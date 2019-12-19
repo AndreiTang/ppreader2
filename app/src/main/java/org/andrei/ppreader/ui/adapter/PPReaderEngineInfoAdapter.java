@@ -5,15 +5,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 
 import org.andrei.ppreader.R;
-import org.andrei.ppreader.data.PPReaderEngineInfo;
+import org.andrei.ppreader.data.PPReaderEngineSetting;
 
 import java.util.ArrayList;
 
 public class PPReaderEngineInfoAdapter extends BaseAdapter {
 
-    public void init(Fragment parent, ArrayList<PPReaderEngineInfo> infos){
+    public void init(Fragment parent, ArrayList<PPReaderEngineSetting> infos){
         m_parent = parent;
         m_infos = infos;
     }
@@ -41,11 +42,23 @@ public class PPReaderEngineInfoAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         if(convertView == null){
             convertView = m_parent.getLayoutInflater().inflate(R.layout.view_ppreader_novelengine_item,null);
+
         }
-        PPReaderEngineInfo info = m_infos.get(position);
+        PPReaderEngineSetting info = m_infos.get(position);
         CheckBox cb = convertView.findViewById(R.id.engine_item);
         cb.setText(info.name);
+        cb.setTag(position);
         cb.setChecked(info.isUsed);
+
+        cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                //info.isUsed = isChecked;
+                int pos = (Integer) buttonView.getTag();
+                m_infos.get(pos).isUsed = isChecked;
+            }
+        });
+
 
         View down = convertView.findViewById(R.id.engine_down);
         View up = convertView.findViewById(R.id.engine_up);
@@ -67,7 +80,7 @@ public class PPReaderEngineInfoAdapter extends BaseAdapter {
             public void onClick(View v) {
                 int pos = (Integer) v.getTag();
                 if (pos > 0){
-                    PPReaderEngineInfo item = m_infos.remove(pos);
+                    PPReaderEngineSetting item = m_infos.remove(pos);
                     m_infos.add(pos-1,item);
                     notifyDataSetChanged();
                 }
@@ -79,7 +92,7 @@ public class PPReaderEngineInfoAdapter extends BaseAdapter {
             public void onClick(View v) {
                 int pos = (Integer) v.getTag();
                 if (pos < m_infos.size() - 1){
-                    PPReaderEngineInfo item = m_infos.remove(pos);
+                    PPReaderEngineSetting item = m_infos.remove(pos);
                     if(pos + 1 == m_infos.size()){
                         m_infos.add(item);
                     }
@@ -101,18 +114,18 @@ public class PPReaderEngineInfoAdapter extends BaseAdapter {
         return convertView;
     }
 
-    public ArrayList<PPReaderEngineInfo> getInfos(){
+    public ArrayList<PPReaderEngineSetting> getInfos(){
         return m_infos;
     }
 
     public void select(int position){
-        for(PPReaderEngineInfo info : m_infos){
+        for(PPReaderEngineSetting info : m_infos){
             info.isSelected = false;
         }
         m_infos.get(position).isSelected = true;
         notifyDataSetChanged();
     }
 
-    private ArrayList<PPReaderEngineInfo> m_infos = null;
+    private ArrayList<PPReaderEngineSetting> m_infos = null;
     Fragment m_parent;
 }

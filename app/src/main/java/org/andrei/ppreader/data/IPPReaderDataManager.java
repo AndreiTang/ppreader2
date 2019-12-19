@@ -10,9 +10,9 @@ public interface IPPReaderDataManager {
     public PPReaderNovel getNovel(String id);
     public int getNovelCount();
     public void removeNovel(final String folder,final String id);
-    public PPReaderEngineInfo getEngineInfo(int index);
-    public PPReaderEngineInfo getEngineInfo(String engineName);
-    public int getEngineInfoCount();
-    public void setEngineInfos(ArrayList<PPReaderEngineInfo> infos);
+    public PPReaderEngineSetting getEngineSetting(int index);
+    public PPReaderEngineSetting getEngineSetting(String engineName);
+    public int getEngineSettingCount();
+    public void setEngineSettings(ArrayList<PPReaderEngineSetting> settings);
     public void moveNovelToHead(PPReaderNovel novel);
 }

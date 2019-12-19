@@ -7,13 +7,12 @@ import org.andrei.ppreader.R;
 import org.andrei.ppreader.data.IPPReaderDataManager;
 import org.andrei.ppreader.data.PPReaderChapter;
 import org.andrei.ppreader.data.PPReaderDataManager;
-import org.andrei.ppreader.data.PPReaderEngineInfo;
+import org.andrei.ppreader.data.PPReaderEngineSetting;
 import org.andrei.ppreader.data.PPReaderNovel;
 import org.andrei.ppreader.data.PPReaderTextPage;
 import org.andrei.ppreader.service.engine.EngineNames;
 import org.andrei.ppreader.service.engine.IPPReaderNovelEngineManager;
 import org.andrei.ppreader.service.engine.PPReaderNovelEngineManager;
-import org.andrei.ppreader.ui.fragment.IPPReaderNovelTextFragmentNotification;
 import org.andrei.ppreader.ui.fragment.PPReaderNovelTextFragment;
 
 import java.util.ArrayList;
@@ -41,15 +40,15 @@ public class MockActivity5 extends FragmentActivity {
         String path = getExternalFilesDir(null).getPath();
         m_dataManager.load(path);
 
-        ArrayList<PPReaderEngineInfo> infos = new ArrayList<>();
+        ArrayList<PPReaderEngineSetting> infos = new ArrayList<>();
         for(int i = 0; i < m_engineManager.count(); i++){
-            PPReaderEngineInfo info = new PPReaderEngineInfo();
+            PPReaderEngineSetting info = new PPReaderEngineSetting();
             info.name = m_engineManager.get(i).getName();
             info.contentUrl = m_engineManager.get(i).getContentUrl();
             info.imageUrl = m_engineManager.get(i).getImageUrl();
             infos.add(info);
         }
-        m_dataManager.setEngineInfos(infos);
+        //m_dataManager.setEngineInfos(infos);
 
         m_engineManager = new PPReaderNovelEngineManager();
 

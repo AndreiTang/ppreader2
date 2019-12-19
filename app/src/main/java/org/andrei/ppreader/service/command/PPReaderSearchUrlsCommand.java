@@ -1,7 +1,7 @@
 package org.andrei.ppreader.service.command;
 
 import org.andrei.ppreader.data.IPPReaderDataManager;
-import org.andrei.ppreader.data.PPReaderEngineInfo;
+import org.andrei.ppreader.data.PPReaderEngineSetting;
 import org.andrei.ppreader.service.engine.IPPReaderHttp;
 import org.andrei.ppreader.service.engine.IPPReaderNovelEngine;
 import org.andrei.ppreader.service.engine.IPPReaderNovelEngineManager;
@@ -15,7 +15,6 @@ import org.jsoup.nodes.Document;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Base64;
 
 public class PPReaderSearchUrlsCommand implements IPPReaderServiceCommand {
 
@@ -33,8 +32,8 @@ public class PPReaderSearchUrlsCommand implements IPPReaderServiceCommand {
         PPReaderSearchUrlsTask t = (PPReaderSearchUrlsTask)task;
         String engineName = "";
         ArrayList<String> urls = new ArrayList<>();
-        for(int i = 0 ; i < m_dataManager.getEngineInfoCount(); i++){
-            PPReaderEngineInfo item = m_dataManager.getEngineInfo(i);
+        for(int i = 0 ; i < m_dataManager.getEngineSettingCount(); i++){
+            PPReaderEngineSetting item = m_dataManager.getEngineSetting(i);
             if(item == null || item.isUsed == false){
                 continue;
             }
@@ -65,7 +64,7 @@ public class PPReaderSearchUrlsCommand implements IPPReaderServiceCommand {
             Document doc = m_http.get(url);
             if(doc == null){
                 retCode =  ServiceError.ERR_NOT_NETWORK;
-                break;
+                continue;
             }
 
             retCode = engine.searchUrls(doc,urls);

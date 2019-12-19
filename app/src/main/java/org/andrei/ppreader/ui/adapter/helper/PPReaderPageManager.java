@@ -234,12 +234,12 @@ public class PPReaderPageManager implements IPPReaderPageManager {
         }
 
         StringBuilder text = new StringBuilder();
-        text.append("J\n");
+        text.append("\n");
         //using dummy title to occupy title place which is just one line.
         // If the real title is length than the width of textview. it will occupy more than 1 line which will cause error.
-        text.append("This is dummy\n");
-        text.append("J\n");
-        text.append("J\n");
+        text.append(chapter.title);
+        text.append("\n");
+        text.append("##end##\n");
         text.append(cleanText(chapter.text));
 
 

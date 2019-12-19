@@ -4,13 +4,11 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.preference.PreferenceDialogFragmentCompat;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import org.andrei.ppreader.R;
 import org.andrei.ppreader.data.IPPReaderDataManager;
-import org.andrei.ppreader.data.PPReaderEngineInfo;
+import org.andrei.ppreader.data.PPReaderEngineSetting;
 import org.andrei.ppreader.ui.adapter.PPReaderEngineInfoAdapter;
 
 import java.util.ArrayList;
@@ -26,7 +24,7 @@ public class PPReaderNovelEngineDialog extends PreferenceDialogFragmentCompat {
         if(positiveResult){
             ListView lv = getDialog().findViewById(R.id.engine_list);
             PPReaderEngineInfoAdapter adapter = (PPReaderEngineInfoAdapter)lv.getAdapter();
-            m_dataManager.setEngineInfos(adapter.getInfos());
+            m_dataManager.setEngineSettings(adapter.getInfos());
         }
     }
 
@@ -41,9 +39,9 @@ public class PPReaderNovelEngineDialog extends PreferenceDialogFragmentCompat {
         lv.setSelector(cd);
 
         final PPReaderEngineInfoAdapter adapter = new PPReaderEngineInfoAdapter();
-        ArrayList<PPReaderEngineInfo> infos = new ArrayList<>();
-        for(int i = 0; i < m_dataManager.getEngineInfoCount(); i++){
-            infos.add(m_dataManager.getEngineInfo(i));
+        ArrayList<PPReaderEngineSetting> infos = new ArrayList<>();
+        for(int i = 0; i < m_dataManager.getEngineSettingCount(); i++){
+            infos.add(m_dataManager.getEngineSetting(i));
         }
         adapter.init(this,infos);
         lv.setAdapter(adapter);

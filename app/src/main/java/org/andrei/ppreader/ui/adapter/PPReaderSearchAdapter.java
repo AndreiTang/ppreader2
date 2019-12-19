@@ -15,9 +15,8 @@ import com.jakewharton.rxbinding2.view.RxView;
 import org.andrei.ppreader.PPReader;
 import org.andrei.ppreader.R;
 import org.andrei.ppreader.data.IPPReaderDataManager;
-import org.andrei.ppreader.data.PPReaderEngineInfo;
+import org.andrei.ppreader.data.PPReaderEngineSetting;
 import org.andrei.ppreader.data.PPReaderNovel;
-import org.andrei.ppreader.service.message.PPReaderSelectNovelMessage;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -112,7 +111,7 @@ public class PPReaderSearchAdapter extends BaseAdapter {
         ImageView img = (ImageView) view.findViewById(R.id.novel_search_cover);
         Glide.with(view).clear(img);
 
-        PPReaderEngineInfo info = m_dataManager.getEngineInfo(novel.engineName);
+        PPReaderEngineSetting info = m_dataManager.getEngineSetting(novel.engineName);
         String imgUrl =  info.imageUrl + novel.img;
         Glide.with(view).load(imgUrl).apply(RequestOptions.fitCenterTransform().error(R.drawable.nocover)).into(img);
 

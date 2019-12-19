@@ -224,7 +224,7 @@ public class PPReaderNovelTextFragment extends PPReaderBaseFragment implements I
         initPageAdapter();
         setChapterDetail(m_novel.currIndex);
         PPReaderNovelTextCatalog catalog = getView().findViewById(R.id.novel_text_catalog);
-        String imgRootUrl = m_dataManager.getEngineInfo(m_novel.engineName).imageUrl;
+        String imgRootUrl = m_dataManager.getEngineSetting(m_novel.engineName).imageUrl;
         catalog.loadNovel(m_novel,imgRootUrl);
 
         switchToCurrentPage();

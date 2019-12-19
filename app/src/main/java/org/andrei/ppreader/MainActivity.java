@@ -13,7 +13,7 @@ import android.view.WindowManager;
 
 import org.andrei.ppreader.data.IPPReaderDataManager;
 import org.andrei.ppreader.data.PPReaderDataManager;
-import org.andrei.ppreader.data.PPReaderEngineInfo;
+import org.andrei.ppreader.data.PPReaderEngineSetting;
 import org.andrei.ppreader.data.PPReaderNovel;
 import org.andrei.ppreader.service.PPReaderServiceFactory;
 import org.andrei.ppreader.service.engine.IPPReaderNovelEngineManager;
@@ -81,9 +81,9 @@ public class MainActivity extends FragmentActivity  {
         }
         savedInstanceState.putSerializable(KEY_NOVELS,novels);
 
-        ArrayList<PPReaderEngineInfo> infos = new ArrayList<>();
-        for(int i = 0; i < m_dataManager.getEngineInfoCount(); i++){
-            infos.add(m_dataManager.getEngineInfo(i));
+        ArrayList<PPReaderEngineSetting> infos = new ArrayList<>();
+        for(int i = 0; i < m_dataManager.getEngineSettingCount(); i++){
+            infos.add(m_dataManager.getEngineSetting(i));
         }
         savedInstanceState.putSerializable(KEY_INFOS,infos);
     }
@@ -116,8 +116,8 @@ public class MainActivity extends FragmentActivity  {
             m_dataManager.addNovel(novel);
         }
 
-        ArrayList<PPReaderEngineInfo> infos = (ArrayList<PPReaderEngineInfo>)savedInstanceState.getSerializable(KEY_INFOS);
-        m_dataManager.setEngineInfos(infos);
+        ArrayList<PPReaderEngineSetting> infos = (ArrayList<PPReaderEngineSetting>)savedInstanceState.getSerializable(KEY_INFOS);
+        m_dataManager.setEngineSettings(infos);
 
         PPReaderMainFragment main = (PPReaderMainFragment)getSupportFragmentManager().findFragmentByTag(PPReaderMainFragment.class.getName());
         PPReaderNovelTextFragment text = (PPReaderNovelTextFragment)getSupportFragmentManager().findFragmentByTag(PPReaderNovelTextFragment.class.getName());
@@ -178,21 +178,37 @@ public class MainActivity extends FragmentActivity  {
         Context appContext = getApplicationContext();
         String path = appContext.getExternalFilesDir(null).getPath();
         int ret = m_dataManager.load(path);
-        if(m_dataManager.getEngineInfoCount() != m_engineManager.count()  ){
-            ArrayList<PPReaderEngineInfo> infos = new ArrayList<>();
-            for(int i = 0; i < m_engineManager.count(); i++){
-                PPReaderEngineInfo info = new PPReaderEngineInfo();
-                info.name = m_engineManager.get(i).getName();
-                if(m_dataManager.getEngineInfo(info.name)!=null){
-                    info.isUsed = m_dataManager.getEngineInfo(info.name).isUsed;
-                }
-                info.contentUrl = m_engineManager.get(i).getContentUrl();
-                info.imageUrl = m_engineManager.get(i).getImageUrl();
-                infos.add(info);
-            }
-            m_dataManager.setEngineInfos(infos);
+        if(m_dataManager.getEngineSettingCount() != m_engineManager.count()  ){
+            buildEngineSettings();
+        }
+        else{
+            initEngineSettings();
         }
         return ret;
+    }
+
+    private void buildEngineSettings(){
+        ArrayList<PPReaderEngineSetting> infos = new ArrayList<>();
+        for(int i = 0; i < m_engineManager.count(); i++){
+            PPReaderEngineSetting info = new PPReaderEngineSetting();
+            info.name = m_engineManager.get(i).getName();
+            if(m_dataManager.getEngineSetting(info.name)!=null){
+                info.isUsed = m_dataManager.getEngineSetting(info.name).isUsed;
+            }
+            info.contentUrl = m_engineManager.get(i).getContentUrl();
+            info.imageUrl = m_engineManager.get(i).getImageUrl();
+            infos.add(info);
+        }
+        m_dataManager.setEngineSettings(infos);
+    }
+
+    private void initEngineSettings(){
+        for(int i = 0; i < m_engineManager.count(); i++){
+            String name = m_engineManager.get(i).getName();
+            PPReaderEngineSetting info = m_dataManager.getEngineSetting(name);
+            info.contentUrl = m_engineManager.get(i).getContentUrl();
+            info.imageUrl = m_engineManager.get(i).getImageUrl();
+        }
     }
 
     private void initTextFragment(final PPReaderMainFragment main, final PPReaderNovelTextFragment text){
